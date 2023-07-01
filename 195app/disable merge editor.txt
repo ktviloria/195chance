@@ -1,0 +1,8 @@
+go to vs code
+ctrl + ,
+
+see if you are in the "user" tab 
+search "merge" + press enter
+untick the box in "merge editor"
+
+yung walang check sa box sa akin ay yung "merge editor" and "Merge-conflict › Auto Navigate Next Conflict: Enabled"

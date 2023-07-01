@@ -1,0 +1,19 @@
+#upgrade pip if needed in command prompt
+    
+#in vscode
+    #venv
+        pip install virtualenv
+        virtualenv 195 venv
+        195venv/scripts/activate
+        #select python interpreter
+
+    #assets - bootstrap
+
+    #install dependencies    
+        pip install dash
+        pip install dash_bootstrap_components
+        pip install pandas
+        pip install psycopg2
+        pip install datetime
+
+    #update dbconnect password

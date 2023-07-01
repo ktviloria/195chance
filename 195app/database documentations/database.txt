@@ -1,0 +1,176 @@
+!!!!!CHANGES!!!!!
+>lines: 170-176
+
+CREATE TABLE  ranks
+(rank_id serial primary key not null, 
+ rank_title varchar(256) not null,
+);
+COPY ranks 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195git\195capstone\195app\sql tables\ranks.csv'
+DELIMITER ','
+CSV HEADER; 
+
+CREATE TABLE users
+(user_id serial primary key not null,
+ user_un varchar(32) not null,
+ user_pass varchar(256) not null,
+ user_type varchar(7) not null default 'faculty'
+);
+COPY users 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195git\195capstone\195app\sql tables\users.csv'
+DELIMITER ','
+CSV HEADER; 
+
+update users
+set user_type = default
+where user_id>3;
+
+CREATE TABLE faculty 
+(user_id int references users(user_id) primary key,
+ faculty_fn varchar(256) not null, 
+ faculty_mn varchar(256),
+ faculty_ln varchar(256) not null, 
+ faculty_suff varchar(256),
+ rank_id int references ranks(rank_id),
+ faculty_bdate date,
+ faculty_mail varchar(256),
+ faculty_contact varchar(64),
+ faculty_emp_num varchar(64),
+ faculty_expert1 varchar(256),
+ faculty_expert2 varchar(256),
+ faculty_expert3 varchar(256),
+ faculty_expert4 varchar(256),
+ faculty_expert5 varchar(256),
+ faculty_last_upd timestamp without time zone default now(),
+ faculty_active_ind bool default true,
+ faculty_delete_ind bool default false
+ );
+COPY faculty 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195git\195capstone\195app\sql tables\faculty.csv'
+DELIMITER ','
+CSV HEADER; 
+
+update faculty
+set faculty_last_upd = default
+where user_id>3;
+
+update faculty
+set faculty_active_ind = default
+where user_id>3;
+
+update faculty
+set faculty_delete_ind = default
+where user_id>3;
+
+CREATE TABLE tags 
+(tag_id serial primary key not null, 
+ tag_title varchar not null, 
+ tag_sub varchar not null, 
+ tag_short_title varchar not null
+);
+COPY tags 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195git\195capstone\195app\sql tables\tags.csv'
+DELIMITER ','
+CSV HEADER; 
+
+CREATE TABLE publications
+(pub_id serial primary key not null,
+ user_id int references users(user_id),
+ tag_id int references tags(tag_id),
+ pub_title varchar(256),
+ pub_last_upd timestamp without time zone default now(),
+ pub_delete_ind bool default false
+);
+COPY publications 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195git\195capstone\195app\sql tables\publications.csv'
+DELIMITER ','
+CSV HEADER; 
+
+update publications
+set pub_title = 'No Title Given'
+where pub_title is null;
+
+update publications
+set pub_last_upd = default
+where pub_id>0;
+
+update publications
+set pub_delete_ind = default
+where pub_id>0;
+
+
+CREATE TABLE authorships
+(pub_id int references publications(pub_id) primary key,
+ a_authors varchar(512) not null,
+ a_year varchar(64),
+ a_date date,
+ a_publisher varchar(256),
+ a_pub_name varchar(256),
+ a_doi varchar(64),
+ a_isxn varchar(64),
+ a_scopus varchar(64)
+ );
+COPY authorships 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195git\195capstone\195app\sql tables\authorships.csv' --replace this with the path where your presentations table is in
+DELIMITER ','
+CSV HEADER;
+
+CREATE TABLE authorship_role
+(a_label_id serial primary key not null, 
+a_label varchar(256) not null); 
+COPY authorship_role
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195git\195capstone\195app\sql tables\authorship_role.csv' --> change accordingly 
+DELIMITER ','
+CSV HEADER; 
+
+ALTER TABLE authorships
+ADD authorship_role int references authorship_role(a_label_id); 
+
+CREATE TABLE presentations
+(pub_id int references publications(pub_id) primary key,
+ p_authors varchar(512) not null,
+ p_year varchar(64),
+ p_conf varchar (256),
+ p_loc varchar(256),
+ p_date_range varchar(256),
+ p_start_date date, --change to date type
+ p_end_date date, --change to date type
+ p_add_info varchar(512)
+ );
+COPY presentations 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195git\195capstone\195app\sql tables\presentations.csv'
+DELIMITER ','
+CSV HEADER;
+
+CREATE TABLE projects
+(pub_id int references publications(pub_id) primary key,
+ r_roles varchar(256),
+ r_year varchar(64),
+ r_start_date date,
+ r_end_date date,
+ r_timeframe varchar(256),
+ r_fund_org varchar(256)
+);
+COPY projects 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195git\195capstone\195app\sql tables\projects.csv'
+DELIMITER ','
+CSV HEADER;
+
+CREATE TABLE others
+(pub_id int references publications(pub_id) primary key,
+ o_add_info varchar(256),
+ o_date date,
+ o_year varchar(64)
+);
+COPY others 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195git\195capstone\195app\sql tables\others.csv'
+DELIMITER ','
+CSV HEADER;
+
+CREATE TABLE pbb_reports
+(pbb_id int primary key,
+pbb_name varchar(256) not null);
+
+CREATE TABLE prom_reports
+(prom_id int primary key,
+prom_name varchar(256) not null);

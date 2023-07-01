@@ -1,0 +1,53 @@
+dashboard
+publications_manage
+my_profile 
+my_publications
+form_authorships
+form_others
+form_presentations
+form_projects
+faculty_details
+home
+publications_home 
+
+
+Create table authorships_users (
+pub_id int references publications(pub_id), 
+user_id int references users(user_id),
+authorship_role int references  authorship_role(a_label_id), 
+authorship_subcat int references authorship_subcategory(a_author_subcat_id), 
+PRIMARY KEY(pub_id, user_id) )
+
+copy authorships_users
+FROM 'D:\195gitclone\195capstone\195app\sql tables\authorship_users.csv'
+DELIMITER ','
+CSV HEADER; 
+
+
+SELECT 
+	authorships.a_year,
+	publications.pub_id,
+	string_agg(faculty_fn || ' ' || faculty_ln , ', ') as faculty_involved,
+	string_agg(authorship_role.a_label, ', ') as roles,
+	pub_title, 
+	a_authors, 
+	To_char(a_date, 'Month YYYY'),
+	a_pub_name, 
+	a_publisher, 
+	a_doi, 
+	a_isxn, 
+	a_scopus, 
+	to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS') as timestampz,
+	publications.modified_by
+ 	FROM authorships_users
+	INNER JOIN authorships on authorships_users.pub_id = authorships.pub_id
+	LEFT OUTER JOIN faculty on authorships_users.user_id = faculty.user_id
+	INNER JOIN publications on authorships_users.pub_id = publications.pub_id
+	LEFT OUTER JOIN authorship_role on authorships_users.authorship_role = authorship_role.a_label_id
+	WHERE publications.pub_delete_ind = false and publications.pub_id = 298
+	GROUP BY publications.pub_id, authorships.a_year, 
+	a_authors, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
+	a_doi, a_isxn, a_scopus, to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS'),publications.modified_by
+			   
+
+	

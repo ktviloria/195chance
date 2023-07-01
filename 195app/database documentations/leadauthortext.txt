@@ -1,0 +1,100 @@
+CREATE TABLE authorship_role
+(a_label_id serial primary key not null, 
+a_label varchar(256) not null); 
+
+COPY authorship_role 
+FRPM 'D:\195gitclone\195capstone\195app\sql tables\authorship_role.csv' --> change accordingly 
+DELIMITER ','
+CSV HEADER; 
+
+ALTER TABLE authorships
+ADD authorship_role int references authorship_role(a_label_id); 
+
+
+!!!!(added May 14, 2023) !!!!!
+
+CREATE TABLE authorship_subcategory
+(a_author_subcat_id serial primary key not null, 
+a_author_subcat_label varchar(256) not null); 
+
+COPY authorship_subcategory
+FROM 'D:\195gitclone\195capstone\195app\sql tables\authorship_subcategory.csv' 
+DELIMITER ','
+CSV HEADER; 
+
+ALTER TABLE authorships
+ADD authorship_subcategory int references authorship_subcategory(a_author_subcat_id);
+
+
+ALTER TABLE projects
+ADD r_contract_link text
+
+
+------ COMBINED TABLE (FOR FINAL DOCUMENTATION)------ 
+
+CREATE TABLE authorships
+(pub_id int references publications(pub_id) primary key,
+ a_authors varchar(512) not null,
+ a_year varchar(64),
+ a_date date,
+ a_publisher varchar(256),
+ a_pub_name varchar(256),
+ a_doi varchar(64),
+ a_isxn varchar(64),
+ a_scopus varchar(64), 
+ authorship_role references authorship_role(a_label_id), 
+ authorship_subcategory references authorship_subcategory(a_author_subcat_id)
+ );
+ 
+CREATE TABLE projects
+(pub_id int references publications(pub_id) primary key,
+ r_roles varchar(256),
+ r_year varchar(64),
+ r_start_date date,
+ r_end_date date,
+ r_timeframe varchar(256),
+ r_fund_org varchar(256),
+ r_contract_link text
+);
+
+
+
+--to add to show last modified by --
+ALTER TABLE publications
+Add column modified_by varchar(256);
+
+alter table faculty
+add column faculty_modified_by varchar(256);
+
+
+--criteria/ tags table modificatios --
+ALTER TABLE tags
+ADD tag_delete_ind bool default false; 
+ALTER TABLE tags
+ADD tag_modified_by varchar(256); 
+ALTER TABLE tags
+ADD tag_last_upd timestamp without time zone default now();
+
+--ranks table modifications --
+ALTER TABLE ranks 
+ADD ranks_delete_ind bool default false; 
+ALTER TABLE ranks 
+ADD ranks_modified_by varchar(256); 
+ALTER TABLE ranks 
+ADD ranks_last_upd timestamp without time zone default now();
+
+--roles table modifications -- 
+ALTER TABLE authorship_role 
+ADD role_delete_ind bool default false; 
+ALTER TABLE authorship_role 
+ADD role_modified_by varchar(256); 
+ALTER TABLE authorship_role 
+ADD role_last_upd timestamp without time zone default now();
+
+--authorship_subcategory modifications -- 
+ALTER TABLE authorship_subcategory 
+ADD sub_delete_ind bool default false; 
+ALTER TABLE authorship_subcategory 
+ADD sub_modified_by varchar(256); 
+ALTER TABLE authorship_subcategory 
+ADD sub_last_upd timestamp without time zone default now();

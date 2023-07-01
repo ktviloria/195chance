@@ -1,0 +1,270 @@
+--ranks 
+
+CREATE TABLE  ranks
+(rank_id serial primary key not null, 
+ rank_title varchar(256) not null,
+ ranks_delete_ind bool default false, 
+ ranks_modified_by varchar(256), 
+ ranks_last_upd timestamp without time zone default now()
+);
+COPY ranks 
+FROM 'C:\ie195Git\195capstone\195app\sql tables\ranks.csv' -- edit local source
+DELIMITER ','
+CSV HEADER; 
+
+--users 
+CREATE TABLE users
+(user_id serial primary key not null,
+ user_un varchar(32) not null,
+ user_pass varchar(256) not null,
+ user_type varchar(7) not null default 'faculty'
+);
+COPY users 
+FROM 'C:\ie195Git\195capstone\195app\sql tables\users.csv' -- edit local source
+DELIMITER ','
+CSV HEADER; 
+
+update users
+set user_type = default
+where user_id>3;
+
+--faculty 
+
+CREATE TABLE faculty 
+(user_id int references users(user_id) primary key,
+ faculty_fn varchar(256) not null, 
+ faculty_mn varchar(256),
+ faculty_ln varchar(256) not null, 
+ faculty_suff varchar(256),
+ rank_id int references ranks(rank_id),
+ faculty_bdate date,
+ faculty_mail varchar(256),
+ faculty_contact varchar(64),
+ faculty_emp_num varchar(64), --changed to varchar 
+ faculty_expert1 varchar(256),
+ faculty_expert2 varchar(256),
+ faculty_expert3 varchar(256),
+ faculty_expert4 varchar(256),
+ faculty_expert5 varchar(256),
+ faculty_last_upd timestamp without time zone default now(),
+ faculty_active_ind bool default true,
+ faculty_delete_ind bool default false,
+ faculty_modified_by varchar(256)
+ );
+COPY faculty 
+FROM 'C:\ie195Git\195capstone\195app\sql tables\faculty.csv' -- edit local source
+DELIMITER ','
+CSV HEADER; 
+
+update faculty
+set faculty_last_upd = default
+where user_id>3;
+
+update faculty
+set faculty_active_ind = default
+where user_id>3;
+
+update faculty
+set faculty_delete_ind = default
+where user_id>3;
+
+--tags 
+CREATE TABLE tags 
+(tag_id serial primary key not null, 
+ tag_title varchar not null, 
+ tag_sub varchar not null, 
+ tag_short_title varchar not null, 
+ tag_delete_ind bool default false, 
+ tag_modified_by varchar(256), 
+ tag_last_upd timestamp without time zone default now()
+);
+COPY tags 
+FROM 'C:\ie195Git\195capstone\195app\sql tables\tags.csv'
+DELIMITER ','
+CSV HEADER;
+
+--publications
+CREATE TABLE publications
+(pub_id serial primary key not null,
+ user_id int references users(user_id),
+ tag_id int references tags(tag_id),
+ pub_title varchar(256),
+ pub_last_upd timestamp without time zone default now(),
+ pub_delete_ind bool default false, 
+ modified_by varchar(256)
+);
+COPY publications 
+FROM 'C:\ie195Git\195capstone\195app\sql tables\publications.csv'
+DELIMITER ','
+CSV HEADER; 
+
+update publications
+set pub_title = 'No Title Given'
+where pub_title is null;
+
+update publications
+set pub_last_upd = default
+where pub_id>0;
+
+update publications
+set pub_delete_ind = default
+where pub_id>0;
+
+--authorship_role 
+
+CREATE TABLE authorship_role
+(a_label_id serial primary key not null, 
+ a_label varchar(256) not null, 
+ role_delete_ind bool default false, 
+ role_modified_by varchar(256), 
+ role_last_upd timestamp without time zone default now());
+COPY authorship_role
+FROM 'C:\ie195Git\195capstone\195app\sql tables\authorship_role.csv'
+DELIMITER ','
+CSV HEADER; 
+
+--authorship_subcategory 
+CREATE TABLE authorship_subcategory
+(a_author_subcat_id serial primary key not null, 
+ a_author_subcat_label varchar(256) not null, 
+ sub_delete_ind bool default false, 
+ sub_modified_by varchar(256), 
+ sub_last_upd timestamp without time zone default now()
+);  
+
+COPY authorship_subcategory
+FROM 'C:\ie195Git\195capstone\195app\sql tables\authorship_subcategory.csv'
+DELIMITER ','
+CSV HEADER; 
+
+
+--authorships 
+
+CREATE TABLE authorships
+(pub_id int references publications(pub_id) primary key,
+ a_authors varchar(512) not null,
+ a_year varchar(64),
+ a_date date,
+ a_publisher varchar(256),
+ a_pub_name varchar(256),
+ a_doi varchar(64),
+ a_isxn varchar(64),
+ a_scopus varchar(64), 
+ authorship_role int references authorship_role(a_label_id), 
+ authorship_subcategory int references authorship_subcategory(a_author_subcat_id)
+ );
+COPY authorships 
+FROM 'C:\ie195Git\195capstone\195app\sql tables\authorships.csv'
+DELIMITER ','
+CSV HEADER;
+
+--projects
+CREATE TABLE projects
+(pub_id int references publications(pub_id) primary key,
+ r_roles varchar(256),
+ r_year varchar(64),
+ r_start_date date,
+ r_end_date date,
+ r_timeframe varchar(256),
+ r_fund_org varchar(256),
+ r_contract_link text
+);
+COPY projects 
+FROM 'C:\ie195Git\195capstone\195app\sql tables\projects.csv'
+DELIMITER ','
+CSV HEADER;
+
+--presentations 
+CREATE TABLE presentations
+(pub_id int references publications(pub_id) primary key,
+ p_authors varchar(512) not null,
+ p_year varchar(64),
+ p_conf varchar (256),
+ p_loc varchar(256),
+ p_date_range varchar(256),
+ p_start_date date, --change to date type
+ p_end_date date, --change to date type
+ p_add_info varchar(512)
+ );
+COPY presentations 
+FROM 'C:\ie195Git\195capstone\195app\sql tables\presentations.csv'
+DELIMITER ','
+CSV HEADER;
+
+--others 
+CREATE TABLE others
+(pub_id int references publications(pub_id) primary key,
+ o_add_info varchar(256),
+ o_date date,
+ o_year varchar(64)
+);
+COPY others 
+FROM 'C:\ie195Git\195capstone\195app\sql tables\others.csv'
+DELIMITER ','
+CSV HEADER;
+
+
+--dummy tables: 
+
+--pbb reports
+CREATE TABLE pbb_reports
+(pbb_id int primary key,
+pbb_name varchar(256) not null);
+
+--promotion reports 
+CREATE TABLE prom_reports
+(prom_id int primary key,
+prom_name varchar(256) not null);
+
+
+Create table authorships_users (
+pub_id int references publications(pub_id), 
+user_id int references users(user_id),
+authorship_role int references  authorship_role(a_label_id), 
+authorship_subcat int references authorship_subcategory(a_author_subcat_id), 
+PRIMARY KEY(pub_id, user_id));
+
+copy authorships_users
+FROM 'C:\ie195Git\195capstone\195app\sql tables\authorship_users.csv'
+DELIMITER ','
+CSV HEADER; 
+
+
+
+CREATE TABLE presentations_users (
+pub_id int references publications(pub_id), 
+user_id int references users(user_id),
+pres_role, 
+PRIMARY KEY(pub_id, user_id); 
+) 
+
+copy presentations_users
+FROM 'C:\ie195Git\195capstone\195app\sql tables\presentations_users.csv'
+DELIMITER ','
+CSV HEADER; 
+
+
+CREATE TABLE projects_users (
+pub_id int references publications(pub_id), 
+user_id int references users(user_id),
+r_roles varchar(256),
+r_contract_link text, 
+PRIMARY KEY(pub_id, user_id)
+); 
+
+copy projects_users
+FROM 'C:\ie195Git\195capstone\195app\sql tables\projects_users.csv' 
+DELIMITER ','
+CSV HEADER; 
+
+CREATE TABLE others_users(
+pub_id int references publications(pub_id), 
+user_id int references users(user_id),
+o_add_info varchar(1024),
+PRIMARY KEY(pub_id, user_id)
+); 
+
+copy others_users
+FROM 'C:\ie195Git\195capstone\195app\sql tables\others_users.csv' 
+DELIMITER ','
+CSV HEADER;
