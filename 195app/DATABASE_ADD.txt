@@ -1,0 +1,15 @@
+CREATE TABLE authors 
+(author_id serial primary key,
+author_user_id int references users(user_id),
+author_fn varchar(256) not null, 
+author_ln varchar(256) not null,
+author_mail varchar(256),
+author_contact varchar(64),
+author_aff varchar(256) not null default true,
+author_fac_ind varchar(256) default true,
+author_last_upd timestamp without time zone default now(),
+author_delete_ind bool default False
+);
+
+INSERT INTO authors (author_user_id, author_fn, author_ln, author_mail, author_contact)
+SELECT faculty.user_id, faculty_fn, faculty_ln, faculty_mail, faculty_contact FROM faculty;

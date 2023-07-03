@@ -554,13 +554,13 @@ def facprof_load (timestamp, to_load, search, onlyonce):
         State('expertise4_div', 'style'), 
         State('expertise5_div', 'style'), 
         State('facprof_affiliation', 'value'),
-        State('currentuserid', 'data') 
+        State('currentuserid', 'data'),
     ]
 )
 
 def facprof_submitprocess (submit_btn, close_btn, lastname, firstname, middlename, 
                            suffix, rank, bdate, mail, contact, emp_num, expert1,
-                           expert2, expert3, expert4, expert5, search, removerecord, 
+                           expert2, expert3, expert4, expert5, search, facremoverecord, 
                            expertdiv_2, expertdiv_3, expertdiv_4, expertdiv_5, status, cuser_id): 
     ctx = dash.callback_context
     if ctx.triggered: 
@@ -670,6 +670,27 @@ def facprof_submitprocess (submit_btn, close_btn, lastname, firstname, middlenam
                 
                 user_values = [user_max_value,usernamee, encrypted_pass, 'faculty']
                 db.modifydatabase(users_sqlcode_add,user_values)
+
+                author_sqlcode_add = """INSERT INTO authors(
+                    author_ln,
+                    author_fn,
+                    author_mail,
+                    author_contact,
+                    author_aff,
+                    author_fac_ind
+                )
+                VALUES (%s, %s, %s, %s, %s)            
+                """
+                
+                # author_sql_max = """SELECT MAX(author_id) from authors
+                # """
+                # author_sql_max_val = []
+                # author_max_colname = ['max']
+                # author_max_value_db =  db.querydatafromdatabase(author_sql_max, author_sql_max_val, author_max_colname )
+                # author_max_value = int(author_max_value_db['max'][0]) + 1 
+
+                author_values = [lastname, firstname, mail, contact, 'UP', 'IE Faculty']
+                db.modifydatabase(author_sqlcode_add, author_values)
             
                 sql = """INSERT INTO faculty(
                     user_id,
@@ -715,7 +736,6 @@ def facprof_submitprocess (submit_btn, close_btn, lastname, firstname, middlenam
             elif mode == 'edit': 
                 parsed = urlparse(search)
                 facprof_editmodeid = parse_qs(parsed.query)['id'][0]
-                
                 sql = """UPDATE faculty
                 SET 
                     faculty_ln = %s, 
@@ -739,12 +759,29 @@ def facprof_submitprocess (submit_btn, close_btn, lastname, firstname, middlenam
                 WHERE 
                     user_id = %s
                 """
-                to_delete = bool(removerecord)
+                to_delete = bool(facremoverecord)
                 if to_delete == True: 
                     status = False
                 values = [lastname, firstname, middlename, 
                             suffix, rank, bdate, mail, contact, emp_num, expert1,
                             expert2, expert3, expert4, expert5, to_delete, status, fac_timestamp_time, username_modifier, facprof_editmodeid]
+                db.modifydatabase(sql, values)
+
+                sql = """UPDATE authors
+                SET 
+                    author_ln = %s, 
+                    author_fn = %s, 
+                    author_mail = %s, 
+                    author_contact = %s, 
+                    author_aff = %s,
+                    author_fac_ind = %s,
+                    author_last_upd = %s,
+                    author_delete_ind = %s
+                WHERE 
+                    author_user_id = %s
+                """
+                to_delete = bool(facremoverecord)
+                values = [lastname, firstname, mail, contact, '', '', fac_timestamp_time, to_delete, facprof_editmodeid]
                 db.modifydatabase(sql, values)
 
                 feedbackmessage1 = "Faculty information updated."

@@ -185,6 +185,15 @@ navbar = dbc.Navbar(
                                             html.Br(),
                                             dbc.NavLink(
                                             [html.Div([
+                                                html.Img(src=app.get_asset_url('authors.png'), height="25px", width="25px"),
+                                                html.Span("Authors Management", style={'vertical-align': 'middle','padding-left':'20px'}),
+                                            ]),
+                                            ],
+                                            href="/author_manage", style=navlink_style_offcanvas),
+                                            html.Br(),
+                                            html.Br(),
+                                            dbc.NavLink(
+                                            [html.Div([
                                                 html.Img(src=app.get_asset_url('faculty_mngmt.png'), height="25px", width="25px"),
                                                 html.Span("User Management", style={'vertical-align': 'middle','padding-left':'20px'}),
                                             ]),
@@ -216,7 +225,7 @@ navbar = dbc.Navbar(
                                                 html.Span("Reports", style={'vertical-align': 'middle','padding-left':'20px'}),
                                             ]),
                                             ],
-                                            href="/reports", style=navlink_style_offcanvas)
+                                            href="/reports", style=navlink_style_offcanvas),
                                         ],
                                         id='offcanvas_admin_div'
                                     ),
