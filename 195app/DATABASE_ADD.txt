@@ -5,11 +5,51 @@ author_fn varchar(256) not null,
 author_ln varchar(256) not null,
 author_mail varchar(256),
 author_contact varchar(64),
-author_aff varchar(256) not null default true,
-author_fac_ind varchar(256) default true,
+author_up_constituent varchar(256),
+author_upd_unit varchar(256),
+author_engg_dept varchar(256),
+author_fac_ind varchar(256),
 author_last_upd timestamp without time zone default now(),
 author_delete_ind bool default False
 );
 
 INSERT INTO authors (author_user_id, author_fn, author_ln, author_mail, author_contact)
 SELECT faculty.user_id, faculty_fn, faculty_ln, faculty_mail, faculty_contact FROM faculty;
+
+UPDATE authors
+set
+author_up_constituent = 'UP Diliman',
+author_upd_unit = 'College of Engineering',
+author_engg_dept = 'Department of Industrial Engineering and Operations Research',
+author_fac_ind = 'IE Faculty'
+WHERE
+author_user_id >0;
+
+
+CREATE TABLE up_system(
+cons_id int primary key not null,
+cons_name varchar(256) not null
+);
+COPY up_system 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195chance\195app\sql tables\upsys.csv'
+DELIMITER ','
+CSV HEADER; 
+
+
+CREATE TABLE up_diliman(
+college_id int primary key not null,
+college_name varchar(256) not null
+);
+COPY up_diliman 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195chance\195app\sql tables\upd.csv'
+DELIMITER ','
+CSV HEADER; 
+
+CREATE TABLE engineering_departments(
+dept_id int primary key not null,
+dept_name varchar(256) not null
+);
+COPY engineering_departments
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195chance\195app\sql tables\engg.csv'
+DELIMITER ','
+CSV HEADER; 
