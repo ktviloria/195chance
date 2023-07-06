@@ -37,7 +37,7 @@ layout= html.Div(
         html.H6("* Indicates required field", style={"color": "#d9534f", "font-style": "italic"}),
         html.Hr(), 
         dbc.Alert('Please supply required fields.', color="danger", id='authorprof_inputs_alert', is_open=False),
-        dbc.Alert('Author being added is a faculty member. Please add in the User Management Module.', color="danger", id='authorprof_facadd_alert', is_open=False),
+        dbc.Alert('Author being added is a faculty member. Please modify in the User Management Module.', color="danger", id='authorprof_facadd_alert', is_open=False),
         dbc.Alert('Author being modified is a faculty member. Please modify in the User Management Module.', color="danger", id='authorprof_facmodify_alert', is_open=False),
         html.Br(),
         dbc.Row(
@@ -540,7 +540,7 @@ def authorprof_submitprocess (submit_btn, close_btn,
         required = [lastname, firstname, up_aff]
         if not all (required):
             inputsopenalert = True
-
+        
         else: 
             parsed = urlparse(search)
             mode = parse_qs(parsed.query)['mode'][0]
@@ -551,9 +551,12 @@ def authorprof_submitprocess (submit_btn, close_btn,
             if up_aff == 'Others':
                 if not (other_aff):
                     inputsopenalert = True
-            else:
-                if mode == "add":
-                    if iefacind == '' or 'Non-IE Faculty':
+            if mode == "add":  
+                if iefacind == 'IE Faculty':
+                    facaddopenalert = True
+                elif iefacind == 'Inactive IE Faculty':
+                    facaddopenalert = True
+                else:
                         openmodal = True 
                         sql_add = """INSERT INTO authors(
                             author_ln, 
@@ -574,17 +577,16 @@ def authorprof_submitprocess (submit_btn, close_btn,
                         db.modifydatabase(sql_add,values_add)
                         feedbackmessage = f"Author added to DelPHI."
                         okay_href = '/author_manage'
-                    else:
-                        facaddopenalert = True
                     
-                elif mode == 'edit': 
-                    if iefacind == 'IE Faculty' or 'Inactive IE Faculty':
-                        facmodifyopenalert = True
-                    else:
+            elif mode == 'edit': 
+                if iefacind == 'IE Faculty':
+                    facmodifyopenalert = True
+                elif iefacind == 'Inactive IE Faculty':
+                    facmodifyopenalert = True
+                else:
                         openmodal = True
                         parsed = urlparse(search)
                         authorprof_editmodeid = parse_qs(parsed.query)['id'][0]
-                        # authorprof_editmodeuserid = parse_qs(parsed.query)['id'][0]
                         
                         sql_edit = """UPDATE authors
                         SET 
@@ -609,8 +611,8 @@ def authorprof_submitprocess (submit_btn, close_btn,
 
                         feedbackmessage = "Author information updated."
                         okay_href = '/author_manage'
-                else: 
-                    raise PreventUpdate
+            # else: 
+            #     raise PreventUpdate
     elif eventid == 'authorprof_closebtn' and close_btn: 
         pass 
     else: 

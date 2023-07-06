@@ -226,6 +226,7 @@ def authors_loadauthorslist(pathname, searchterm, upfilter, updfilter, enggfilte
                 authors 
             WHERE
                 author_delete_ind = false
+            ORDER BY author_last_upd DESC
             """
         values = []
         cols = ['authorID', 'Full Name', 'Affiliation', 'UPD Unit', 'UPD Engineering Dept.', 'IE Faculty Indication', 'Email', 'Contact #', 'Last Updated']         
