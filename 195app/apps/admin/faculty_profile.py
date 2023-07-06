@@ -680,9 +680,10 @@ def facprof_submitprocess (submit_btn, close_btn, lastname, firstname, middlenam
                     author_up_constituent,
                     author_upd_unit,
                     author_engg_dept,
-                    author_fac_ind
+                    author_fac_ind,
+                    author_last_upd
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)            
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)            
                 """
                 
                 # author_sql_max = """SELECT MAX(author_id) from authors
@@ -692,7 +693,7 @@ def facprof_submitprocess (submit_btn, close_btn, lastname, firstname, middlenam
                 # author_max_value_db =  db.querydatafromdatabase(author_sql_max, author_sql_max_val, author_max_colname )
                 # author_max_value = int(author_max_value_db['max'][0]) + 1 
 
-                author_values = [user_max_value, lastname, firstname, mail, contact, 'UP Diliman', 'College of Engineering' , 'Departmeng of Industrial Engineering and Operations Research', 'IE Faculty']
+                author_values = [user_max_value, lastname, firstname, mail, contact, 'UP Diliman', 'College of Engineering' , 'Departmeng of Industrial Engineering and Operations Research', 'IE Faculty', fac_timestamp_time]
                 db.modifydatabase(author_sqlcode_add, author_values)
             
                 sql = """INSERT INTO faculty(

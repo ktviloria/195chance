@@ -226,7 +226,6 @@ def authors_loadauthorslist(pathname, searchterm, upfilter, updfilter, enggfilte
                 authors 
             WHERE
                 author_delete_ind = false
-            ORDER BY author_last_upd DESC
             """
         values = []
         cols = ['authorID', 'Full Name', 'Affiliation', 'UPD Unit', 'UPD Engineering Dept.', 'IE Faculty Indication', 'Email', 'Contact #', 'Last Updated']         
@@ -305,7 +304,7 @@ def authors_loadauthorslist(pathname, searchterm, upfilter, updfilter, enggfilte
             # elif enggfilter:
             #     sql += """AND (author_engg_dept ILIKE %s)"""
             #     values += [f"%{enggfilter}%"]
-                
+        sql += """ORDER BY author_last_upd DESC"""  
         authors = db.querydatafromdatabase(sql, values, cols)
 
         if authors.shape[0]: 
@@ -318,9 +317,11 @@ def authors_loadauthorslist(pathname, searchterm, upfilter, updfilter, enggfilte
                     ) 
                 ] 
             authors['Modify'] = buttons 
-          
-        authors.drop(['authorID'],axis=1,inplace=True) 
-        table = dbc.Table.from_dataframe(authors, striped=True, bordered=True, hover=True, size='sm') 
-        return [table] 
+            
+            authors.drop(['authorID'],axis=1,inplace=True) 
+            table = dbc.Table.from_dataframe(authors, striped=True, bordered=True, hover=True, size='sm') 
+            return [table] 
+        else:
+            return ["No records to display."]
     else: 
         return ["No records to display."]        

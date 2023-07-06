@@ -186,7 +186,7 @@ navbar = dbc.Navbar(
                                             dbc.NavLink(
                                             [html.Div([
                                                 html.Img(src=app.get_asset_url('authors.png'), height="25px", width="25px"),
-                                                html.Span("Authors Management", style={'vertical-align': 'middle','padding-left':'20px'}),
+                                                html.Span("Author Management", style={'vertical-align': 'middle','padding-left':'20px'}),
                                             ]),
                                             ],
                                             href="/author_manage", style=navlink_style_offcanvas),
