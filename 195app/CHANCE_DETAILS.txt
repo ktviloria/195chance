@@ -23,14 +23,17 @@ NEW MODULES in 195app>apps>forms:
 1. form_up_constituent
     FEATURES:
         -add UP Constituent
+        -modify UP Constituent
 
 2. form_upd_unit
     FEATURES:
         -add UPD Unit
+        -modify UPD Unit
 
 3. form_engg_dept
     FEATURES:
         -add UPD Engineering Department
+        -modify UPD Engineering Department
 
 #########
 
