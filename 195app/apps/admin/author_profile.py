@@ -37,6 +37,8 @@ layout= html.Div(
         html.H6("* Indicates required field", style={"color": "#d9534f", "font-style": "italic"}),
         html.Hr(), 
         dbc.Alert('Please supply required fields.', color="danger", id='authorprof_inputs_alert', is_open=False),
+        dbc.Alert('Author being added is a faculty member. Please add in the User Management Module.', color="danger", id='authorprof_facadd_alert', is_open=False),
+        dbc.Alert('Author being modified is a faculty member. Please modify in the User Management Module.', color="danger", id='authorprof_facmodify_alert', is_open=False),
         html.Br(),
         dbc.Row(
             [
@@ -103,26 +105,108 @@ layout= html.Div(
                                 ), 
                             ], 
                             className="mb-3", 
+                        ),         
+                        # UP Affiliation Dropdown
+                        html.Div(
+                            [ 
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                                dbc.Label("UP Affiliation", id = 'authorprof_up_aff_label'), 
+                                                dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"}),
+                                            ],
+                                            width=3
+                                        ),  
+                                        dbc.Col( 
+                                            html.Div( 
+                                                dcc.Dropdown( 
+                                                    options=[
+                                                    {'label': 'UP Baguio', 'value': 'UP Baguio'},
+                                                    {'label': 'UP Cebu', 'value': 'UP Cebu'},
+                                                    {'label': 'UP Diliman', 'value': 'UP Diliman'},
+                                                    {'label': 'UP Los Baños', 'value': 'UP Los Baños'},
+                                                    {'label': 'UP Manila', 'value': 'UP Manila'},
+                                                    {'label': 'UP Mindanao', 'value': 'UP Mindanao'},
+                                                    {'label': 'UP Open University', 'value': 'UP Open University'},
+                                                    {'label': 'UP Visayas', 'value': 'UP Visayas'},
+                                                    {'label': 'Others', 'value': 'Others'},
+                                                    ],
+                                                    id='authorprof_up_aff_dropdown',clearable=True, searchable=True, placeholder="UP Affiliation"
+                                                ),
+                                                className="dash-bootstrap" 
+                                            ), 
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ),
+                                html.Div(
+                                    dbc.Row(
+                                        [
+                                             dbc.Col(
+                                                [
+                                                    dbc.Label("Specify Other Affiliation", id = 'authorprof_up_aff_others_label'), 
+                                                    dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"}),
+                                                ],
+                                                width=3
+                                            ),  
+                                            dbc.Col( 
+                                                dbc.Input( 
+                                                    type="text", id="authorprof_up_aff_others", placeholder="Please specify your affiliation." 
+                                                ),
+                                                width = 9
+                                            ),
+                                        ]
+                                    ),
+                                    id="authorprof_up_aff_others_div"
+                                ),
+                            ],
+                                id = 'authorprof_up_aff_div'
                         ),
-                        # Author Affiliation Dropdown
+                        # UPD Unit Dropdown
                         html.Div(
                             dbc.Row( 
                                 [ 
                                     dbc.Col(
                                         [
-                                            dbc.Label("Author Affiliation", id = 'authorprof_affiliation_label'), 
-                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"}),
+                                            dbc.Label("UP Diliman Unit", id = 'authorprof_upd_unit_label'), 
+                                            # dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"}),
                                         ],
                                         width=3
                                     ),  
                                     dbc.Col( 
                                         html.Div( 
                                             dcc.Dropdown( 
-                                                id='authorprof_affiliation', 
-                                                options =[
-                                                    {'label':'UP', 'value':True},
-                                                    {'label':'Non-UP', 'value':False}
-                                                    ]
+                                                options=[
+                                                    {'label': 'College of Arts and Letters', 'value': 'College of Arts and Letters'},
+                                                    {'label': 'College of Fine Arts', 'value': 'College of Fine Arts'},
+                                                    {'label': 'College of Human Kinetics', 'value': 'College of Human Kinetics'},
+                                                    {'label': 'College of Mass Communication', 'value': 'College of Mass Communication'},
+                                                    {'label': 'College of Music', 'value': 'College of Music'},
+                                                    {'label': 'Asian Institute of Tourism', 'value': 'Asian Institute of Tourism'},
+                                                    {'label': 'Cesar E.A. Virata School of Business', 'value': 'Cesar E.A. Virata School of Business'},
+                                                    {'label': 'School of Economics', 'value': 'School of Economics'},
+                                                    {'label': 'School of Labor and Industrial Relations', 'value': 'School of Labor and Industrial Relations'},
+                                                    {'label': 'National College of Public Administration and Governance', 'value': 'National College of Public Administration and Governance'},
+                                                    {'label': 'School of Urban and Regional Planning', 'value': 'School of Urban and Regional Planning'},
+                                                    {'label': 'Technology Management Center', 'value': 'Technology Management Center'},
+                                                    {'label': 'UPD Extension Program in Pampanga and Olongapo', 'value': 'UPD Extension Program in Pampanga and Olongapo'},
+                                                    {'label': 'School of Archaeology', 'value': 'chool of Archaeology'},
+                                                    {'label': 'College of Architecture', 'value': 'College of Architecture'},
+                                                    {'label': 'College of Engineering', 'value': 'College of Engineering'},
+                                                    {'label': 'College of Science', 'value': 'College of Science'},
+                                                    {'label': 'School of Library and Information Studies', 'value': 'School of Library and Information Studies'},
+                                                    {'label': 'School of Labor and Industrial Relations', 'value': 'School of Labor and Industrial Relations'},
+                                                    {'label': 'School of Statistics', 'value': 'School of Statistics'},
+                                                    {'label': 'Asian Center', 'value': 'Asian Center'},
+                                                    {'label': 'College of Education', 'value': 'College of Education'},
+                                                    {'label': 'Institute of Islamic Studies', 'value': 'Institute of Islamic Studies'},
+                                                    {'label': 'College of Law', 'value': 'College of Law'},
+                                                    {'label': 'College of Social Sciences and Philosophy', 'value': 'College of Social Sciences and Philosophy'},
+                                                    {'label': 'College of Social Work and Community Development', 'value': 'College of Social Work and Community Development'},
+                                                    {'label': 'Others', 'value': 'Others'},
+                                                    ],
+                                                id='authorprof_upd_unit_dropdown', clearable=True, searchable=True, placeholder="UP Affiliation"
                                             ),
                                             className="dash-bootstrap" 
                                         ), 
@@ -130,7 +214,44 @@ layout= html.Div(
                                 ], 
                                 className="mb-3", 
                             ),
-                            id = 'authorprof_affiliation'
+                            id = 'authorprof_upd_unit_div'
+                        ),
+                        # UPD Engineering Department Dropdown
+                        html.Div(
+                            dbc.Row( 
+                                [ 
+                                    dbc.Col(
+                                        [
+                                            dbc.Label("UPD Engineering Department", id = 'authorprof_engg_dept_label'), 
+                                            # dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"}),
+                                        ],
+                                        width=3
+                                    ),  
+                                    dbc.Col( 
+                                        html.Div( 
+                                            dcc.Dropdown( 
+                                                options=[
+                                                    {'label': 'Department of Chemical Engineering', 'value': 'Department of Chemical Engineering'},
+                                                    {'label': 'Institute of Civil Engineering', 'value': 'Institute of Civil Engineering'},
+                                                    {'label': 'Department of Computer Science', 'value': 'Department of Computer Science'},
+                                                    {'label': 'Electrical and Electronics Institute', 'value': 'Electrical and Electronics Institute'},
+                                                    {'label': 'Department of Geodetic Engineering', 'value': 'Department of Geodetic Engineering'},
+                                                    {'label': 'Department of Industrial Engineering and Operations Research', 'value': 'Department of Industrial Engineering and Operations Research'},
+                                                    {'label': 'Department of Mechanical Engineering', 'value': 'Department of Mechanical Engineering'},
+                                                    {'label': 'Department of Mining Metallurgical and Materials Engineering', 'value': 'Department of Mining Metallurgical and Materials Engineering'},
+                                                    {'label': 'Energy Engineering Program', 'value': 'Energy Engineering Program'},
+                                                    {'label': 'Environmental Engineering Program', 'value': 'Environmental Engineering Program'},
+                                                    {'label': 'Others', 'value': 'Others'},
+                                                    ],
+                                                id='authorprof_engg_dept_dropdown',clearable=True, searchable=True, placeholder="UP Affiliation"
+                                            ),
+                                            className="dash-bootstrap" 
+                                        ), 
+                                    ), 
+                                ], 
+                                className="mb-3", 
+                            ),
+                            id = 'authorprof_engg_dept_div'
                         ),
                         # IE Faculty Indication Dropdown
                         html.Div(
@@ -138,7 +259,7 @@ layout= html.Div(
                                 [ 
                                     dbc.Col(
                                         [
-                                            dbc.Label("IE Faculty Indication", id = 'authorprof_iefacind_label'), 
+                                            dbc.Label("UPD IE Faculty Indication", id = 'authorprof_iefacind_label'), 
                                             # dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"}, id='authorprof_iefacind_star'),
                                         ],
                                         width=3
@@ -147,30 +268,31 @@ layout= html.Div(
                                         [
                                             html.Div( 
                                                 dcc.Dropdown( 
-                                                    id='authorprof_iefacind', 
+                                                    id='authorprof_iefacind_dropdown', 
                                                     options = [
-                                                        {'label':'IE Faculty', 'value':True},
-                                                        {'label':'Non-IE Faculty', 'value':False},
+                                                        {'label':'IE Faculty', 'value':'IE Faculty'},
+                                                        {'label':'Inactive IE Faculty', 'value':'Inactive IE Faculty'},
+                                                        {'label':'Non-IE Faculty', 'value':'Non-IE Faculty'},
                                                     ]
                                                 ),
                                                 className="dash-bootstrap",
                                             ), 
-                                            html.Div( 
-                                                dcc.Dropdown( 
-                                                    id='authorprof_noniefacind', 
-                                                    options = [
-                                                        {'label': 'N/A: Non-UP Affiliated', 'value': 'Non-UP'},
-                                                    ]
-                                                ),
-                                                className="dash-bootstrap",
-                                            ), 
+                                            # html.Div( 
+                                            #     dcc.Dropdown( 
+                                            #         id='authorprof_noniefacind', 
+                                            #         options = [
+                                            #             {'label': 'N/A: Non-UP Affiliated', 'value': 'Non-UP'},
+                                            #         ]
+                                            #     ),
+                                            #     className="dash-bootstrap",
+                                            # ), 
                                         ]
                                     ), 
                                 ], 
                                 className="mb-3", 
                             ),
                             id = 'authorprof_iefacind_div'
-                        ),
+                        ), 
                         # Delete Indicator
                         html.Div( 
                             dbc.Row( 
@@ -221,11 +343,10 @@ layout= html.Div(
         Output('authorprof_removerecord_div', 'style')
     ],
     [ 
-        Input('url', 'pathname'),
+        Input('url', 'pathname')
     ], 
     [ 
         State('url', 'search')
-        
     ] 
 )
 def authorprof_load_removerecord(pathname, search): 
@@ -241,47 +362,67 @@ def authorprof_load_removerecord(pathname, search):
          raise PreventUpdate 
     return [to_load, removerecord_div]
 
-# IE Faculty Indicator Style       
+# UP Criteria Style       
 @app.callback(
     [
-        Output('authorprof_iefacind', 'style'), 
-        Output('authorprof_noniefacind', 'style'),
-        Output('authorprof_iefacind_label', 'style'),
-        # Output('authorprof_iefacind_star', 'style'),
+        Output('authorprof_up_aff_others_div', 'style'),
+        Output('authorprof_upd_unit_div', 'style'),
+        Output('authorprof_engg_dept_div', 'style'),
+        Output('authorprof_iefacind_div', 'style'),
     ], 
     [
         Input('url', 'pathname'), 
-        Input('authorprof_affiliation', 'value')
+        Input('authorprof_up_aff_dropdown', 'value'),
+        Input('authorprof_upd_unit_dropdown', 'value'),
+        Input('authorprof_engg_dept_dropdown', 'value'),
     ]
 )
-def facinddiv (pathname, aff): 
+def facinddiv (pathname, up_aff, upd_unit, engg_dept): 
     if pathname == '/author_profile':
-        if aff == '':
-            aff = None
-            facind = None
-            nonfacind = None
-            facindlabel = None
-            # facindstar = None
-        
-        if aff == None:  
-            facind = {'display': 'none'}
-            nonfacind = {'display': 'none'}
-            facindlabel = {'display': 'none'}
-            # facindstar = {'display': 'none'}
-        elif aff == False:
-            facind = {'display': 'none'}
-            nonfacind = None
-            facindlabel = None
-            # facindstar = None
-        else: 
-            facind = None
-            nonfacind = {'display': 'none'}
-            facindlabel = None
-            # facindstar = None
-    else: 
+        if up_aff == '':
+            up_aff = None
+        if up_aff == None:
+            up_aff_others_div = {'display': 'none'}
+            upd_unit_div = {'display': 'none'}
+            engg_dept_div = {'display': 'none'}
+            ie_fac_ind_div = {'display': 'none'}
+        elif up_aff == 'Others':
+            up_aff_others_div = {'display': 'contents'}
+            upd_unit_div = {'display': 'none'}
+            engg_dept_div = {'display': 'none'}
+            ie_fac_ind_div = {'display': 'none'}
+        elif up_aff == 'UP Diliman':
+            up_aff_others_div = {'display': 'none'}
+            upd_unit_div = {'display': 'contents'}
+            engg_dept_div = {'display': 'none'}
+            ie_fac_ind_div = {'display': 'none'}
+            if upd_unit == '':
+                upd_unit = None
+            if upd_unit == None:
+                engg_dept_div = {'display': 'none'}
+                ie_fac_ind_div = {'display': 'none'}
+            elif upd_unit == 'College of Engineering':
+                engg_dept_div = {'display': 'contents'}
+                ie_fac_ind_div = {'display': 'none'}
+                if engg_dept == '':
+                    engg_dept = None
+                if engg_dept == None:
+                    ie_fac_ind_div = {'display': 'none'}
+                elif engg_dept == 'Department of Industrial Engineering and Operations Research':
+                    ie_fac_ind_div = {'display': 'contents'}
+                else:
+                    ie_fac_ind_div = {'display': 'none'}
+            else:
+                engg_dept_div = {'display': 'none'}
+                ie_fac_ind_div = {'display': 'none'}
+        else:
+            up_aff_others_div = {'display': 'none'}
+            upd_unit_div = {'display': 'none'}
+            engg_dept_div = {'display': 'none'}
+            ie_fac_ind_div = {'display': 'none'}
+    else:
         raise PreventUpdate
-    return [facind, nonfacind, facindlabel]
-
+    return(up_aff_others_div, upd_unit_div, engg_dept_div, ie_fac_ind_div)
 
 # Load Details
 @app.callback (
@@ -289,9 +430,12 @@ def facinddiv (pathname, aff):
         Output('authorprof_ln', 'value'),
         Output('authorprof_fn', 'value'), 
         Output('authorprof_mail', 'value'), 
-        Output('authorprof_contact', 'value'),    
-        Output('authorprof_affiliation', 'value'),
-        Output('authorprof_iefacind', 'value'),
+        Output('authorprof_contact', 'value'),
+        Output('authorprof_up_aff_dropdown', 'value'),
+        Output('authorprof_up_aff_others', 'value'),
+        Output('authorprof_upd_unit_dropdown', 'value'),
+        Output('authorprof_engg_dept_dropdown', 'value'),
+        Output('authorprof_iefacind_dropdown', 'value'),    
     ], 
     [
         Input('authorprof_toload', 'modified_timestamp')
@@ -310,18 +454,20 @@ def authorprof_load (timestamp, to_load, search):
                 author_fn,
                 author_mail,
                 author_contact,
-                author_aff,
+                author_up_constituent,
+                author_other_aff,
+                author_upd_unit,
+                author_engg_dept,
                 author_fac_ind
             FROM authors
             WHERE
                 author_delete_ind = false
             """
-            
         parsed = urlparse(search)
         authorprofid = parse_qs(parsed.query)['id'][0]
             
         authorprof_val = []
-        authorprof_colname = ['authorprof_id','authorprof_user_id', 'authorprof_ln', 'authorprof_fn', 'authorprof_mail', 'authorprof_contact', 'authorprof_aff', 'authorprof_fac_ind']
+        authorprof_colname = ['authorprof_id','authorprof_user_id', 'authorprof_ln', 'authorprof_fn', 'authorprof_mail', 'authorprof_contact', 'authorprof_up_aff', 'authorprof_other_aff', 'authorprof_upd_unit', 'authorprof_engg_dept', 'authorprof_iefacind']
         authorprof_df = db.querydatafromdatabase(authorprof_sql, authorprof_val, authorprof_colname)
             
         counter = 0 
@@ -336,19 +482,23 @@ def authorprof_load (timestamp, to_load, search):
         authorprof_fn = authorprof_df['authorprof_fn'][counted]
         authorprof_mail = authorprof_df['authorprof_mail'][counted]
         authorprof_contact = authorprof_df['authorprof_contact'][counted]
-        authorprof_aff = authorprof_df['authorprof_aff'][counted]
-        authorprof_fac_ind = authorprof_df['authorprof_fac_ind'][counted]
+        authorprof_up_aff = authorprof_df['authorprof_up_aff'][counted]
+        authorprof_other_aff = authorprof_df['authorprof_other_aff'][counted]
+        authorprof_upd_unit = authorprof_df['authorprof_upd_unit'][counted]
+        authorprof_engg_dept = authorprof_df['authorprof_engg_dept'][counted]
+        authorprof_iefacind = authorprof_df['authorprof_iefacind'][counted]
     else:
         raise PreventUpdate
-    return [authorprof_ln, authorprof_fn, authorprof_mail, authorprof_contact, authorprof_aff, authorprof_fac_ind]
-
+    return [authorprof_ln, authorprof_fn, authorprof_mail, authorprof_contact, authorprof_up_aff, authorprof_other_aff, authorprof_upd_unit, authorprof_engg_dept, authorprof_iefacind]
 
 # Submit Process 
 @app.callback(
     [
         Output('authorprof_modal', 'is_open'), 
         Output('authorprof_feedback_message', 'children'), 
-        Output('authorprof_inputs_alert', 'is_open'), 
+        Output('authorprof_inputs_alert', 'is_open'),
+        Output('authorprof_facadd_alert', 'is_open'),
+        Output('authorprof_facmodify_alert', 'is_open'), 
         Output('authorprof_closebtn', 'href')
     ], 
     [
@@ -360,119 +510,109 @@ def authorprof_load (timestamp, to_load, search):
         State('authorprof_fn', 'value'),
         State('authorprof_mail', 'value'),
         State('authorprof_contact', 'value'),
+        State('authorprof_up_aff_dropdown', 'value'),
+        State('authorprof_up_aff_others', 'value'),
+        State('authorprof_upd_unit_dropdown', 'value'),
+        State('authorprof_engg_dept_dropdown', 'value'),
+        State('authorprof_iefacind_dropdown', 'value'), 
         State('url', 'search'), 
         State('authorprof_removerecord', 'value'), 
-        State('authorprof_affiliation', 'value'),
-        State('authorprof_iefacind', 'value'),
-        State('authorprof_noniefacind', 'value'),
     ]
 )
 
 def authorprof_submitprocess (submit_btn, close_btn,
                            lastname, firstname, mail, contact,
-                           search, removerecord, 
-                           aff, facind, nonfacind): 
+                           up_aff, other_aff, upd_unit, engg_dept, iefacind,
+                           search, removerecord): 
     ctx = dash.callback_context
     if ctx.triggered: 
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
         openmodal = False 
         feedbackmessage  = ' '
         inputsopenalert = False
+        facaddopenalert = False
+        facmodifyopenalert = False
         okay_href = None 
     else: 
         raise PreventUpdate
         
     if eventid == 'authorprof_submitbtn' and  submit_btn:
-        completename = [lastname, firstname]
-        if not all (completename):
+        required = [lastname, firstname, up_aff]
+        if not all (required):
             inputsopenalert = True
-        # else:
-        #     if aff == True:
-        #         up_required = [aff, facind]
-        #         if not all(up_required): 
-        #             inputsopenalert = True
-        #     elif aff == False:
-        #         nonup_required = [aff, nonfacind]
-        #         if not all(nonup_required): 
-        #             inputsopenalert = True
+
         else: 
-                openmodal = True 
-                parsed = urlparse(search)
-                mode = parse_qs(parsed.query)['mode'][0]
+            parsed = urlparse(search)
+            mode = parse_qs(parsed.query)['mode'][0]
                 
-                author_timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                author_timestamp_time = datetime.datetime.strptime(author_timestamp,'%Y-%m-%d %H:%M:%S')
+            author_timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            author_timestamp_time = datetime.datetime.strptime(author_timestamp,'%Y-%m-%d %H:%M:%S')
 
+            if up_aff == 'Others':
+                if not (other_aff):
+                    inputsopenalert = True
+            else:
                 if mode == "add":
-                    sql_add = """INSERT INTO authors(
-                        author_ln, 
-                        author_fn, 
-                        author_mail,
-                        author_contact,
-                        author_aff,
-                        author_fac_ind,
-                        author_delete_ind, 
-                        author_last_upd
-                    )
-                    VALUES (%s, %s, %s, %s,%s, %s, %s, %s)
-                    """
-                    values_add =[lastname, firstname, mail, contact, aff, facind, False, author_timestamp_time]
-                    db.modifydatabase(sql_add,values_add)
-                    feedbackmessage = f"Author added to DelPHI."
-                    okay_href = '/author_manage'
-                
+                    if iefacind == '' or 'Non-IE Faculty':
+                        openmodal = True 
+                        sql_add = """INSERT INTO authors(
+                            author_ln, 
+                            author_fn, 
+                            author_mail,
+                            author_contact,
+                            author_up_constituent,
+                            author_other_aff,
+                            author_upd_unit,
+                            author_engg_dept,
+                            author_fac_ind,
+                            author_delete_ind, 
+                            author_last_upd
+                        )
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        """
+                        values_add =[lastname, firstname, mail, contact, up_aff, other_aff, upd_unit, engg_dept, iefacind, False, author_timestamp_time]
+                        db.modifydatabase(sql_add,values_add)
+                        feedbackmessage = f"Author added to DelPHI."
+                        okay_href = '/author_manage'
+                    else:
+                        facaddopenalert = True
+                    
                 elif mode == 'edit': 
-                    parsed = urlparse(search)
-                    authorprof_editmodeid = parse_qs(parsed.query)['id'][0]
-                    authorprof_editmodeuserid = parse_qs(parsed.query)['id'][0]
-                    
-                    sql_edit = """UPDATE authors
-                    SET 
-                        author_ln = %s, 
-                        author_fn = %s, 
-                        author_mail = %s,
-                        author_contact = %s, 
-                        author_aff = %s,
-                        author_fac_ind = %s,
-                        author_last_upd = %s,
-                        author_delete_ind = %s
-                    WHERE 
-                        author_id = %s
-                    """
-                    to_delete = bool(removerecord)
-                    values_edit = [lastname, firstname, mail, contact, aff, facind, author_timestamp_time, to_delete, authorprof_editmodeid]
-                    
-                    # if aff == True and facind == True:
-                    sql_author="""SELECT author_user_id FROM authors"""
-                    values_author = []
-                    cols_author = ['id']
-                    fac_user_id = db.querydatafromdatabase(sql_author, values_author, cols_author)
+                    if iefacind == 'IE Faculty' or 'Inactive IE Faculty':
+                        facmodifyopenalert = True
+                    else:
+                        openmodal = True
+                        parsed = urlparse(search)
+                        authorprof_editmodeid = parse_qs(parsed.query)['id'][0]
+                        # authorprof_editmodeuserid = parse_qs(parsed.query)['id'][0]
                         
-                    for i in range(len(fac_user_id['id'])):
-                        if int(fac_user_id['id'][i]) == int(authorprof_editmodeuserid):
-                            sql_fac = """UPDATE faculty
-                                    SET 
-                                        faculty_ln = %s, 
-                                        faculty_fn = %s,
-                                        faculty_mail = %s,
-                                        faculty_contact = %s,
-                                        faculty_delete_ind = %s, 
-                                        faculty_last_upd = %s
-                                    WHERE 
-                                        user_id = %s
-                                    """
-                            to_delete = bool(removerecord)
-                            values_fac = [lastname, firstname, mail, contact, to_delete, author_timestamp_time, authorprof_editmodeuserid]
-                            db.modifydatabase(sql_fac, values_fac)
-                            
-                    db.modifydatabase(sql_edit, values_edit)
+                        sql_edit = """UPDATE authors
+                        SET 
+                            author_ln = %s, 
+                            author_fn = %s, 
+                            author_mail = %s,
+                            author_contact = %s, 
+                            author_up_constituent = %s,
+                            author_other_aff = %s,
+                            author_upd_unit = %s,
+                            author_engg_dept = %s,
+                            author_fac_ind = %s,
+                            author_last_upd = %s,
+                            author_delete_ind = %s
+                        WHERE 
+                            author_id = %s
+                        """
+                        to_delete = bool(removerecord)
+                        values_edit = [lastname, firstname, mail, contact, up_aff, other_aff, upd_unit, engg_dept, iefacind, author_timestamp_time, to_delete, authorprof_editmodeid]
+                                
+                        db.modifydatabase(sql_edit, values_edit)
 
-                    feedbackmessage = "Author information updated."
-                    okay_href = '/author_manage'
+                        feedbackmessage = "Author information updated."
+                        okay_href = '/author_manage'
                 else: 
                     raise PreventUpdate
     elif eventid == 'authorprof_closebtn' and close_btn: 
         pass 
     else: 
         raise PreventUpdate
-    return [openmodal, feedbackmessage, inputsopenalert, okay_href]
+    return [openmodal, feedbackmessage, inputsopenalert, facaddopenalert, facmodifyopenalert, okay_href]

@@ -6,6 +6,7 @@ author_ln varchar(256) not null,
 author_mail varchar(256),
 author_contact varchar(64),
 author_up_constituent varchar(256),
+author_other_aff varchar(256),
 author_upd_unit varchar(256),
 author_engg_dept varchar(256),
 author_fac_ind varchar(256),
@@ -28,28 +29,39 @@ author_user_id >0;
 
 CREATE TABLE up_system(
 cons_id int primary key not null,
-cons_name varchar(256) not null
+cons_name varchar(256) not null,
+cons_delete_ind bool default False
 );
 COPY up_system 
 FROM 'C:\Users\Kyla\Desktop\IEORDproject\195chance\195app\sql tables\upsys.csv'
 DELIMITER ','
 CSV HEADER; 
 
+update up_system
+set cons_delete_ind = default;
 
 CREATE TABLE up_diliman(
 college_id int primary key not null,
-college_name varchar(256) not null
+college_name varchar(256) not null,
+college_delete_ind bool default False
 );
 COPY up_diliman 
 FROM 'C:\Users\Kyla\Desktop\IEORDproject\195chance\195app\sql tables\upd.csv'
 DELIMITER ','
-CSV HEADER; 
+CSV HEADER;
+
+update up_diliman
+set college_delete_ind = default;
 
 CREATE TABLE engineering_departments(
 dept_id int primary key not null,
-dept_name varchar(256) not null
+dept_name varchar(256) not null,
+dept_delete_ind bool default False
 );
 COPY engineering_departments
 FROM 'C:\Users\Kyla\Desktop\IEORDproject\195chance\195app\sql tables\engg.csv'
 DELIMITER ','
 CSV HEADER; 
+
+update engineering_departments
+set dept_delete_ind = default;

@@ -1,9 +1,9 @@
-cons_id,cons_name
-1,UP Baguio
-2,UP Cebu
-3,UP Diliman
-4,UP Los Baños
-5,UP Manila
-6,UP Mindanao
-7,UP Open University
-8,UP Visayas
+cons_id,cons_name,cons_delete_ind
+1,UP Baguio,FALSE
+2,UP Cebu,FALSE
+3,UP Diliman,FALSE
+4,UP Los Baños,FALSE
+5,UP Manila,FALSE
+6,UP Mindanao,FALSE
+7,UP Open University,FALSE
+8,UP Visayas,FALSE

@@ -1,0 +1,54 @@
+NEW MODULES in 195app>apps>admin:
+1. author_manage
+    FEATURES:
+        -list all authors + details
+        -if affiliation == Others, show specific affiliation in parentheses
+        -search filter for authors/email
+        -dropdown filter for UP author_up_constituent
+        -dropdown filter for UPD author_upd_unit (only shown if author_up_constituent == UP Diliman)
+        -dropdown filter for UPD author_engg_dept (only show if author_up_unit == College of Engineering)
+        -button for adding author
+        -button for modifying author
+
+2. author_profile
+    FEATURES:
+        -input/dropwdown fields
+        -dropdown field displays for UPD Unit, UPD Engineering Department, and IEORD Faculty Indication is dependent on prior input for dropdown
+        -restricts author addition/modification to Non-IE faculty (if IEORD faculty indication indicates that author being added/modified is an IE Faculty member, alert with prompt is shown for admin to add/modify in User Management module instead)
+        -required fields: Last Name, First Name, Affiliation (+ specific affiliation if Affiliation = Others)
+
+########
+
+NEW MODULES in 195app>apps>forms:
+1. form_up_constituent
+    FEATURES:
+        -add UP Constituent
+
+2. form_upd_unit
+    FEATURES:
+        -add UPD Unit
+
+3. form_engg_dept
+    FEATURES:
+        -add UPD Engineering Department
+
+#########
+
+UPDATED MODULES:
+1. 195app>index
+    *updated links
+
+2. 195app>apps>commonmodules
+    *added navlink for Author Management
+
+3. 195app>apps>admin>faculty_profile
+    ADDED FEATURES:
+        -if faculty is added, author is also added with same details + specifications of UP constituent, UPD unit, Engineering Department, and IE Faculty Indication
+        -if faculty is edited, author details are updated
+        -if faculty is deleted, author is also deleted
+
+4. 195app>apps>admin>settings
+    -tab for adding/modifying UP constituent
+    -tab for adding/modifying UPD Unit
+    -tab for adding/modifying UPD Engineering Department
+

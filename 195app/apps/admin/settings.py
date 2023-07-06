@@ -32,6 +32,9 @@ layout= html.Div(
                                                 dcc.Tab(label="Faculty Rank", value="tab_ra", style={"color": "#800000"}, selected_style={'font-weight': 'bold', "color": "#800000"}),
                                                 dcc.Tab(label="Faculty Authorship Role", value="tab_ro", style={"color": "#800000"}, selected_style={'font-weight': 'bold', "color": "#800000"}),
                                                 dcc.Tab(label="Faculty Authorship Involvement", value="tab_i", style={"color": "#800000"}, selected_style={'font-weight': 'bold', "color": "#800000"}),
+                                                dcc.Tab(label="UP Constituent", value="tab_up_cons", style={"color": "#800000"}, selected_style={'font-weight': 'bold', "color": "#800000"}),
+                                                dcc.Tab(label="UP Diliman Unit", value="tab_upd_unit", style={"color": "#800000"}, selected_style={'font-weight': 'bold', "color": "#800000"}),
+                                                dcc.Tab(label="UPD Engineering Departments", value="tab_engg_dept", style={"color": "#800000"}, selected_style={'font-weight': 'bold', "color": "#800000"}),
                                             ],
                                             id='tabs',
                                             value='tab_pc',
@@ -273,7 +276,142 @@ def settings_page(pathname, tab):
                 )
             ]
             inv.drop(['subcat_id'],axis=1,inplace=True) 
-            list = dbc.Table.from_dataframe(inv, striped=True, bordered=True, hover=True, size='sm') 
+            list = dbc.Table.from_dataframe(inv, striped=True, bordered=True, hover=True, size='sm')
+
+        elif tab == 'tab_up_cons':
+            #up constituent
+            sql_pc = """SELECT 
+                cons_id,
+                cons_name 
+            from up_system
+            WHERE not cons_delete_ind
+            ORDER BY cons_id
+            """
+            values_pc = []
+            cols_pc = ['cons_id','UP Constituent']
+            cons = db.querydatafromdatabase(sql_pc, values_pc, cols_pc)
+            
+            if cons.shape[0]: 
+                buttons = []
+                for i in cons['cons_id']: 
+                    buttons += [ 
+                        html.Div(
+                            dbc.Button('Edit/Delete', href = f"/form_up_constituent?mode=edit&id={i}", size = 'sm', color = 'secondary'), 
+                            style = {'text-align': 'center'}
+                        )
+                    ]
+                cons['Action'] = buttons 
+
+            add = [
+                html.Div(
+                    [
+                        html.Div( 
+                        [ 
+                            html.H5("UP Constituents"),
+                            html.Hr(),
+                        ],
+                        ),
+                        html.Div(
+                            [
+                                dbc.Button('Add UP Constituent', href= "/form_up_constituent?mode=add",color="danger", id='form_up_cons_submitbtn', className="me-md-2"),
+                            ],
+                            className="d-grid d-md-flex justify-content-md-end",
+                        ),
+                    ]
+                )
+            ]
+            cons.drop(['cons_id'],axis=1,inplace=True) 
+            list = dbc.Table.from_dataframe(cons, striped=True, bordered=True, hover=True, size='sm') 
+            
+        elif tab == 'tab_upd_unit':
+            #upd unit
+            sql_pc = """SELECT 
+                college_id,
+                college_name 
+            from up_diliman
+            WHERE not college_delete_ind
+            ORDER BY college_id
+            """
+            values_pc = []
+            cols_pc = ['college_id','UP Diliman Unit']
+            unit = db.querydatafromdatabase(sql_pc, values_pc, cols_pc)
+            
+            if unit.shape[0]: 
+                buttons = []
+                for i in unit['college_id']: 
+                    buttons += [ 
+                        html.Div(
+                            dbc.Button('Edit/Delete', href = f"/form_upd_unit?mode=edit&id={i}", size = 'sm', color = 'secondary'), 
+                            style = {'text-align': 'center'}
+                        )
+                    ]
+                unit['Action'] = buttons 
+
+            add = [
+                html.Div(
+                    [
+                        html.Div( 
+                        [ 
+                            html.H5("UP Diliman Units"),
+                            html.Hr(),
+                        ],
+                        ),
+                        html.Div(
+                            [
+                                dbc.Button('Add UP Diliman Unit', href= "/form_upd_unit?mode=add",color="danger", id='form_upd_unit_submitbtn', className="me-md-2"),
+                            ],
+                            className="d-grid d-md-flex justify-content-md-end",
+                        ),
+                    ]
+                )
+            ]
+            unit.drop(['college_id'],axis=1,inplace=True) 
+            list = dbc.Table.from_dataframe(unit, striped=True, bordered=True, hover=True, size='sm') 
+
+        elif tab == 'tab_engg_dept':
+            #upd engineering department
+            sql_pc = """SELECT 
+                dept_id,
+                dept_name 
+            from engineering_departments
+            WHERE not dept_delete_ind
+            ORDER BY dept_id
+            """
+            values_pc = []
+            cols_pc = ['dept_id','UP Diliman Engineering Department']
+            enggdept = db.querydatafromdatabase(sql_pc, values_pc, cols_pc)
+            
+            if enggdept.shape[0]: 
+                buttons = []
+                for i in enggdept['dept_id']: 
+                    buttons += [ 
+                        html.Div(
+                            dbc.Button('Edit/Delete', href = f"/form_engg_dept?mode=edit&id={i}", size = 'sm', color = 'secondary'), 
+                            style = {'text-align': 'center'}
+                        )
+                    ]
+                enggdept['Action'] = buttons 
+
+            add = [
+                html.Div(
+                    [
+                        html.Div( 
+                        [ 
+                            html.H5("UP Diliman Engineering Departments"),
+                            html.Hr(),
+                        ],
+                        ),
+                        html.Div(
+                            [
+                                dbc.Button('Add UP Diliman Engineering Department', href= "/form_engg_dept?mode=add",color="danger", id='form_engg_dept_submitbtn', className="me-md-2"),
+                            ],
+                            className="d-grid d-md-flex justify-content-md-end",
+                        ),
+                    ]
+                )
+            ]
+            enggdept.drop(['dept_id'],axis=1,inplace=True) 
+            list = dbc.Table.from_dataframe(enggdept, striped=True, bordered=True, hover=True, size='sm') 
 
         return [add,list]
     else: 

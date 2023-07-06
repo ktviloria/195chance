@@ -672,14 +672,17 @@ def facprof_submitprocess (submit_btn, close_btn, lastname, firstname, middlenam
                 db.modifydatabase(users_sqlcode_add,user_values)
 
                 author_sqlcode_add = """INSERT INTO authors(
+                    author_user_id,
                     author_ln,
                     author_fn,
                     author_mail,
                     author_contact,
-                    author_aff,
+                    author_up_constituent,
+                    author_upd_unit,
+                    author_engg_dept,
                     author_fac_ind
                 )
-                VALUES (%s, %s, %s, %s, %s)            
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)            
                 """
                 
                 # author_sql_max = """SELECT MAX(author_id) from authors
@@ -689,7 +692,7 @@ def facprof_submitprocess (submit_btn, close_btn, lastname, firstname, middlenam
                 # author_max_value_db =  db.querydatafromdatabase(author_sql_max, author_sql_max_val, author_max_colname )
                 # author_max_value = int(author_max_value_db['max'][0]) + 1 
 
-                author_values = [lastname, firstname, mail, contact, 'UP', 'IE Faculty']
+                author_values = [user_max_value, lastname, firstname, mail, contact, 'UP Diliman', 'College of Engineering' , 'Departmeng of Industrial Engineering and Operations Research', 'IE Faculty']
                 db.modifydatabase(author_sqlcode_add, author_values)
             
                 sql = """INSERT INTO faculty(
@@ -752,7 +755,7 @@ def facprof_submitprocess (submit_btn, close_btn, lastname, firstname, middlenam
                     faculty_expert3 = %s,
                     faculty_expert4 = %s,
                     faculty_expert5 = %s, 
-                    faculty_delete_ind = %s, 
+                    faculty_delete_ind =%s, 
                     faculty_active_ind = %s,
                     faculty_last_upd = %s,
                     faculty_modified_by = %s
@@ -762,6 +765,13 @@ def facprof_submitprocess (submit_btn, close_btn, lastname, firstname, middlenam
                 to_delete = bool(facremoverecord)
                 if to_delete == True: 
                     status = False
+                    iefac_to_delete = True
+                    iefacind = ''
+                if to_delete == False:
+                    if status == False:
+                        iefacind = 'Inactive IE Faculty'
+                    if status == True:
+                        iefacind = 'IE Faculty'
                 values = [lastname, firstname, middlename, 
                             suffix, rank, bdate, mail, contact, emp_num, expert1,
                             expert2, expert3, expert4, expert5, to_delete, status, fac_timestamp_time, username_modifier, facprof_editmodeid]
@@ -773,15 +783,14 @@ def facprof_submitprocess (submit_btn, close_btn, lastname, firstname, middlenam
                     author_fn = %s, 
                     author_mail = %s, 
                     author_contact = %s, 
-                    author_aff = %s,
                     author_fac_ind = %s,
                     author_last_upd = %s,
                     author_delete_ind = %s
                 WHERE 
                     author_user_id = %s
                 """
-                to_delete = bool(facremoverecord)
-                values = [lastname, firstname, mail, contact, '', '', fac_timestamp_time, to_delete, facprof_editmodeid]
+                iefac_to_delete = bool(facremoverecord)
+                values = [lastname, firstname, mail, contact, iefacind, fac_timestamp_time, iefac_to_delete, facprof_editmodeid]
                 db.modifydatabase(sql, values)
 
                 feedbackmessage1 = "Faculty information updated."
