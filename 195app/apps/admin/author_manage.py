@@ -42,17 +42,6 @@ layout = html.Div(
                                             [
                                                 dbc.FormText("Filter by UP Affiliation", style={"font-style": "italic"}),
                                                 dcc.Dropdown(
-                                                    options=[
-                                                    {'label': 'UP Baguio', 'value': 'UP Baguio'},
-                                                    {'label': 'UP Cebu', 'value': 'UP Cebu'},
-                                                    {'label': 'UP Diliman', 'value': 'UP Diliman'},
-                                                    {'label': 'UP Los Baños', 'value': 'UP Los Baños'},
-                                                    {'label': 'UP Manila', 'value': 'UP Manila'},
-                                                    {'label': 'UP Mindanao', 'value': 'UP Mindanao'},
-                                                    {'label': 'UP Open University', 'value': 'UP Open University'},
-                                                    {'label': 'UP Visayas', 'value': 'UP Visayas'},
-                                                    {'label': 'Others', 'value': 'Others'},
-                                                    ],
                                                     id='up_aff_dropdown', clearable=True, searchable=True, placeholder="UP Affiliation"),
                                             ],
                                             width = 2,
@@ -62,35 +51,6 @@ layout = html.Div(
                                                 [
                                                     dbc.FormText("Filter by UPD Unit", style={"font-style": "italic"}),
                                                     dcc.Dropdown(
-                                                        options=[
-                                                        {'label': 'College of Arts and Letters', 'value': 'College of Arts and Letters'},
-                                                        {'label': 'College of Fine Arts', 'value': 'College of Fine Arts'},
-                                                        {'label': 'College of Human Kinetics', 'value': 'College of Human Kinetics'},
-                                                        {'label': 'College of Mass Communication', 'value': 'College of Mass Communication'},
-                                                        {'label': 'College of Music', 'value': 'College of Music'},
-                                                        {'label': 'Asian Institute of Tourism', 'value': 'Asian Institute of Tourism'},
-                                                        {'label': 'Cesar E.A. Virata School of Business', 'value': 'Cesar E.A. Virata School of Business'},
-                                                        {'label': 'School of Economics', 'value': 'School of Economics'},
-                                                        {'label': 'School of Labor and Industrial Relations', 'value': 'School of Labor and Industrial Relations'},
-                                                        {'label': 'National College of Public Administration and Governance', 'value': 'National College of Public Administration and Governance'},
-                                                        {'label': 'School of Urban and Regional Planning', 'value': 'School of Urban and Regional Planning'},
-                                                        {'label': 'Technology Management Center', 'value': 'Technology Management Center'},
-                                                        {'label': 'UPD Extension Program in Pampanga and Olongapo', 'value': 'UPD Extension Program in Pampanga and Olongapo'},
-                                                        {'label': 'School of Archaeology', 'value': 'chool of Archaeology'},
-                                                        {'label': 'College of Architecture', 'value': 'College of Architecture'},
-                                                        {'label': 'College of Engineering', 'value': 'College of Engineering'},
-                                                        {'label': 'College of Science', 'value': 'College of Science'},
-                                                        {'label': 'School of Library and Information Studies', 'value': 'School of Library and Information Studies'},
-                                                        {'label': 'School of Labor and Industrial Relations', 'value': 'School of Labor and Industrial Relations'},
-                                                        {'label': 'School of Statistics', 'value': 'School of Statistics'},
-                                                        {'label': 'Asian Center', 'value': 'Asian Center'},
-                                                        {'label': 'College of Education', 'value': 'College of Education'},
-                                                        {'label': 'Institute of Islamic Studies', 'value': 'Institute of Islamic Studies'},
-                                                        {'label': 'College of Law', 'value': 'College of Law'},
-                                                        {'label': 'College of Social Sciences and Philosophy', 'value': 'College of Social Sciences and Philosophy'},
-                                                        {'label': 'College of Social Work and Community Development', 'value': 'College of Social Work and Community Development'},
-                                                        {'label': 'Others', 'value': 'Others'},
-                                                        ],
                                                         id='upd_unit_dropdown', clearable=True, searchable=True, placeholder="UP Diliman Unit"),
                                                 ],
                                                 width = 2,
@@ -102,38 +62,12 @@ layout = html.Div(
                                                 [
                                                     dbc.FormText("Filter by UPD Engineering Department", style={"font-style": "italic"}),
                                                     dcc.Dropdown(
-                                                        options=[
-                                                        {'label': 'Department of Chemical Engineering', 'value': 'Department of Chemical Engineering'},
-                                                        {'label': 'Institute of Civil Engineering', 'value': 'Institute of Civil Engineering'},
-                                                        {'label': 'Department of Computer Science', 'value': 'Department of Computer Science'},
-                                                        {'label': 'Electrical and Electronics Institute', 'value': 'Electrical and Electronics Institute'},
-                                                        {'label': 'Department of Geodetic Engineering', 'value': 'Department of Geodetic Engineering'},
-                                                        {'label': 'Department of Industrial Engineering and Operations Research', 'value': 'Department of Industrial Engineering and Operations Research'},
-                                                        {'label': 'Department of Mechanical Engineering', 'value': 'Department of Mechanical Engineering'},
-                                                        {'label': 'Department of Mining Metallurgical and Materials Engineering', 'value': 'Department of Mining Metallurgical and Materials Engineering'},
-                                                        {'label': 'Energy Engineering Program', 'value': 'Energy Engineering Program'},
-                                                        {'label': 'Environmental Engineering Program', 'value': 'Environmental Engineering Program'},
-                                                        {'label': 'Others', 'value': 'Others'},
-                                                        ],
                                                         id='upd_engg_dropdown', clearable=True, searchable=True, placeholder="Affiliation"),
                                                 ],
                                                 width = 2,
                                             ),
                                             id='authorman_engg_dept_div'
                                         ),
-                                        # dbc.Col(
-                                        #     [
-                                        #         dbc.FormText("Filter by UPD Unit", style={"font-style": "italic"}),
-                                        #         dcc.Dropdown(
-                                        #             options=[
-                                        #             {'label': 'UPD IE Faculty', 'value': True},
-                                        #             {'label': 'Non-UPD IE Faculty', 'value': False},
-                                        #             {'label': 'N/A: Non-UPD Affiliated', 'value': "Non-UP"},
-                                        #             ],
-                                        #             id='ie_faculty_dropdown', clearable=True, placeholder="Faculty Indicator"),
-                                        #     ],
-                                        #     width = 2,
-                                        # ),
                                     ], 
                                     className="mb-3", 
                                 ), 
@@ -170,7 +104,7 @@ def facinddiv (pathname, up_aff, upd_unit):
         if up_aff == None:
             upd_unit_div = {'display': 'none'}
             engg_dept_div = {'display': 'none'}
-        elif up_aff == 'Others':
+        elif up_aff == 'Non-UP':
             upd_unit_div = {'display': 'none'}
             engg_dept_div = {'display': 'none'}
         elif up_aff == 'UP Diliman':
@@ -192,7 +126,76 @@ def facinddiv (pathname, up_aff, upd_unit):
     return(upd_unit_div, engg_dept_div)
 
 
+#UP Constituent filter callback
+@app.callback(
+    [
+        Output('up_aff_dropdown', 'options'),
+    ],
+    [
+        Input('url', 'pathname'),
+    ]
+) 
+def loadcons(pathname):
+    if pathname == '/author_manage':
+        sql_filter1 = """SELECT DISTINCT (cons_name) as label, (cons_name) as value
+            FROM up_system
+            WHERE cons_delete_ind = FALSE
+            ORDER BY value ASC"""
+        values_filter1 = []
+        cols_filter1 = ['label', 'value']
+        fac_filter_included = db.querydatafromdatabase(sql_filter1, values_filter1, cols_filter1)
+        fac_filter_options = fac_filter_included.to_dict('records')
+    else:
+        raise PreventUpdate
+    return [fac_filter_options] 
 
+#UPD Units filter callback
+@app.callback(
+    [
+        Output('upd_unit_dropdown', 'options'),
+    ],
+    [
+        Input('url', 'pathname'),
+    ]
+) 
+def loadupdunits(pathname):
+    if pathname == '/author_manage':
+        sql_filter2 = """SELECT DISTINCT (college_name) as label, (college_name) as value
+            FROM up_diliman
+            WHERE college_delete_ind = FALSE
+            ORDER BY value ASC"""
+        values_filter2 = []
+        cols_filter2 = ['label', 'value']
+        fac_filter_included = db.querydatafromdatabase(sql_filter2, values_filter2, cols_filter2)
+        fac_filter_options = fac_filter_included.to_dict('records')
+    else:
+        raise PreventUpdate
+    return [fac_filter_options] 
+
+#UPD Engineering Dept filter callback
+@app.callback(
+    [
+        Output('engg_dept_dropdown', 'options'),
+    ],
+    [
+        Input('url', 'pathname'),
+    ]
+) 
+def loadenggdept(pathname):
+    if pathname == '/author_manage':
+        sql_filter3 = """SELECT DISTINCT (dept_name) as label, (dept_name) as value
+            FROM upd_engg_depts
+            WHERE dept_delete_ind = FALSE
+            ORDER BY value ASC"""
+        values_filter3 = []
+        cols_filter3 = ['label', 'value']
+        fac_filter_included = db.querydatafromdatabase(sql_filter3, values_filter3, cols_filter3)
+        fac_filter_options = fac_filter_included.to_dict('records')
+    else:
+        raise PreventUpdate
+    return [fac_filter_options] 
+
+# List
 @app.callback( 
     [ 
         Output('authorslist', 'children') 
@@ -213,7 +216,7 @@ def authors_loadauthorslist(pathname, searchterm, upfilter, updfilter, enggfilte
                 author_id,
                 author_ln || ', '|| author_fn as author_full_name,
                 CASE
-                    WHEN author_up_constituent = 'Others' THEN author_up_constituent || ' (' || author_other_aff ||') '
+                    WHEN author_up_constituent = 'Non-UP' THEN author_up_constituent || ' (' || author_other_aff ||') '
                     ELSE author_up_constituent
                 END as specified_aff,
                 author_upd_unit,
@@ -304,7 +307,7 @@ def authors_loadauthorslist(pathname, searchterm, upfilter, updfilter, enggfilte
             # elif enggfilter:
             #     sql += """AND (author_engg_dept ILIKE %s)"""
             #     values += [f"%{enggfilter}%"]
-        sql += """ORDER BY author_last_upd DESC"""  
+        sql += """ORDER BY author_user_id"""  
         authors = db.querydatafromdatabase(sql, values, cols)
 
         if authors.shape[0]: 

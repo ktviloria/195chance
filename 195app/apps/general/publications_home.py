@@ -206,73 +206,40 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
     if pathname == '/publications_home':
         
         if tab == 'tab_a':
-            # sql_a = """SELECT
-            #         a_year,
-            #         publications.pub_id,
-            #         faculty_fn || ' ' || faculty_ln AS faculty_full_name,
-            #         tag_short_title,
-            #         pub_title,
-            #         a_authors,
-            #         authorship_role.a_label,
-            #         authorship_subcategory.a_author_subcat_label,
-            #         To_char(a_date, 'Month YYYY'), 
-            #         a_pub_name, 
-            #         a_publisher, 
-            #         a_doi, 
-            #         a_isxn, 
-            #         a_scopus
-            #     FROM authorships
-            #         INNER JOIN publications on authorships.pub_id = publications.pub_id
-            #         INNER JOIN faculty on publications.user_id = faculty.user_id
-            #         INNER JOIN tags on publications.tag_id = tags.tag_id
-            #         FULL JOIN authorship_role on authorships.authorship_role = authorship_role.a_label_id
-            #         FULL JOIN authorship_subcategory on authorships.authorship_subcategory = authorship_subcategory.a_author_subcat_id
-            #     WHERE
-            #         pub_delete_ind = false
-                
-            #     """
-            # values_a = []
-            # cols_a = ['Year','id', 'Faculty Involved', 'Publication Criteria', 'Title', 'All Authors', 'Involvement', 'Involvement2', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus']
-            sql_a = """SELECT 
-                authorships.a_year,
-                publications.pub_id,
-				string_agg(
-				  CASE
-					WHEN authorship_role.a_label IS NULL THEN faculty_fn || ' ' || faculty_ln
-					ELSE faculty_fn || ' ' || faculty_ln || ' (' || authorship_role.a_label ||') '
-				  END,
-				  ', '
-				) AS combined_values,
+            sql_a = """SELECT  publications.pub_id,
+                a_year,
+				(select string_agg(lead_author_name, ', ')
+				 from pub_lead_authors
+				 where pub_lead_authors.pub_id = publications.pub_id
+				) as lead_authors,
+                publications.pub_title,
                 tags.tag_short_title,
-                pub_title, 
-                a_authors, 
+				(select string_agg(contributing_author_name, ', ')
+				 from pub_contributing_authors
+				 where pub_contributing_authors.pub_id = publications.pub_id
+				) as contributing_authors,
                 To_char(a_date, 'Month YYYY'),
                 a_pub_name, 
                 a_publisher, 
                 a_doi, 
                 a_isxn, 
                 a_scopus, 
-                authorship_subcategory.a_author_subcat_label,
                 to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS') as timestampz,
                 publications.modified_by
 
-                FROM authorships_users
-                INNER JOIN authorships on authorships_users.pub_id = authorships.pub_id
-                LEFT OUTER JOIN faculty on authorships_users.user_id = faculty.user_id
-                INNER JOIN publications on authorships_users.pub_id = publications.pub_id
-                LEFT OUTER JOIN authorship_role on authorships_users.authorship_role = authorship_role.a_label_id
+                FROM authorships
+                INNER JOIN publications on authorships.pub_id = publications.pub_id
+                LEFT OUTER JOIN pub_lead_authors on authorships.a_lead_id = pub_lead_authors.a_lead_id
+				LEFT OUTER JOIN pub_contributing_authors on authorships.a_contributing_id = pub_contributing_authors.a_contributing_id
                 LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
-                LEFT OUTER JOIN authorship_subcategory on authorships.authorship_subcategory = authorship_subcategory.a_author_subcat_id
-                WHERE publications.pub_delete_ind = false 
-                                
+                WHERE publications.pub_delete_ind = false     
                 """
     
             values_a = []
-            cols_a = ['Year','id', 'Faculty Involved', 'Criteria', 'Title', 'All Authors',  'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus',  'Involvement2', 'Last Updated', 'Last Modified By'] 
+            cols_a = ['id', 'Year', 'Lead Author(s)', 'Title', 'Criteria', 'Other Contributing Author(s)', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus',  'Last Updated', 'Last Modified By'] 
             
             sql_a2 = sql_a
-            sql_a2 += """GROUP BY publications.pub_id, authorships.a_year, tags.tag_short_title, authorship_subcategory.a_author_subcat_label,
-                a_authors, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
+            sql_a2 += """GROUP BY publications.pub_id, a_year, tags.tag_short_title, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
                 a_doi, a_isxn, a_scopus, publications.modified_by, to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS')
             ORDER BY authorships.a_year DESC"""
             
@@ -288,22 +255,22 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     values_a += [datefilter_u]
                     if searchterm:
                         sql_a += """ AND (
-                            ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) OR (a_year ILIKE %s)
-                            OR (a_authors ILIKE %s) OR (a_pub_name ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
-                            OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s) OR (tag_short_title ILIKE %s)
-                            OR (authorship_role.a_label ILIKE %s))"""
-                        values_a += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
+                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
+                    OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
+                ) """
+                        values_a += [f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                 if searchterm:
                     sql_a += """ AND (
-                        ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) OR (a_year ILIKE %s)
-                        OR (a_authors ILIKE %s) OR (a_pub_name ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
-                        OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s) OR (tag_short_title ILIKE %s)
-                        OR (authorship_role.a_label ILIKE %s))"""
-                    values_a += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
+                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
+                    OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
+                ) """
+                    values_a += [f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                     if datefilter_u:
                         sql_a += """AND (cast (a_year as int) <= %s)"""
                         values_a += [datefilter_u]
@@ -319,22 +286,22 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     values_a += [datefilter]
                     if searchterm:
                         sql_a += """ AND (
-                            ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) OR (a_year ILIKE %s)
-                            OR (a_authors ILIKE %s) OR (a_pub_name ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
-                            OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s) OR (tag_short_title ILIKE %s)
-                            OR (authorship_role.a_label ILIKE %s))"""
-                        values_a += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
+                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
+                    OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
+                ) """
+                        values_a += [f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                 if searchterm:
                     sql_a += """ AND (
-                        ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) OR (a_year ILIKE %s)
-                        OR (a_authors ILIKE %s) OR (a_pub_name ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
-                        OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s) OR (tag_short_title ILIKE %s)
-                        OR (authorship_role.a_label ILIKE %s))"""
-                    values_a += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
+                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
+                    OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
+                ) """
+                    values_a += [f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                     if datefilter:
                         sql_a += """AND (cast (a_year as int) >= %s)"""
                         values_a += [datefilter]
@@ -344,13 +311,13 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
             
             elif searchterm:
                 sql_a += """ AND (
-                    ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) OR (a_year ILIKE %s)
-                    OR (a_authors ILIKE %s) OR (a_pub_name ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
-                    OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s) OR (tag_short_title ILIKE %s)
-                    OR (authorship_role.a_label ILIKE %s))"""
-                values_a += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                        f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
-                        f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
+                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
+                    OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
+                ) """
+                values_a += [f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                 if datefilter:
                     sql_a += """AND (cast (a_year as int) >= %s)"""
                     values_a += [datefilter]
@@ -370,23 +337,16 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                 sql_a += """"""
                 values_a += []
                 
-            sql_a += """GROUP BY publications.pub_id, authorships.a_year, tags.tag_short_title, authorship_subcategory.a_author_subcat_label,
-                a_authors, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
+            sql_a += """GROUP BY publications.pub_id, a_year, tags.tag_short_title, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
                 a_doi, a_isxn, a_scopus, publications.modified_by, to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS')
             ORDER BY authorships.a_year DESC"""
-            pub_a = db.querydatafromdatabase(sql_a, values_a, cols_a) 
-            
-            
-                
-                
+            pub_a = db.querydatafromdatabase(sql_a, values_a, cols_a)        
             
             modals_a = []
             if pub_a.shape[0]: 
                 buttons_a = [] 
                 # pub_details = []
                 # other_info = []
-                
-                
                 for ids in pub_a['id']: 
                     buttons_a += [
                         html.Div(
@@ -401,11 +361,9 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                 for i in range(len(pub_a2)): 
                     ids = pub_a2['id'][i]
                     pub_title = pub_a2['Title'][i]
-                    pub_faculty_assoc = pub_a2['Faculty Involved'][i]
+                    pub_lead = pub_a2['Lead Author(s)'][i]
                     pub_category = pub_a2['Criteria'][i]
-                    pub_authors = pub_a2['All Authors'][i]
-                    # pub_involvement = pub_a['Involvement'][i]
-                    pub_involvement2 = pub_a2['Involvement2'][i]
+                    pub_contributing = pub_a2['Other Contributing Author(s)'][i]
                     pub_date = pub_a2['Date'][i]
                     pub_publication = pub_a2['Publication'][i]
                     pub_publisher = pub_a2['Publisher'][i]
@@ -424,19 +382,15 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                                             html.Span(f"{pub_title}"), ], id = f"modal_title_{ids}"
                                         ),
                                         html.Div([
-                                            html.Strong("Faculty Involved: "),  
-                                            html.Span(f"{pub_faculty_assoc}"),], id = f"modal_pub_faculty_{ids}"
-                                        ),       
+                                            html.Strong("Lead Author(s): "),
+                                            html.Span(f"{pub_lead}"),], id = f"modal_lead_authors_{ids}"),
                                         html.Div([
                                             html.Strong("Publication Category: "), 
                                             html.Span(f"{pub_category}"),], id = f"modal_pub_category_{ids}"
                                         ), 
                                         html.Div([
-                                            html.Strong("Authors: "),
-                                            html.Span(f"{pub_authors}"),], id = f"modal_authors_{ids}"),
-                                        html.Div([
-                                            html.Strong("With Other UP Faculty: "), 
-                                            html.Span(f"{pub_involvement2}"),], id = f"modal_involvement_{ids}"),
+                                            html.Strong("Other Contributing Author(s): "),
+                                            html.Span(f"{pub_contributing}"),], id = f"modal_contributing_authors_{ids}"),
                                         html.Div([
                                             html.Strong("Date of Publication: "), 
                                             html.Span(f"{pub_date}"),], id = f"modal_date_{ids}"),
@@ -500,7 +454,6 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
             pub_a.drop(['DOI'],axis=1,inplace=True)
             pub_a.drop(['ISXN'],axis=1,inplace=True)
             pub_a.drop(['Scopus'],axis=1,inplace=True)
-            pub_a.drop(['Involvement2'],axis=1,inplace=True)
             
             if pub_a.shape[0]:
                 table_a = dbc.Table.from_dataframe(pub_a, striped=True, bordered=True, hover=True, size='sm', style={"whiteSpace": "pre-line"}) 

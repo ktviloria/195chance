@@ -1,9 +1,10 @@
 cons_id,cons_name,cons_delete_ind
-1,UP Baguio,FALSE
-2,UP Cebu,FALSE
-3,UP Diliman,FALSE
-4,UP Los Baños,FALSE
-5,UP Manila,FALSE
-6,UP Mindanao,FALSE
-7,UP Open University,FALSE
-8,UP Visayas,FALSE
+1,Non-UP,FALSE
+2,UP Baguio,FALSE
+3,UP Cebu,FALSE
+4,UP Diliman,FALSE
+5,UP Los Baños,FALSE
+6,UP Manila,FALSE
+7,UP Mindanao,FALSE
+8,UP Open University,FALSE
+9,UP Visayas,FALSE
