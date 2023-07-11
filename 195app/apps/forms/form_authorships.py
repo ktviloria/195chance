@@ -461,7 +461,8 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
                 where
                     a_lead_id in (SELECT distinct a_lead_id
                                 from pub_lead_authors
-                                where pub_lead_authors.pub_id = authorships.pub_id)
+                                where pub_lead_authors.pub_id = authorships.pub_id
+                                and pub_lead_delete_ind = false)
                     and authorships.pub_id = %s"""
             form_a_lead_val = [int(form_a_id)]
             form_a_lead_cols = ['a_lead_ids']
@@ -477,7 +478,8 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
                 where
                     a_contributing_id in (SELECT distinct a_contributing_id
                                 from pub_contributing_authors
-                                where pub_contributing_authors.pub_id = authorships.pub_id)
+                                where pub_contributing_authors.pub_id = authorships.pub_id
+                                and pub_contributing_delete_ind = false)
                     and authorships.pub_id = %s"""
             form_a_contributing_val = [int(form_a_id)]
             form_a_contributing_cols = ['a_contributing_ids']
@@ -690,7 +692,45 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                         
                         form_a_values_addauthorship_l = [sql_pub_max, a_lead[i], a_date, a_year, a_publisher, a_pubname, a_doi, a_isxn, a_scopus]
                         db.modifydatabase(form_a_sqlcode_add_authorships_l, form_a_values_addauthorship_l)
-                    
+
+                if roles == 'Contributing Author':
+                    for i in range(len(a_contributing)): 
+                        sql_pub_contributing = """INSERT INTO pub_contributing_authors(
+                                pub_id, 
+                                a_contributing_id
+                            )
+                            VALUES (%s, %s)
+                            """
+                        val_pub_contributing = [sql_pub_max, a_contributing[i]]
+                        db.modifydatabase(sql_pub_contributing, val_pub_contributing)
+
+                        sql_pub_contributing_upd ="""update pub_contributing_authors
+                        set
+                        contributing_author_name = (select author_fn || ' ' || author_ln from authors where a_contributing_id=author_id)
+                        where a_contributing_id>0;
+                        """
+                        val_pub_contributing_upd =[]
+                        db.modifydatabase(sql_pub_contributing_upd, val_pub_contributing_upd)
+                        
+                        form_a_sqlcode_add_authorships_l = """INSERT INTO authorships(
+                            pub_id, 
+                            a_contributing_id,
+                            a_date, 
+                            a_year, 
+                            a_publisher, 
+                            a_pub_name, 
+                            a_doi, 
+                            a_isxn, 
+                            a_scopus 
+                        )
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        """
+                        str_to_date = datetime.strptime(a_date, '%Y-%m-%d').date()
+                        a_year = str_to_date.year
+                        
+                        form_a_values_addauthorship_l = [sql_pub_max, a_contributing[i], a_date, a_year, a_publisher, a_pubname, a_doi, a_isxn, a_scopus]
+                        db.modifydatabase(form_a_sqlcode_add_authorships_l, form_a_values_addauthorship_l)
+
                 if roles == 'Lead Author' and roles == 'Contributing Author':
                     for i in range(len(form_a_author_combined)): 
                         sql_pub_author = """INSERT INTO pub_lead_authors(
@@ -843,53 +883,52 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                     a_lead = []
                 if type(a_lead) == int: 
                         a_lead = [a_lead]
+
                 if a_contributing == None: 
                     a_contributing = []
                 if type(a_contributing) == int: 
                         a_contributing = [a_contributing]
-                                
-                if roles == 'Lead Author':
-                    for i in range(len(a_lead)): 
-                        sql_pub_lead1 =  """UPDATE pub_lead_authors
-                        SET
-                            a_lead_id = %s,
-                            pub_lead_delete_ind = %s,
-                        WHERE
-                            pub_id = %s
+                
+                #delete all
+                sql_delete_lead_a = """DELETE FROM pub_lead_authors
+                        WHERE pub_id = %s"""
+                val_delete_lead_a =[int(form_a_editmodeid)]
+                db.modifydatabase(sql_delete_lead_a, val_delete_lead_a)               
+                
+                for i in range(len(a_lead)):
+                    sql_pub_lead = """INSERT INTO pub_lead_authors(pub_id, a_lead_id)
+                        VALUES (%s, %s)
                         """
-                        to_delete = bool(removerecord)
-                        pub_lead_values1 = [a_lead, to_delete, form_a_editmodeid]
-                        db.modifydatabase(sql_pub_lead1, pub_lead_values1)
+                    pub_lead_values = [int(form_a_editmodeid), a_lead[i]]
+                    db.modifydatabase(sql_pub_lead, pub_lead_values) 
 
-                        sql_pub_lead_upd ="""update pub_lead_authors
+                    sql_pub_lead_upd ="""update pub_lead_authors
                         set
                         lead_author_name = (select author_fn || ' ' || author_ln from authors where a_lead_id=author_id)
                         where a_lead_id>0;
                         """
-                        val_pub_lead_upd =[]
-                        db.modifydatabase(sql_pub_lead_upd, val_pub_lead_upd)
+                    val_pub_lead_upd =[]
+                    db.modifydatabase(sql_pub_lead_upd, val_pub_lead_upd)
 
-                        sql_update_authorships_l = """ UPDATE authorships
-                        SET 
-                        a_lead_id = %s, 
-                        a_date = %s, 
-                        a_year= %s, 
-                        a_publisher = %s, 
-                        a_pub_name = %s, 
-                        a_doi = %s, 
-                        a_isxn = %s, 
-                        a_scopus = %s, 
-                        WHERE 
-                            pub_id = %s
+                    sql_update_authorships_l = """ INSERT INTO authorships ( 
+                        pub_id,
+                        a_lead_id,
+                        a_date, 
+                        a_year, 
+                        a_publisher, 
+                        a_pub_name, 
+                        a_doi, 
+                        a_isxn, 
+                        a_scopus
+                        )
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) 
                         """
-                        
-                        str_to_date = datetime.strptime(a_date, '%Y-%m-%d').date()
-                        a_year = str_to_date.year
-                        values_update_authorships_l = [a_lead, a_date, a_year, a_publisher, a_pubname, a_doi, a_isxn, a_scopus, form_a_editmodeid]
-                        db.modifydatabase(sql_update_authorships_l, values_update_authorships_l)
+                    str_to_date = datetime.strptime(a_date, '%Y-%m-%d').date()
+                    a_year = str_to_date.year
+                    values_update_authorships_l = [int(form_a_editmodeid), a_lead[i], a_date, a_year, a_publisher, a_pubname, a_doi, a_isxn, a_scopus]
+                    db.modifydatabase(sql_update_authorships_l, values_update_authorships_l)
                 
-                if roles == 'Contributing Author':
-                    for i in range(len(a_contributing)): 
+                for i in range(len(a_contributing)): 
                         sql_pub_contributing =  """UPDATE pub_contributing_authors
                         SET
                             a_contributing_id = %s,
@@ -927,7 +966,7 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                         str_to_date = datetime.strptime(a_date, '%Y-%m-%d').date()
                         a_year = str_to_date.year
                         values_update_authorships = [a_lead, a_contributing, a_date, a_year, a_publisher, a_pubname, a_doi, a_isxn, a_scopus, form_a_editmodeid]
-                db.modifydatabase(sql_update_authorships, values_update_authorships )
+                        db.modifydatabase(sql_update_authorships, values_update_authorships)
                 feedbackmessage = 'Authorship details updated.'
                 if cuser_id <= 3: 
                     okay_href = '/publications_manage'

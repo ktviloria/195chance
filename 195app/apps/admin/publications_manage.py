@@ -222,7 +222,7 @@ def pubmanage_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u): 
                 LEFT OUTER JOIN pub_lead_authors on authorships.a_lead_id = pub_lead_authors.a_lead_id
 				LEFT OUTER JOIN pub_contributing_authors on authorships.a_contributing_id = pub_contributing_authors.a_contributing_id
                 LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
-                WHERE publications.pub_delete_ind = false 
+                WHERE publications.pub_delete_ind = false
                 """
             values_a = []
             cols_a = ['id', 'Year', 'Lead Author(s)', 'Title', 'Criteria', 'Other Contributing Author(s)', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus',  'Last Updated', 'Last Modified By'] 
