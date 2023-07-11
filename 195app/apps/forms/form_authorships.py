@@ -425,10 +425,6 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
     if onlyloadonce == 1: 
         if to_load == 1: 
             form_a_sql = """ SELECT distinct authorships.pub_id,
-                (select string_agg(lead_author_name, ', ')
-				 from pub_lead_authors
-				 where pub_lead_authors.pub_id = authorships.pub_id
-				) as lead_authors,
                 (select string_agg(contributing_author_name, ', ')
 				 from pub_contributing_authors
 				 where pub_contributing_authors.pub_id = authorships.pub_id
@@ -443,9 +439,8 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
                 authorships.a_scopus
 
                 FROM authorships 
-                    LEFT OUTER JOIN publications on authorships.pub_id = publications.pub_id 
-					LEFT OUTER JOIN pub_lead_authors on authorships.pub_id = pub_lead_authors.pub_id
-					LEFT OUTER JOIN pub_contributing_authors on authorships.pub_id = pub_contributing_authors.pub_id
+                    INNER JOIN publications on authorships.pub_id = publications.pub_id 
+					LEFT OUTER JOIN pub_contributing_authors on publications.pub_id = pub_contributing_authors.pub_id
                 WHERE
                     publications.pub_delete_ind = false and authorships.pub_id = %s 
                 ORDER BY authorships.pub_id
@@ -454,31 +449,51 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
             parsed = urlparse(search)
             form_a_id = parse_qs(parsed.query)['id'][0]
             form_a_val = [int(form_a_id)]
-            form_a_colname = ['form_a_pub_id',  'form_a_tag_id', 'form_a_pub_title',
-                              'form_a_lead', 'form_a_contributing',
+            form_a_colname = ['form_a_pub_id',
+                              'form_a_contributing',
+                              'form_a_pub_title', 'form_a_tag_id',
                               'form_a_date', 'form_a_publisher', 'form_a_pub_name', 'form_a_doi', 'form_a_isxn', 'form_a_scopus']
             form_a_df = db.querydatafromdatabase(form_a_sql,  form_a_val, form_a_colname )
             
-            form_a_lead_sql = """SELECT string_agg(cast(a_lead_id as text), ', ') from pub_lead_authors where pub_id = %s"""
+            form_a_lead_sql = """SELECT distinct a_lead_id
+                from
+                    authorships
+                where
+                    a_lead_id in (SELECT distinct a_lead_id
+                                from pub_lead_authors
+                                where pub_lead_authors.pub_id = authorships.pub_id)
+                    and authorships.pub_id = %s"""
             form_a_lead_val = [int(form_a_id)]
             form_a_lead_cols = ['a_lead_ids']
             form_a_lead_df = db.querydatafromdatabase(form_a_lead_sql, form_a_lead_val, form_a_lead_cols)
-            # author1 = form_a_lead_df['a_lead_ids'][0]
-            # for i in range(len(form_a_lead_df['a_lead_ids'])): 
-            #     author1.append(form_a_lead_df['a_lead_ids'][i])
+            form_a_lead= form_a_lead_df['a_lead_ids'][0]
+            form_a_lead=[]
+            for i in range(len(form_a_lead_df['a_lead_ids'])): 
+                form_a_lead.append(form_a_lead_df['a_lead_ids'][i])
             
-            form_a_contributing_sql = """SELECT string_agg(cast(a_contributing_id as text), ', ') from pub_contributing_authors where pub_id = %s"""
+            form_a_contributing_sql = """SELECT distinct a_contributing_id
+                from
+                    authorships
+                where
+                    a_contributing_id in (SELECT distinct a_contributing_id
+                                from pub_contributing_authors
+                                where pub_contributing_authors.pub_id = authorships.pub_id)
+                    and authorships.pub_id = %s"""
             form_a_contributing_val = [int(form_a_id)]
             form_a_contributing_cols = ['a_contributing_ids']
             form_a_contributing_df = db.querydatafromdatabase(form_a_contributing_sql, form_a_contributing_val, form_a_contributing_cols)
-            # author2 = form_a_contributing_df['a_contributing_ids'][0]
+            
+            if len(form_a_contributing_df) == 0:
+                form_a_contributing = []
+            else:
+                form_a_contributing= form_a_contributing_df['a_contributing_ids'][0]
+                form_a_contributing = []
+                for i in range(len(form_a_contributing_df['a_contributing_ids'])): 
+                    form_a_contributing.append(form_a_contributing_df['a_contributing_ids'][i])
 
-    
             form_a_pub_id = form_a_df['form_a_pub_id'][0]
-            form_a_tag_id = form_a_df['form_a_tag_id'][0]
             form_a_pub_title = form_a_df['form_a_pub_title'][0]
-            form_a_lead= form_a_df['form_a_lead'][0]
-            form_a_contributing= form_a_df['form_a_contributing'][0]
+            form_a_tag_id = form_a_df['form_a_tag_id'][0]
             form_a_date = form_a_df['form_a_date'][0]
             form_a_publisher = form_a_df['form_a_publisher'][0]
             form_a_pub_name = form_a_df['form_a_pub_name'][0]
@@ -488,8 +503,7 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
 
         else: 
             raise PreventUpdate 
-        onlyloadonce += 1
-        
+        onlyloadonce += 1       
         
     else: 
         raise PreventUpdate
@@ -568,8 +582,7 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
             a_isxn, 
             # a_scopus
         ]
-        print ("a_lead: ", a_lead)
-        print("a_contributing: ", a_contributing)
+    
         if (not(a_doi) and not(a_isxn)): 
             DOI_alert = True 
         if (not all(inputs) and not all(inputs2)): 
@@ -632,12 +645,14 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                 if a_lead == None: 
                     a_lead = []
                 if type(a_lead) == int: 
-                        a_lead = [a_lead]
+                    a_lead = [a_lead]
                 if a_contributing == None: 
                     a_contributing = []
                 if type(a_contributing) == int: 
-                        a_contributing = [a_contributing]    
+                    a_contributing = [a_contributing]    
                 
+                form_a_author_combined = a_lead + a_contributing
+
                 if roles == 'Lead Author':
                     for i in range(len(a_lead)): 
                         sql_pub_lead = """INSERT INTO pub_lead_authors(
@@ -676,28 +691,40 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                         form_a_values_addauthorship_l = [sql_pub_max, a_lead[i], a_date, a_year, a_publisher, a_pubname, a_doi, a_isxn, a_scopus]
                         db.modifydatabase(form_a_sqlcode_add_authorships_l, form_a_values_addauthorship_l)
                     
-                if roles == 'Contributing Author':
-                    for i in range(len(a_contributing)): 
-                            sql_pub_contributing = """INSERT INTO pub_contributing_authors(
+                if roles == 'Lead Author' and roles == 'Contributing Author':
+                    for i in range(len(form_a_author_combined)): 
+                        sql_pub_author = """INSERT INTO pub_lead_authors(
                                 pub_id, 
-                                cast (a_contributing_id as int)
+                                a_lead_id
+                            )
+                            VALUES (%s, %s)
+
+                            INSERT INTO pub_contributing_authors(
+                                pub_id, 
+                                a_contributing_id
                             )
                             VALUES (%s, %s)
                             """
-                            val_pub_contributing = [sql_pub_max, a_contributing]
-                            db.modifydatabase(sql_pub_contributing, val_pub_contributing)
-                            
-                            sql_pub_contributing_upd ="""update pub_contributing_authors
+                        val_pub_author = [sql_pub_max, a_lead[i], sql_pub_max, a_contributing[i]]
+                        db.modifydatabase(sql_pub_author, val_pub_author)
+                        
+                        sql_pub_author_upd ="""update pub_lead_authors
+                            set
+                            lead_author_name = (select author_fn || ' ' || author_ln from authors where a_lead_id=author_id)
+                            where a_lead_id>0;
+
+                        update pub_contributing_authors
                             set
                             contributing_author_name = (select author_fn || ' ' || author_ln from authors where a_contributing_id=author_id)
                             where a_contributing_id>0;
-                            """
-                            val_pub_contributing_upd =[]
-                            db.modifydatabase(sql_pub_contributing_upd, val_pub_contributing_upd)
-
-                            form_a_sqlcode_add_authorships_c = """INSERT INTO authorships(
+                        """
+                        val_pub_author_upd =[]
+                        db.modifydatabase(sql_pub_author_upd, val_pub_author_upd)
+                        
+                        form_a_sqlcode_add_authorships_author = """INSERT INTO authorships(
                             pub_id, 
-                            a_contributing_id, 
+                            a_lead_id,
+                            a_contributing_id,
                             a_date, 
                             a_year, 
                             a_publisher, 
@@ -708,11 +735,84 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                         )
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                         """
-                            str_to_date = datetime.strptime(a_date, '%Y-%m-%d').date()
-                            a_year = str_to_date.year
+                        str_to_date = datetime.strptime(a_date, '%Y-%m-%d').date()
+                        a_year = str_to_date.year
                         
-                            form_a_values_addauthorship_c = [sql_pub_max, a_contributing[i], a_date, a_year, a_publisher, a_pubname, a_doi, a_isxn, a_scopus]
-                            db.modifydatabase(form_a_sqlcode_add_authorships_c, form_a_values_addauthorship_c)
+                        form_a_values_addauthorship_author = [sql_pub_max, a_lead[i], a_contributing[i], a_date, a_year, a_publisher, a_pubname, a_doi, a_isxn, a_scopus]
+                        db.modifydatabase(form_a_sqlcode_add_authorships_author, form_a_values_addauthorship_author)
+                    
+                    # for i in range(len(a_lead)): 
+                    #     sql_pub_lead = """INSERT INTO pub_lead_authors(
+                    #             pub_id, 
+                    #             a_lead_id
+                    #         )
+                    #         VALUES (%s, %s)
+                    #         """
+                    #     val_pub_lead = [sql_pub_max, a_lead[i]]
+                    #     db.modifydatabase(sql_pub_lead, val_pub_lead)
+                        
+                    #     sql_pub_lead_upd ="""update pub_lead_authors
+                    #     set
+                    #     lead_author_name = (select author_fn || ' ' || author_ln from authors where a_lead_id=author_id)
+                    #     where a_lead_id>0;
+                    #     """
+                    #     val_pub_lead_upd =[]
+                    #     db.modifydatabase(sql_pub_lead_upd, val_pub_lead_upd)
+                        
+                    #     form_a_sqlcode_add_authorships_l = """INSERT INTO authorships(
+                    #         pub_id, 
+                    #         a_lead_id,
+                    #         a_date, 
+                    #         a_year, 
+                    #         a_publisher, 
+                    #         a_pub_name, 
+                    #         a_doi, 
+                    #         a_isxn, 
+                    #         a_scopus 
+                    #     )
+                    #     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    #     """
+                    #     str_to_date = datetime.strptime(a_date, '%Y-%m-%d').date()
+                    #     a_year = str_to_date.year
+                        
+                    #     form_a_values_addauthorship_l = [sql_pub_max, a_lead[i], a_date, a_year, a_publisher, a_pubname, a_doi, a_isxn, a_scopus]
+                    #     db.modifydatabase(form_a_sqlcode_add_authorships_l, form_a_values_addauthorship_l)
+                    # for i in range(len(a_contributing)): 
+                    #         sql_pub_contributing = """INSERT INTO pub_contributing_authors(
+                    #             pub_id, 
+                    #             cast (a_contributing_id as int)
+                    #         )
+                    #         VALUES (%s, %s)
+                    #         """
+                    #         val_pub_contributing = [sql_pub_max, a_contributing]
+                    #         db.modifydatabase(sql_pub_contributing, val_pub_contributing)
+                            
+                    #         sql_pub_contributing_upd ="""update pub_contributing_authors
+                    #         set
+                    #         contributing_author_name = (select author_fn || ' ' || author_ln from authors where a_contributing_id=author_id)
+                    #         where a_contributing_id>0;
+                    #         """
+                    #         val_pub_contributing_upd =[]
+                    #         db.modifydatabase(sql_pub_contributing_upd, val_pub_contributing_upd)
+
+                    #         form_a_sqlcode_add_authorships_c = """INSERT INTO authorships(
+                    #         pub_id, 
+                    #         a_contributing_id, 
+                    #         a_date, 
+                    #         a_year, 
+                    #         a_publisher, 
+                    #         a_pub_name, 
+                    #         a_doi, 
+                    #         a_isxn, 
+                    #         a_scopus 
+                    #     )
+                    #     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    #     """
+                    #         str_to_date = datetime.strptime(a_date, '%Y-%m-%d').date()
+                    #         a_year = str_to_date.year
+                        
+                    #         form_a_values_addauthorship_c = [sql_pub_max, a_contributing[i], a_date, a_year, a_publisher, a_pubname, a_doi, a_isxn, a_scopus]
+                    #         db.modifydatabase(form_a_sqlcode_add_authorships_c, form_a_values_addauthorship_c)
                 
                 feedbackmessage = 'Authorship entry added to database.'
                 if cuser_id <= 3: 

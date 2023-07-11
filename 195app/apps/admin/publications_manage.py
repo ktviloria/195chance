@@ -89,7 +89,7 @@ layout= html.Div(
                                 #search filter
                                 dbc.Col(
                                     [
-                                    dbc.FormText("Search faculty, criteria, title, or any keyword on table", style = {"font-style": "italic", 'font-size':'13px'}), 
+                                    dbc.FormText("Search faculty, author, title, or any keyword on table", style = {"font-style": "italic", 'font-size':'13px'}), 
                                     dbc.Input(type="text", id="pubman_filter", placeholder="Enter Keyword"),
                                     ],
                                     style={'min-width': '22%', 'padding-left': '0.5rem', 'padding-right': '0.5rem'}
