@@ -276,7 +276,7 @@ def mypub_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u,  curr
 
                 """
             values_a = [f"{currentuserid}"]
-            cols_a = ['id', 'Year', 'Co-Lead Author(s)', 'Title', 'Criteria', 'Other Contributing Author(s)', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus',  'Last Updated', 'Last Modified By']
+            cols_a = ['id', 'Year', 'Lead Author(s)', 'Title', 'Criteria', 'Other Contributing Author(s)', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus',  'Last Updated', 'Last Modified By']
             
             #fix additivity of searchterms and filters
             if datefilter:

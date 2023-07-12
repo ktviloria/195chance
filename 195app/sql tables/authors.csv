@@ -89,22 +89,22 @@ author_id,author_user_id,author_fn,author_ln,author_mail,author_contact,author_u
 88,,N.,Marinas,,,Others,,,,,,FALSE
 89,,S.,Matthews,,,Others,,,,,,FALSE
 90,,J. S.,Matuba,,,Others,,,,,,FALSE
-91,,J.,Medina,,,Others,,,,,,FALSE
-92,,A. G.,Mercado,,,Others,,,,,,FALSE
-93,,J. J.,Michalek,,,Others,,,,,,FALSE
-94,,I. V.,Mirasol,,,Others,,,,,,FALSE
-95,,M. A.,Naguit,,,Others,,,,,,FALSE
-96,,C.,Novabos,,,Others,,,,,,FALSE
-97,,C.,Ocampo,,,Others,,,,,,FALSE
-98,,J. A.,Olalo,,,Others,,,,,,FALSE
-99,,A.,Oleta,,,Others,,,,,,FALSE
-100,,M. J.,Orata,,,Others,,,,,,FALSE
-101,,A.,Palma,,,Others,,,,,,FALSE
-102,,B.,Patterson,,,Others,,,,,,FALSE
-103,,R. P.,Payyanadan,,,Others,,,,,,FALSE
-104,,E. J.,Perez,,,Others,,,,,,FALSE
-105,,W.,Pleto,,,Others,,,,,,FALSE
-106,,A.,Portus,,,Others,,,,,,FALSE
+91,,K.,Medel,,,Others,,,,,,FALSE
+92,,J.,Medina,,,Others,,,,,,FALSE
+93,,A. G.,Mercado,,,Others,,,,,,FALSE
+94,,J. J.,Michalek,,,Others,,,,,,FALSE
+95,,I. V.,Mirasol,,,Others,,,,,,FALSE
+96,,M. A.,Naguit,,,Others,,,,,,FALSE
+97,,C.,Novabos,,,Others,,,,,,FALSE
+98,,C.,Ocampo,,,Others,,,,,,FALSE
+99,,J. A.,Olalo,,,Others,,,,,,FALSE
+100,,A.,Oleta,,,Others,,,,,,FALSE
+101,,M. J.,Orata,,,Others,,,,,,FALSE
+102,,A.,Palma,,,Others,,,,,,FALSE
+103,,B.,Patterson,,,Others,,,,,,FALSE
+104,,R. P.,Payyanadan,,,Others,,,,,,FALSE
+105,,E. J.,Perez,,,Others,,,,,,FALSE
+106,,W.,Pleto,,,Others,,,,,,FALSE
 107,,A.,Portus,,,Others,,,,,,FALSE
 108,,L.,Quilantang,,,Others,,,,,,FALSE
 109,,N.,Rasco,,,Others,,,,,,FALSE
@@ -115,47 +115,48 @@ author_id,author_user_id,author_fn,author_ln,author_mail,author_contact,author_u
 114,,L.D.,Revilla,,,Others,,,,,,FALSE
 115,,J. A.,Revilla,,,Others,,,,,,FALSE
 116,,K.,Reyes,,,Others,,,,,,FALSE
-117,,V. F.,Reyes,,,Others,,,,,,FALSE
-118,,M. M.,Rivera,,,Others,,,,,,FALSE
-119,,K.,Robles,,,Others,,,,,,FALSE
-120,,E. Z.,Rustico,,,Others,,,,,,FALSE
-121,,E. Z.,Rustico Jr.,,,Others,,,,,,FALSE
-122,,P.,Samoza,,,Others,,,,,,FALSE
-123,,C. A. S.,San Miguel,,,Others,,,,,,FALSE
-124,,N.,Sanchez,,,Others,,,,,,FALSE
-125,,K.,Santos,,,Others,,,,,,FALSE
-126,,K.,Sedilla,,,Others,,,,,,FALSE
-127,,D.,Shunk,,,Others,,,,,,FALSE
-128,,N.,Simon,,,Others,,,,,,FALSE
-129,,M.,Soares,,,Others,,,,,,FALSE
-130,,R. S.,Soriano,,,Others,,,,,,FALSE
-131,,J.,Stamm,,,Others,,,,,,FALSE
-132,,D. M.,Sua-an,,,Others,,,,,,FALSE
-133,,J.,Sugay,,,Others,,,,,,FALSE
-134,,K. F.,Tabanda,,,Others,,,,,,FALSE
-135,,J.,Tantuco,,,Others,,,,,,FALSE
-136,,J.,Trinidad,,,Others,,,,,,FALSE
-137,,A.,Weis,,,Others,,,,,,FALSE
-138,,J. R.,Wirthlin,,,Others,,,,,,FALSE
-139,,K.,Wood,,,Others,,,,,,FALSE
-140,,D.,Worger,,,Others,,,,,,FALSE
-141,,T.,Wu,,,Others,,,,,,FALSE
-142,,T.,Yukcel,,,Others,,,,,,FALSE
-143,,L. C.,Yupingkun,,,Others,,,,,,FALSE
-144,4,Benette,Custodio,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-145,5,Lorelie,Grepo,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-146,6,Mili-Ann,Tamayao,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-147,7,Iris Ann,Martinez,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-148,8,Erickson,Llaguno,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-149,9,Eugene Rex,Jalao,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-150,10,Lowell,Lorenzo,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-151,11,Virginia,Soriano,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-152,12,Aura,Matias,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-153,13,Adeline,Pacia,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-154,14,Joanna,Resurreccion,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-155,15,Simon Anthony,Lorenzo,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-156,16,Nikole Andrei Louise,Mallare,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-157,17,Carlo Angelo,Sonday,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-158,18,Raymond Freth,Lagria,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-159,19,Lizabeth Ann,Franco,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-160,20,Pierre Allen,Villena,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+117,,S.,Reyes,,,Others,,,,,,FALSE
+118,,V. F.,Reyes,,,Others,,,,,,FALSE
+119,,M. M.,Rivera,,,Others,,,,,,FALSE
+120,,K.,Robles,,,Others,,,,,,FALSE
+121,,E. Z.,Rustico,,,Others,,,,,,FALSE
+122,,E. Z.,Rustico Jr.,,,Others,,,,,,FALSE
+123,,P.,Samoza,,,Others,,,,,,FALSE
+124,,C. A. S.,San Miguel,,,Others,,,,,,FALSE
+125,,N.,Sanchez,,,Others,,,,,,FALSE
+126,,K.,Santos,,,Others,,,,,,FALSE
+127,,K.,Sedilla,,,Others,,,,,,FALSE
+128,,D.,Shunk,,,Others,,,,,,FALSE
+129,,N.,Simon,,,Others,,,,,,FALSE
+130,,M.,Soares,,,Others,,,,,,FALSE
+131,,R. S.,Soriano,,,Others,,,,,,FALSE
+132,,J.,Stamm,,,Others,,,,,,FALSE
+133,,D. M.,Sua-an,,,Others,,,,,,FALSE
+134,,J.,Sugay,,,Others,,,,,,FALSE
+135,,K. F.,Tabanda,,,Others,,,,,,FALSE
+136,,J.,Tantuco,,,Others,,,,,,FALSE
+137,,J.,Trinidad,,,Others,,,,,,FALSE
+138,,A.,Weis,,,Others,,,,,,FALSE
+139,,J. R.,Wirthlin,,,Others,,,,,,FALSE
+140,,K.,Wood,,,Others,,,,,,FALSE
+141,,D.,Worger,,,Others,,,,,,FALSE
+142,,T.,Wu,,,Others,,,,,,FALSE
+143,,T.,Yukcel,,,Others,,,,,,FALSE
+144,,L. C.,Yupingkun,,,Others,,,,,,FALSE
+145,4,Benette,Custodio,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+146,5,Lorelie,Grepo,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+147,6,Mili-Ann,Tamayao,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+148,7,Iris Ann,Martinez,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+149,8,Erickson,Llaguno,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+150,9,Eugene Rex,Jalao,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+151,10,Lowell,Lorenzo,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+152,11,Virginia,Soriano,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+153,12,Aura,Matias,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+154,13,Adeline,Pacia,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+155,14,Joanna,Resurreccion,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+156,15,Simon Anthony,Lorenzo,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+157,16,Nikole Andrei Louise,Mallare,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+158,17,Carlo Angelo,Sonday,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+159,18,Raymond Freth,Lagria,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+160,19,Lizabeth Ann,Franco,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+161,20,Pierre Allen,Villena,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
