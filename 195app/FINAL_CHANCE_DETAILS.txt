@@ -1,3 +1,6 @@
+
+##########
+
 NEW MODULES in 195app>apps>admin:
 1. author_manage
     FEATURES:
@@ -16,24 +19,6 @@ NEW MODULES in 195app>apps>admin:
         -dropdown field displays for UPD Unit, UPD Engineering Department, and IEORD Faculty Indication is dependent on prior input for dropdown
         -restricts author addition/modification to Non-IE faculty (if IEORD faculty indication indicates that author being added/modified is an IE Faculty member, alert with prompt is shown for admin to add/modify in User Management module instead)
         -required fields: Last Name, First Name, Affiliation (+ specific affiliation if Affiliation = Others)
-
-########
-
-NEW MODULES in 195app>apps>forms:
-1. form_up_constituent
-    FEATURES:
-        -add UP Constituent
-        -modify UP Constituent
-
-2. form_upd_unit
-    FEATURES:
-        -add UPD Unit
-        -modify UPD Unit
-
-3. form_engg_dept
-    FEATURES:
-        -add UPD Engineering Department
-        -modify UPD Engineering Department
 
 #########
 
@@ -54,4 +39,60 @@ UPDATED MODULES:
     -tab for adding/modifying UP constituent
     -tab for adding/modifying UPD Unit
     -tab for adding/modifying UPD Engineering Department
+
+5. 195app>apps>forms>form_authorships
+    -changed layout
+    -changed callback
+    ADDED FEATURES:
+        -lead author can be selected from all authors (author_id)
+            -lead author can be determined as faculty: author_user_id=user_id where user_id>3
+        -contributing author can be selected from all authors (author_id)
+        -alert when lead author=contributing author
+    ***FINISHED:
+        -callbacks for lead authors
+    ***TO BE WORKED ON:
+        -callbacks for contributing authors
+
+6. 195app>apps>general>publications_home
+    -updated table to reflect changes in database
+    ***FINISHED:
+        -filters
+    ***TO BE WORKED ON:
+        -modal callbacks
+
+7. 195app>apps>general>faculty_details
+    -updated table to reflect changes in database
+    ***FINISHED:
+        -filters
+    ***TO BE WORKED ON:
+        -modal callbacks
+
+8. 195app>apps>admin>publications_manage
+    -updated table to reflect changes in database
+    ***FINISHED:
+        -filters
+
+9. 195app>apps>faculty>my_publications
+    -updated table to reflect changes in database
+    ***FINISHED:
+        -filters
+
+
+########
+
+NEW MODULES in 195app>apps>forms:
+1. form_up_constituent
+    FEATURES:
+        -add UP Constituent
+        -modify UP Constituent
+
+2. form_upd_unit
+    FEATURES:
+        -add UPD Unit
+        -modify UPD Unit
+
+3. form_engg_dept
+    FEATURES:
+        -add UPD Engineering Department
+        -modify UPD Engineering Department
 
