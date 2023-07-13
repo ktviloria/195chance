@@ -134,7 +134,7 @@ def form_engg_dept_load (timestamp, to_load, search):
     if to_load == 1: 
         form_engg_dept = """SELECT
         dept_id, dept_name
-        FROM engineering_departments
+        FROM upd_engg_depts
         ORDER BY dept_id
         """
         
@@ -202,14 +202,14 @@ def form_engg_dept_submit (submit_btn, close_btn, title,search, removerecord):
             mode = parse_qs(parsed.query)['mode'][0]
             
             if mode == 'add': 
-                sql_max_inquiry = """SELECT MAX(dept_id) from engineering_departments
+                sql_max_inquiry = """SELECT MAX(dept_id) from upd_engg_depts
                 """
                 sql_max_val = []
                 max_colname = ['max']
                 engg_dept_max_db = db.querydatafromdatabase(sql_max_inquiry, sql_max_val, max_colname)
                 engg_dept_max = int(engg_dept_max_db['max'][0]) + 1 
                 
-                form_engg_dept_sql = """INSERT INTO engineering_departments(
+                form_engg_dept_sql = """INSERT INTO upd_engg_depts(
                     dept_id, 
                     dept_name
                 )
@@ -226,7 +226,7 @@ def form_engg_dept_submit (submit_btn, close_btn, title,search, removerecord):
                 parsed = urlparse(search)
                 form_engg_dept_editmodeid = parse_qs(parsed.query)['id'][0]
                 
-                sql_update_engg_dept = """UPDATE engineering_departments
+                sql_update_engg_dept = """UPDATE upd_engg_depts
                 SET 
                     dept_name = %s, 
                     dept_delete_ind = %s 

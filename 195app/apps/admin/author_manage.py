@@ -125,7 +125,6 @@ def facinddiv (pathname, up_aff, upd_unit):
         raise PreventUpdate
     return(upd_unit_div, engg_dept_div)
 
-
 #UP Constituent filter callback
 @app.callback(
     [
@@ -175,7 +174,7 @@ def loadupdunits(pathname):
 #UPD Engineering Dept filter callback
 @app.callback(
     [
-        Output('engg_dept_dropdown', 'options'),
+        Output('upd_engg_dropdown', 'options'),
     ],
     [
         Input('url', 'pathname'),

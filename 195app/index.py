@@ -13,7 +13,7 @@ from apps import login
 from apps.admin import dashboard, faculty_manage, faculty_profile, publications_manage, settings, reports, author_manage, author_profile
 from apps.faculty import edit_my_profile, my_profile, my_publications
 from apps.general import faculty_details, faculty_home, home, publications_home
-from apps.forms import edit_password, form_authorships, form_presentations, form_projects, form_others, form_criteria, form_facrank, form_involvement, form_role, edit_username, form_presentations_copy, form_up_constituent, form_upd_unit, form_engg_dept
+from apps.forms import edit_password, form_authorships, form_presentations, form_projects, form_others, form_criteria, form_facrank, form_involvement, form_role, edit_username, form_presentations_copy, form_up_constituent, form_upd_engg_dept, form_upd_unit
 
 CONTENT_STYLE = { 
  "margin-left": "1em", 
@@ -49,6 +49,7 @@ app.layout = html.Div(
         Input('url', 'pathname') 
     ],
     [ 
+
         State('sessionlogout', 'data'), 
         State('currentuserid', 'data'),
         State('currentrole', 'data')
@@ -134,7 +135,7 @@ def displaypage(pathname,
             elif pathname == '/form_upd_unit':
                 returnlayout = form_upd_unit.layout
             elif pathname == '/form_engg_dept':
-                returnlayout = form_engg_dept.layout
+                returnlayout = form_upd_engg_dept.layout
 
 
             elif pathname == '/form_presentations_copy':

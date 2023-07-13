@@ -41,7 +41,7 @@ layout= html.Div(
         # General pub info needed
         html.Div(
             [
-                #Faculty involved
+                #Authors involved
                 dbc.Row( 
                     [ 
                         dbc.Col(
@@ -328,14 +328,15 @@ def form_a_load_removerecord(pathname, search):
 def form_a_load_dropdown(pathname, lead, contributing, currentuserid): 
     if pathname == '/form_authorships': 
         sql_lead_author = """ SELECT
-            DISTINCT (author_fn ||' '|| author_ln) as label, author_id as value
+            DISTINCT (author_fn ||' '|| author_ln) as label, author_id as value,
+			author_user_id
             from authors
             WHERE not author_delete_ind
-            ORDER BY value DESC
+				ORDER BY authors.author_user_id 
         """
         values_lead_author = []
         
-        cols_lead_author = ['label', 'value']
+        cols_lead_author = ['label', 'value', 'faculty_ind']
         lead_author_involved = db.querydatafromdatabase(sql_lead_author, values_lead_author, cols_lead_author)
 
         lead_author_opts = lead_author_involved.to_dict('records')
@@ -425,6 +426,10 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
     if onlyloadonce == 1: 
         if to_load == 1: 
             form_a_sql = """ SELECT distinct authorships.pub_id,
+				(select string_agg(lead_author_name, ', ')
+				 from pub_lead_authors
+				 where pub_lead_authors.pub_id = authorships.pub_id
+				) as lead_authors, 
                 (select string_agg(contributing_author_name, ', ')
 				 from pub_contributing_authors
 				 where pub_contributing_authors.pub_id = authorships.pub_id
@@ -440,9 +445,10 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
 
                 FROM authorships 
                     INNER JOIN publications on authorships.pub_id = publications.pub_id 
+					LEFT OUTER JOIN pub_lead_authors on publications.pub_id = pub_lead_authors.pub_id
 					LEFT OUTER JOIN pub_contributing_authors on publications.pub_id = pub_contributing_authors.pub_id
                 WHERE
-                    publications.pub_delete_ind = false and authorships.pub_id = %s 
+                    publications.pub_delete_ind = false and authorships.pub_id = %s
                 ORDER BY authorships.pub_id
             """
         
@@ -450,7 +456,7 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
             form_a_id = parse_qs(parsed.query)['id'][0]
             form_a_val = [int(form_a_id)]
             form_a_colname = ['form_a_pub_id',
-                              'form_a_contributing',
+                              'form_a_lead', 'form_a_contributing',
                               'form_a_pub_title', 'form_a_tag_id',
                               'form_a_date', 'form_a_publisher', 'form_a_pub_name', 'form_a_doi', 'form_a_isxn', 'form_a_scopus']
             form_a_df = db.querydatafromdatabase(form_a_sql,  form_a_val, form_a_colname )
@@ -461,8 +467,7 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
                 where
                     a_lead_id in (SELECT distinct a_lead_id
                                 from pub_lead_authors
-                                where pub_lead_authors.pub_id = authorships.pub_id
-                                and pub_lead_delete_ind = false)
+                                where pub_lead_authors.pub_id = authorships.pub_id)
                     and authorships.pub_id = %s"""
             form_a_lead_val = [int(form_a_id)]
             form_a_lead_cols = ['a_lead_ids']
@@ -478,8 +483,7 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
                 where
                     a_contributing_id in (SELECT distinct a_contributing_id
                                 from pub_contributing_authors
-                                where pub_contributing_authors.pub_id = authorships.pub_id
-                                and pub_contributing_delete_ind = false)
+                                where pub_contributing_authors.pub_id = authorships.pub_id)
                     and authorships.pub_id = %s"""
             form_a_contributing_val = [int(form_a_id)]
             form_a_contributing_cols = ['a_contributing_ids']
@@ -583,9 +587,8 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
         elif (not(a_doi) and not(a_isxn)): 
             DOI_alert = True 
         elif a_contributing:
-            for a_lead in a_contributing:
                 for a_contributing in a_contributing:
-                    if a_lead == a_contributing:
+                    if a_contributing in a_lead:
                         authoralert = True
         else:
             openmodal = True  
@@ -631,10 +634,6 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                 form_a_values_addpub = [sql_pub_max, a_tag, a_title, False, a_timestamp_time, a_username_modifier]
                 db.modifydatabase(form_a_sqlcode_add_publications, form_a_values_addpub)
                 
-                #LEAD AUTHOR ADD
-
-                if a_lead == None: 
-                    a_lead = []
                 if type(a_lead) == int: 
                     a_lead = [a_lead]
 
@@ -665,6 +664,14 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                     val_pub_lead_upd = []
                     db.modifydatabase(sql_pub_lead_upd, val_pub_lead_upd)
 
+                #     form_a_sqlcode_upd_publications = """UPDATE publications
+                #         SET
+                #         user_id = (SELECT author_user_id FROM authors WHERE author_user_id=user_id)
+                #         WHERE pub_id > 0;
+                # """ 
+                #     form_a_values_updpub = []
+                #     db.modifydatabase(form_a_sqlcode_upd_publications, form_a_values_updpub)
+
                     form_a_sqlcode_add_authorships_l = """INSERT INTO authorships(
                         pub_id, 
                         a_lead_id,
@@ -683,6 +690,23 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
 
                     form_a_values_addauthorship_l = [sql_pub_max, a_lead[i], a_date, a_year, a_publisher, a_pubname, a_doi, a_isxn, a_scopus]
                     db.modifydatabase(form_a_sqlcode_add_authorships_l, form_a_values_addauthorship_l)
+                    
+#                     sql_check = """select publications.pub_id, authors.author_user_id, publications.user_id
+# from authors, publications
+# where authors.author_user_id = publications.user_id and publications.tag_id <=7
+# order by pub_id"""
+#                     form_a_sqlcode_upd_publications = """UPDATE publications
+#                         SET
+#                         user_id = (select author_user_id
+#                             from authors
+#                             where author_id in (select publications.pub_id
+#                                 from authorships
+#                                 inner join publications on authorships.pub_id = publications.pub_id)
+#                                 where publications.pub_id = authorships.pub_id))
+#                         WHERE pub_id > 0;
+#                 """ 
+#                     form_a_values_updpub = []
+#                     db.modifydatabase(form_a_sqlcode_upd_publications, form_a_values_updpub)
 
                 # CONTRIBUTING AUTHOR ADD
 
@@ -916,7 +940,7 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                         WHERE pub_id = %s"""
                 val_delete_lead_a =[int(form_a_editmodeid)]
                 db.modifydatabase(sql_delete_lead_a, val_delete_lead_a)               
-                #add all new lead
+                #re-add pub w updated lead
                 for i in range(len(a_lead)):
                     sql_pub_lead = """INSERT INTO pub_lead_authors(pub_id, a_lead_id)
                         VALUES (%s, %s)

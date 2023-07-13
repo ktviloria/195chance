@@ -1,91 +1,134 @@
-pub_id,p_authors,p_pres_year,p_conf,p_loc,p_date_range,p_start_date,p_end_date,p_add_info
-6,"Santos, K. and Grepo, L.",2015,6th AHFE Conference,"Las Vegas, NV","July 27-30, 2015","July 27, 2015","July 30, 2015",
-7,"Custodio, B.",2016,PCA Colloqium,"UPD Quezon City, Philippines","November 7-11, 2016","November 7, 2016","November 11, 2016",
-8,"Custodio, B.",2018,PCA Colloqium,"UPD Quezon City, Philippines","November 12, 2018","November 12, 2018","November 12, 2018",
-9,"Tamayao,M.M.",2017,"ISIE-ISSST 2017: Science in Support of Sustainable and Resilient Communities, ","Chicago, IL, USA. ","June 25-29, 2017","June 25, 2017","June 29, 2017",
-10,"Tamayao,M.M.",2017,COE PCA Colloqium,"UPD Quezon City, Philippines","November 13-17, 2017","November 13, 2017","November 17, 2017",
-113,"Custodio, B., Matias, A., and Soriano, V. ",2016,COE PCA Colloqium,"UPD Quezon City, Philippines","November 7-11, 2016","November 7, 2016","November 11, 2016","Advances in Safety Management and Human Factors, Advances in Intelligent Systems and Computing 491"
-114,"Custodio, B.",2017,The 2nd Asian Conference on Ergonomics and Design 2017,"Tsudanuma Campus, Nihon University, Chiba, Japan ","June 1-4, 2017","June 1, 2017","June 4, 2017","The Japanese Journal of Ergonomics, Vol. 53, Issue Supplement 2"
-115,"Custodio, B.",2017,PCA Colloquim,"UPD Quezon City, Philippines","November 13-17, 2017","November 13, 2017","November 17, 2017",
-116,"Resurreccion, J.Z., Paningit, E.C., and Santos, J.R.",2014,22nd International Input-output Conference,"Lisbon, Portugal","July 14-18, 2014","July 14, 2014","July 18, 2014",
-117,"Resurreccion, J.Z., and Paningit, E.C.",2014,7th ASEAN Environmental Engineering Conference,"Puerto Princesa, Palawan, Philippines","November 21-22, 2014","November 21, 2014","November 22, 2014",
-118,"Resurreccion, J.Z., Paningit, E.C., and Santos, J.R.",2015,4th World Risk Congress,"Singapore, Singapore","July 19-22, 2015","July 19, 2015","July 22, 2015",
-119,"Resurreccion, J.Z., and Santos, J.R.",2015,Society of Risk Analysis Annual Meeting,"Arlington, Virginia, United States of America","December 6-10, 2015","December 6, 2015","December 10, 2015",
-120,"Magpili, L.M., Resurreccion, J.Z., and Blanco, A.C. ",2016,Institute of Industrial and Systems Engineers Annual Conference and Expo,"Anaheim, California, United States of America","May 21-24, 2016","May 21, 2016","May 24, 2016",
-121,"Resurreccion, J.Z., and Santos, J.R.",2016,PCA Colloqium,"UPD Quezon City, Philippines","November 7-11, 2016","November 7, 2016","November 11, 2016",
-122,"Resurreccion, J.Z., and Santos, J.R.",2017,Society of Risk Analysis Annual Meeting,"Arlington, Virginia, United States of America","December 10-14, 2017","December 10, 2017","December 14, 2017",
-123,"Magpili, L.M., Resurreccion, J.Z., and Blanco, A.C. ",2017,PCA Colloqium,"UPD Quezon City, Philippines","November 13-17, 2017","November 13, 2017","November 17, 2017",
-124,"Resurreccion, J.Z., and Santos, J.R.",2018,Society of Risk Analysis Annual Meeting,"New Orleans, Louisiana, United States of America","December 2-6, 2018","December 2, 2018","December 6, 2018",
-125,"Resurreccion, J.Z., De Pano, M.T.S., Domingo, J.R.T., and Ecat, D.A.G. ",2018,PCA Colloqium,"UPD Quezon City, Philippines","November 12, 2018","November 12, 2018","November 12, 2018",
-126,"Martinez, I. ",2014,PCA Colloqium,"UPD Quezon City, Philippines","August 29, 2014","August 29, 2014","August 29, 2014",
-127,"Martinez, I. ",2015,6th International Conference on Applied Human Factors and Ergonomics (AHFE 2015),"Caesars Palace, Las Vegas, United States of America","July 26 - 30, 2015","July 26, 2015","July 30, 2015",
-128,"Portus, A. and Martinez, I.",2016,6th International Conference on Applied Human Factors and Ergonomics (AHFE 2015),"Caesars Palace, Las Vegas, United States of America","July 26 - 30, 2016","July 26, 2015","July 30, 2015",
-129,"Martinez, I. ",2015,Edgardo S. Pacheco Professorial Chair,"UPD Quezon City, Philippines","November 27, 2015","November 27, 2015","November 27, 2015",
-130,"Grepo, L.C., and Custodio, B.P.",2014,5th AHFE Conference,"Krakow, Poland"," July 19-23, 2014","July 19, 2014","July 23, 2014",
-131,"Llaguno, E. ",2015,2015 PCA Colloquium ,"UPD Quezon City, Philippines","November 27, 2015","November 27, 2015","November 27, 2015",
-132,"Llaguno, E. ",2016,2016 PCA Colloquium,"UPD Quezon City, Philippines","November 7-11, 2016","November 7, 2016","November 11, 2016",
-133,"Llaguno, E. ",2017,2017 PCA Colloquium,"UPD Quezon City, Philippines","November 13-17, 2017","November 13, 2017","November 17, 2017",
-134,"Llaguno, E. ",2018,The IAFOR International Conference,"Hawaii Convention Center, Hawaii","January 4-6, 2018","January 4, 2018","January 6, 2018",
-135,"Llaguno, E. ",2018,2018 PCA Colloquium,"UPD Quezon City, Philippines","November 12, 2018","November 12, 2018","November 12, 2018",
-136,"Jalao, E.R.L.",2014,4th International Conference on Industrial Engineering and Operations Management (IEOM 2014),Bali Indonesia,"January 7-9, 2014","January 7, 2014","January 9, 2014",
-137,"Jalao, E.R.L.",2014,2014 Professorial Chair Colloquim,"UPD Quezon City, Philippines","August 29, 2014","August 29, 2014","August 29, 2014",
-138,"Jalao, E.R.L.",2015,2015 AHFE Conference,Las Vegas Nevada,"July 26-30, 2015","July 26, 2015","July 30, 2015",
-139,"Jalao, E.R.L.",2015,Business Analytics Conference,Batangas State University,"October 21, 2015","October 21, 2015","October 21, 2015",
-140,"Jalao, E.R.L.",2015,Engg PCA Colloquim,"UPD Quezon City, Philippines","November 27, 2015","November 27, 2015","November 27, 2015",
-141,"Jalao, E.R.L.",2016,Talas Data Science Conference,,"November 26, 2016","November 26, 2016","November 26, 2016",
-142,"Jalao, E.R.L.",2016,UPLB Actuarial Science Society Conference,,"April 18, 2016","April 18, 2016","April 18, 2016",
-143,"Jalao, E.R.L.",2016,R Users Group,,"November 15, 2016","November 15, 2016","November 15, 2016",
-144,"Jalao, E.R.L.",2016,Engg PCA Colloquim,"UPD Quezon City, Philippines","November 7-11, 2016","November 7, 2016","November 11, 2016",
-145,"Jalao, E.R.L.",2017,Industry-Academe Business Analytics Conference,,"February 3, 2017","February 3, 2017","February 3, 2017",
-146,"Jalao, E.R.L.",2017,Engg PCA Colloquim,"UPD Quezon City, Philippines","November 13-17, 2017","November 13, 2017","November 17, 2017",
-147,"Jalao, E.R.L.",2018,APEC Project DARE (Data Analytics Raising Employment) Forum,"Hong Kong University Science and Technology (HKUST), Hong Kong","October 7-8, 2018","October 7, 2018","October 8, 2018",
-148,"Jalao, E.R.L.",2018,Bangko Sentral ng Pilipinas' 31st Environmental Scanning Exercise,"BSP, Manila","December 4, 2018","December 4, 2018","December 4, 2018",
-149,"Jalao, E.R.L.",2018,"2018 National Quality Forum, Philippine Society for Quality",Okada Manila,"October 18, 2018","October 18, 2018","October 18, 2018",
-150,"Jalao, E.R.L.",2018,PyCon Philippines 2018,iAcademy Ph,"February 25, 2018","February 25, 2018","February 25, 2018",
-151,"Jalao, E.R.L.",2018,PCA Colloquim 2018,"UPD Quezon City, Philippines","November 12, 2018","November 12, 2018","November 12, 2018",
-152,"Lorenzo, L.L",2015,PCA Colloquim 2015,"UPD Quezon City, Philippines","November 27, 2015","November 27, 2015","November 27, 2015",
-153,"Lorenzo, L.L",2016,PCA Colloquim 2016,"UPD Quezon City, Philippines","November 7-11, 2016","November 7, 2016","November 11, 2016",
-154,"Lorenzo, L.L",2017,WCE 2017,London,"July 6, 2017","July 6, 2017","July 6, 2017",
-155,"Lorenzo, L.L",2017,PCA Colloquim 2017,"UPD Quezon City, Philippines","November 13-17, 2017","November 13, 2017","November 17, 2017",
-156,"Lorenzo, L.L",2018,PCA Colloquim 2018,"UPD Quezon City, Philippines","November 12, 2018","November 12, 2018","November 12, 2018",
-157,"Soriano, V.J. ",2014,PCA Colloquim 2014,"UPD Quezon City, Philippines","August 29, 2014","August 29, 2014","August 29, 2014",
-158,"Soriano, V.J. ",2015,PCA Colloquim 2015 ,"UPD Quezon City, Philippines","November 27, 2015","November 27, 2015","November 27, 2015",
-159,"Soriano, V.J., Bernalez, I, and Tamayo, M.A.M.",2017,Proceedings of the 8th International Conference on Applied Human Factors and Ergonomics (AHFE 2017),"Westin Bonaventure Hotel, Los Angeles, California, USA","July 17 – 21, 2017","July 17, 2017","July 21, 2017","P. Arezes (ed.), Advances in Safety Management and Human Factors, Advances in Intelligent Systems and Computing 604. © Springer International Publishing AG 2018, DOI 10.1007/978-3-319-60525-8_38"
-160,"Tacadao, M. K. A., Soriano, V. J., Jimena, C.E.G., Dapito, M., and Ompad, E.",2016,The XXIst International Conference of the Society for Human Ecology (SHE):  Shaping a Livable Future: Research – Education – Policy,"Holiday Inn Hotel, Santa Ana, California, USA.","April 12 - 15, 2016","April 12, 2016","April 15, 2016",
-161,"Soriano, V.J. ",2016,PCA Colloquim 2016,"UPD Quezon City, Philippines","November 7-11, 2016","November 7, 2016","November 11, 2016",
-162,"Soriano, V.J. ",2017,PCA Colloquim 2017,"UPD Quezon City, Philippines","November 13-17, 2017","November 13, 2017","November 17, 2017",
-163,"Soriano, V.J., Llaguno E., Gotera, K.M., Custodio, B., and Jimena, C.E. ",2018,"The IAFOR International Conference on Sustainability, Energy & the Environment – Hawaii 2018 (IICSEE Hawaii 2018)","Hawai’i Convention Center, Honolulu, Hawaii, USA","January 4-6, 2018 ","January 4, 2018","January 6, 2018",
-164,"Soriano, V.J. ",2018,PCA Colloquim 2018,"UPD Quezon City, Philippines","November 12, 2018","November 12, 2018","November 12, 2018",
-165,"Matias, A. and Indardaya, A.P.",2014,6th International Conference on Human Factors and Ergoonomics and Affiliated Conferences 2014,"Krakow, Poland","June 19-23, 2014","June 19, 2014","June 23, 2014",
-166,"Matias, A.C. ",2015,"International Conference on Electrical, Electronics and Computer Engineering","University of Perpetual Help, Las Pinas","February 12, 2015","February 12, 2015","February 12, 2015",Plenary Speaker
-167,"Matias, A.C. ",2015,IDEA Global Entrepreneurship Symposium 2015,"Radisson Blu Hotel, Cebu City","February 26, 2015","February 26, 2015","February 26, 2015",Plenary Speaker
-168,"Matias, A.C. ",2015,1st ASEAN Patient Safety Congress,Sofitel,"June 26, 2015","June 26, 2015","June 26, 2015",Panel Discussant
-169,"Matias, A.C. ",2015,PIIE/ICPR Conference,Marriot Hotel,"July 5, 2015","July 5, 2015","July 5, 2015",Plenary Panel Discussant
-170,"Matias, A.C., and Rustico, E.Z.",2015,6th International Conference on Applied Human Factors and Ergonomics 2015 and the Affiliated Conference,"Ceasars Palace, Las Vegas, USA","July 26-30, 2015","July 26, 2015","July 30, 2015",
-171,"Novabos, C., and Matias, A.C.",2015,6th International Conference on Applied Human Factors and Ergonomics 2015 and the Affiliated Conferences,"Ceasars Palace, Las Vegas, USA","July 26-30, 2015","July 26, 2015","July 30, 2015",
-172,"Matias, A.C. ",2015,Regional Conference on Electrical Engineering,Acacia Hotel,"October 16, 2015","October 16, 2015","October 16, 2015",
-173,"Matias, A.C. ",2015,RTU Symposium,"Momarco Resort, Tanay","March 13, 2015","March 13, 2015","March 13, 2015",Speaker
-174,"Matias, A.C. ",2015,"Camp Atienza Day, 51st Engineer Brigade",Camp Atienza,"October 8, 2015","October 8, 2015","October 8, 2015",Guest Speaker
-175,"Matias, A.C. ",2015,UP Diliman General Education Conference,NIP Auditorium,"September 28, 2015","September 28, 2015","September 28, 2015",Speaker
-176,"Matias, A., and Ferreira, S.",2016,IAIA 2016 International Conference,"Nagoya Congress Center, Japan","May 12-13, 2016","May 12, 2016","May 13, 2016",
-177,"Matias, A.C. ",2017,3rd Regional Workshop on Country Safeguard Systems,"Westin Resort, Nusa Dua, Bali, Indonesia","April 10-11, 2017","April 10, 2017","April 11, 2017",
-178,"Matias, A.C. ",2018,IEshikawa 2018,UPNEC Auditorium,"October 20, 2018","October 20, 2018","October 20, 2018",Speaker
-179,"Matias, A.C. ",2018,NEC ConNECt,"UPD Quezon City, Philippines","October 29, 2018","October 29, 2018","October 29, 2018",Speaker
-180,"Matias, A.C. ",2018,QA Orientation,UP Manila,"November 21, 2018","November 21, 2018","November 21, 2018",Speaker
-181,"Matias, A.C. ",2018,PCA Colloqium ,"UPD Quezon City, Philippines","November 12, 2018","November 12, 2018","November 12, 2018",
-182,"Pacia, A.A. ",2014,PCA Colloqium ,"UPD Quezon City, Philippines","August 29, 2014","August 29, 2014","August 29, 2014",
-183,"Pacia, A.A. ",2015,PCA Colloqium ,"UPD Quezon City, Philippines","November 27, 2015","November 27, 2015","November 27, 2015",
-184,"Pacia, A.A. ",2016,PCA Colloqium ,"UPD Quezon City, Philippines","November 7-11, 2016","November 7, 2016","November 11, 2016",
-185,"Pacia, A.A. ",2017,PCA Colloqium ,"UPD Quezon City, Philippines","November 13-17, 2017","November 13, 2017","November 17, 2017",
-186,"Pacia, A.A. ",2018,PCA Colloqium ,"UPD Quezon City, Philippines","November 12, 2018","November 12, 2018","November 12, 2018",
-187,"Tamayao, M. (presentor), Michalek, J., Hendrickson, C., and Azevedo, I.. ",2015,Climate and Energy Decision Making Annual Seminar.,"Pittsburgh, PA, USA.","November 13-17, 2017","November 13, 2017","November 17, 2017",
-188,"Tamayao, M.A.M.",2015,College of Engineering Professorial Chair Award Colloqium 2015,"UPD Quezon City, Philippines","November 27, 2015","November 27, 2015","November 27, 2015",
-189,"Tamayao, M.A.M.",2016,Energy Policy Development Program Conference 2016,"Makati, PH","January 12-13, 2016","January 12, 2016","January 13, 2016",Presentor
-190,"Tamayao, M.A.M.",2016,The UPLB Energy Forum,UPLB,"February 15, 2016","February 15, 2016","February 15, 2016",Plenary Presentor
-191,"Tamayao, M.A.M., Palanca, A., Danao, L., and Soriano, V.J.",2016,UP Center for Integrative and Development Studies Research Coloquim.,UP Diliman,"April 29, 2016","April 29, 2016","April 29, 2016",Presentor
-192,"Tamayao, M.A.M.",2016,"UP Sustainable Energy Talks: Power, Transportation, and Storage",UP Diliman,"September 26, 2016","September 26, 2016","September 26, 2016",Presentor
-193,"Cenia, M.C.B., Tamayao, M.A.M., Soriano, V.J. et al. ",2018,LCA XVIII Conference. ,"Fort Collins, Colorado, USA.","September 25-27, 2018","September 25, 2018","September 27, 2018",Presentor
-194,"Tamayao, M.A.M.",2017,APEC Expert Working Group Conference: Making the Case for Clean Energy Investments with Life Cycle Assessment. ,"Kuala Lumpur, Malaysia. ","October 19-20, 2017","October 19, 2017","October 20, 2017",Invited Speaker.
-195,"Tamayao, M.A.M.",2018,Asia Vinyl Council Regional Meeting.,"Bangkok, Thailand. ","February 13, 2018","February 13, 2018","February 13, 2018",Invited Plenary Speaker.
-196,"Tamayao, M.A.M.",2018,Expert Meeting on Economic and Life Cycle Analysis of Solar Photovoltaic Systems in APEC Region toward Low-Carbon Society.,"Putrajaya, Malaysia.","March 13-14, 2018","March 13, 2018","March 14, 2018",Invited Speaker.
-197,"Tamayao, M.A.M.",2018,College PCA Colloqium.,"UP Diliman, QC, PH.","November 12, 2018","November 12, 2018","November 12, 2018",
+pub_id,p_author_id,p_pres_year,p_conf,p_loc,p_date_range,p_start_date,p_end_date,p_add_info
+6,146,2015,6th AHFE Conference,"Las Vegas, NV","July 27-30, 2015",2015-07-27,2015-07-30,
+6,126,2015,6th AHFE Conference,"Las Vegas, NV","July 27-30, 2015",2015-07-27,2015-07-30,
+7,145,2016,PCA Colloqium,"UPD Quezon City, Philippines","November 7-11, 2016",2016-11-07,2016-11-11,
+8,145,2018,PCA Colloqium,"UPD Quezon City, Philippines","November 12, 2018",2018-11-12,2018-11-12,
+9,147,2017,"ISIE-ISSST 2017: Science in Support of Sustainable and Resilient Communities, ","Chicago, IL, USA. ","June 25-29, 2017",2017-06-25,2017-06-29,
+10,147,2017,COE PCA Colloqium,"UPD Quezon City, Philippines","November 13-17, 2017",2017-11-13,2017-11-17,
+113,145,2016,COE PCA Colloqium,"UPD Quezon City, Philippines","November 7-11, 2016",2016-11-07,2016-11-11,"Advances in Safety Management and Human Factors, Advances in Intelligent Systems and Computing 491"
+113,152,2016,COE PCA Colloqium,"UPD Quezon City, Philippines","November 7-11, 2016",2016-11-07,2016-11-11,"Advances in Safety Management and Human Factors, Advances in Intelligent Systems and Computing 491"
+113,153,2016,COE PCA Colloqium,"UPD Quezon City, Philippines","November 7-11, 2016",2016-11-07,2016-11-11,"Advances in Safety Management and Human Factors, Advances in Intelligent Systems and Computing 491"
+114,145,2017,The 2nd Asian Conference on Ergonomics and Design 2017,"Tsudanuma Campus, Nihon University, Chiba, Japan ","June 1-4, 2017",2017-06-01,2017-06-04,"The Japanese Journal of Ergonomics, Vol. 53, Issue Supplement 2"
+115,145,2017,PCA Colloquim,"UPD Quezon City, Philippines","November 13-17, 2017",2017-11-13,2017-11-17,
+116,155,2014,22nd International Input-output Conference,"Lisbon, Portugal","July 14-18, 2014",2014-07-14,2014-07-18,
+116,162,2014,22nd International Input-output Conference,"Lisbon, Portugal","July 14-18, 2014",2014-07-14,2014-07-18,
+116,163,2014,22nd International Input-output Conference,"Lisbon, Portugal","July 14-18, 2014",2014-07-14,2014-07-18,
+117,155,2014,7th ASEAN Environmental Engineering Conference,"Puerto Princesa, Palawan, Philippines","November 21-22, 2014",2014-11-21,2014-11-22,
+117,162,2014,7th ASEAN Environmental Engineering Conference,"Puerto Princesa, Palawan, Philippines","November 21-22, 2014",2014-11-21,2014-11-22,
+118,155,2015,4th World Risk Congress,"Singapore, Singapore","July 19-22, 2015",2015-07-19,2015-07-22,
+118,162,2015,4th World Risk Congress,"Singapore, Singapore","July 19-22, 2015",2015-07-19,2015-07-22,
+118,163,2015,4th World Risk Congress,"Singapore, Singapore","July 19-22, 2015",2015-07-19,2015-07-22,
+119,155,2015,Society of Risk Analysis Annual Meeting,"Arlington, Virginia, United States of America","December 6-10, 2015",2015-12-06,2015-12-10,
+119,163,2015,Society of Risk Analysis Annual Meeting,"Arlington, Virginia, United States of America","December 6-10, 2015",2015-12-06,2015-12-10,
+120,155,2016,Institute of Industrial and Systems Engineers Annual Conference and Expo,"Anaheim, California, United States of America","May 21-24, 2016",2016-05-21,2016-05-24,
+120,164,2016,Institute of Industrial and Systems Engineers Annual Conference and Expo,"Anaheim, California, United States of America","May 21-24, 2016",2016-05-21,2016-05-24,
+120,165,2016,Institute of Industrial and Systems Engineers Annual Conference and Expo,"Anaheim, California, United States of America","May 21-24, 2016",2016-05-21,2016-05-24,
+121,155,2016,PCA Colloqium,"UPD Quezon City, Philippines","November 7-11, 2016",2016-11-07,2016-11-11,
+121,163,2016,PCA Colloqium,"UPD Quezon City, Philippines","November 7-11, 2016",2016-11-07,2016-11-11,
+122,155,2017,Society of Risk Analysis Annual Meeting,"Arlington, Virginia, United States of America","December 10-14, 2017",2017-12-10,2017-12-14,
+122,163,2017,Society of Risk Analysis Annual Meeting,"Arlington, Virginia, United States of America","December 10-14, 2017",2017-12-10,2017-12-14,
+123,155,2017,PCA Colloqium,"UPD Quezon City, Philippines","November 13-17, 2017",2017-11-13,2017-11-17,
+123,164,2017,PCA Colloqium,"UPD Quezon City, Philippines","November 13-17, 2017",2017-11-13,2017-11-17,
+123,165,2017,PCA Colloqium,"UPD Quezon City, Philippines","November 13-17, 2017",2017-11-13,2017-11-17,
+124,155,2018,Society of Risk Analysis Annual Meeting,"New Orleans, Louisiana, United States of America","December 2-6, 2018",2018-12-02,2018-12-06,
+124,163,2018,Society of Risk Analysis Annual Meeting,"New Orleans, Louisiana, United States of America","December 2-6, 2018",2018-12-02,2018-12-06,
+125,155,2018,PCA Colloqium,"UPD Quezon City, Philippines","November 12, 2018",2018-11-12,2018-11-12,
+125,49,2018,PCA Colloqium,"UPD Quezon City, Philippines","November 12, 2018",2018-11-12,2018-11-12,
+125,53,2018,PCA Colloqium,"UPD Quezon City, Philippines","November 12, 2018",2018-11-12,2018-11-12,
+125,55,2018,PCA Colloqium,"UPD Quezon City, Philippines","November 12, 2018",2018-11-12,2018-11-12,
+126,148,2014,PCA Colloqium,"UPD Quezon City, Philippines","August 29, 2014",2014-08-29,2014-08-29,
+127,148,2015,6th International Conference on Applied Human Factors and Ergonomics (AHFE 2015),"Caesars Palace, Las Vegas, United States of America","July 26 - 30, 2015",2015-07-26,2015-07-30,
+128,148,2016,6th International Conference on Applied Human Factors and Ergonomics (AHFE 2015),"Caesars Palace, Las Vegas, United States of America","July 26 - 30, 2016",2015-07-26,2015-07-30,
+128,107,2016,6th International Conference on Applied Human Factors and Ergonomics (AHFE 2015),"Caesars Palace, Las Vegas, United States of America","July 26 - 30, 2016",2015-07-26,2015-07-30,
+129,148,2015,Edgardo S. Pacheco Professorial Chair,"UPD Quezon City, Philippines","November 27, 2015",2015-11-27,2015-11-27,
+130,145,2014,5th AHFE Conference,"Krakow, Poland"," July 19-23, 2014",2014-07-19,2014-07-23,
+130,146,2014,5th AHFE Conference,"Krakow, Poland"," July 19-23, 2014",2014-07-19,2014-07-23,
+131,149,2015,2015 PCA Colloquium,"UPD Quezon City, Philippines","November 27, 2015",2015-11-27,2015-11-27,
+132,149,2016,2016 PCA Colloquium,"UPD Quezon City, Philippines","November 7-11, 2016",2016-11-07,2016-11-11,
+133,149,2017,2017 PCA Colloquium,"UPD Quezon City, Philippines","November 13-17, 2017",2017-11-13,2017-11-17,
+134,149,2018,The IAFOR International Conference,"Hawaii Convention Center, Hawaii","January 4-6, 2018",2018-01-04,2018-01-06,
+135,149,2018,2018 PCA Colloquium,"UPD Quezon City, Philippines","November 12, 2018",2018-11-12,2018-11-12,
+136,150,2014,4th International Conference on Industrial Engineering and Operations Management (IEOM 2014),Bali Indonesia,"January 7-9, 2014",2014-01-07,2014-01-09,
+137,150,2014,2014 Professorial Chair Colloquim,"UPD Quezon City, Philippines","August 29, 2014",2014-08-29,2014-08-29,
+138,150,2015,2015 AHFE Conference,Las Vegas Nevada,"July 26-30, 2015",2015-07-26,2015-07-30,
+139,150,2015,Business Analytics Conference,Batangas State University,"October 21, 2015",2015-10-21,2015-10-21,
+140,150,2015,Engg PCA Colloquim,"UPD Quezon City, Philippines","November 27, 2015",2015-11-27,2015-11-27,
+141,150,2016,Talas Data Science Conference,,"November 26, 2016",2016-11-26,2016-11-26,
+142,150,2016,UPLB Actuarial Science Society Conference,,"April 18, 2016",2016-04-18,2016-04-18,
+143,150,2016,R Users Group,,"November 15, 2016",2016-11-15,2016-11-15,
+144,150,2016,Engg PCA Colloquim,"UPD Quezon City, Philippines","November 7-11, 2016",2016-11-07,2016-11-11,
+145,150,2017,Industry-Academe Business Analytics Conference,,"February 3, 2017",2017-02-03,2017-02-03,
+146,150,2017,Engg PCA Colloquim,"UPD Quezon City, Philippines","November 13-17, 2017",2017-11-13,2017-11-17,
+147,150,2018,APEC Project DARE (Data Analytics Raising Employment) Forum,"Hong Kong University Science and Technology (HKUST), Hong Kong","October 7-8, 2018",2018-10-07,2018-10-08,
+148,150,2018,Bangko Sentral ng Pilipinas' 31st Environmental Scanning Exercise,"BSP, Manila","December 4, 2018",2018-12-04,2018-12-04,
+149,150,2018,"2018 National Quality Forum, Philippine Society for Quality",Okada Manila,"October 18, 2018",2018-10-18,2018-10-18,
+150,150,2018,PyCon Philippines 2018,iAcademy Ph,"February 25, 2018",2018-02-25,2018-02-25,
+151,150,2018,PCA Colloquim 2018,"UPD Quezon City, Philippines","November 12, 2018",2018-11-12,2018-11-12,
+152,151,2015,PCA Colloquim 2015,"UPD Quezon City, Philippines","November 27, 2015",2015-11-27,2015-11-27,
+153,151,2016,PCA Colloquim 2016,"UPD Quezon City, Philippines","November 7-11, 2016",2016-11-07,2016-11-11,
+154,151,2017,WCE 2017,London,"July 6, 2017",2017-07-06,2017-07-06,
+155,151,2017,PCA Colloquim 2017,"UPD Quezon City, Philippines","November 13-17, 2017",2017-11-13,2017-11-17,
+156,151,2018,PCA Colloquim 2018,"UPD Quezon City, Philippines","November 12, 2018",2018-11-12,2018-11-12,
+157,152,2014,PCA Colloquim 2014,"UPD Quezon City, Philippines","August 29, 2014",2014-08-29,2014-08-29,
+158,152,2015,PCA Colloquim 2015,"UPD Quezon City, Philippines","November 27, 2015",2015-11-27,2015-11-27,
+159,148,2017,Proceedings of the 8th International Conference on Applied Human Factors and Ergonomics (AHFE 2017),"Westin Bonaventure Hotel, Los Angeles, California, USA","July 17 – 21, 2017",2017-07-17,2017-07-21,"P. Arezes (ed.), Advances in Safety Management and Human Factors, Advances in Intelligent Systems and Computing 604. © Springer International Publishing AG 2018, DOI 10.1007/978-3-319-60525-8_38"
+159,152,2017,Proceedings of the 8th International Conference on Applied Human Factors and Ergonomics (AHFE 2017),"Westin Bonaventure Hotel, Los Angeles, California, USA","July 17 – 21, 2017",2017-07-17,2017-07-21,"P. Arezes (ed.), Advances in Safety Management and Human Factors, Advances in Intelligent Systems and Computing 604. © Springer International Publishing AG 2018, DOI 10.1007/978-3-319-60525-8_38"
+159,17,2017,Proceedings of the 8th International Conference on Applied Human Factors and Ergonomics (AHFE 2017),"Westin Bonaventure Hotel, Los Angeles, California, USA","July 17 – 21, 2017",2017-07-17,2017-07-21,"P. Arezes (ed.), Advances in Safety Management and Human Factors, Advances in Intelligent Systems and Computing 604. © Springer International Publishing AG 2018, DOI 10.1007/978-3-319-60525-8_38"
+160,152,2016,The XXIst International Conference of the Society for Human Ecology (SHE):  Shaping a Livable Future: Research – Education – Policy,"Holiday Inn Hotel, Santa Ana, California, USA.","April 12 - 15, 2016",2016-04-12,2016-04-15,
+160,166,2016,The XXIst International Conference of the Society for Human Ecology (SHE):  Shaping a Livable Future: Research – Education – Policy,"Holiday Inn Hotel, Santa Ana, California, USA.","April 12 - 15, 2016",2016-04-12,2016-04-15,
+160,167,2016,The XXIst International Conference of the Society for Human Ecology (SHE):  Shaping a Livable Future: Research – Education – Policy,"Holiday Inn Hotel, Santa Ana, California, USA.","April 12 - 15, 2016",2016-04-12,2016-04-15,
+160,168,2016,The XXIst International Conference of the Society for Human Ecology (SHE):  Shaping a Livable Future: Research – Education – Policy,"Holiday Inn Hotel, Santa Ana, California, USA.","April 12 - 15, 2016",2016-04-12,2016-04-15,
+160,169,2016,The XXIst International Conference of the Society for Human Ecology (SHE):  Shaping a Livable Future: Research – Education – Policy,"Holiday Inn Hotel, Santa Ana, California, USA.","April 12 - 15, 2016",2016-04-12,2016-04-15,
+161,152,2016,PCA Colloquim 2016,"UPD Quezon City, Philippines","November 7-11, 2016",2016-11-07,2016-11-11,
+162,152,2017,PCA Colloquim 2017,"UPD Quezon City, Philippines","November 13-17, 2017",2017-11-13,2017-11-17,
+163,145,2018,"The IAFOR International Conference on Sustainability, Energy & the Environment – Hawaii 2018 (IICSEE Hawaii 2018)","Hawai’i Convention Center, Honolulu, Hawaii, USA","January 4-6, 2018 ",2018-01-04,2018-01-06,
+163,149,2018,"The IAFOR International Conference on Sustainability, Energy & the Environment – Hawaii 2018 (IICSEE Hawaii 2018)","Hawai’i Convention Center, Honolulu, Hawaii, USA","January 4-6, 2018 ",2018-01-04,2018-01-06,
+163,152,2018,"The IAFOR International Conference on Sustainability, Energy & the Environment – Hawaii 2018 (IICSEE Hawaii 2018)","Hawai’i Convention Center, Honolulu, Hawaii, USA","January 4-6, 2018 ",2018-01-04,2018-01-06,
+163,63,2018,"The IAFOR International Conference on Sustainability, Energy & the Environment – Hawaii 2018 (IICSEE Hawaii 2018)","Hawai’i Convention Center, Honolulu, Hawaii, USA","January 4-6, 2018 ",2018-01-04,2018-01-06,
+163,167,2018,"The IAFOR International Conference on Sustainability, Energy & the Environment – Hawaii 2018 (IICSEE Hawaii 2018)","Hawai’i Convention Center, Honolulu, Hawaii, USA","January 4-6, 2018 ",2018-01-04,2018-01-06,
+164,152,2018,PCA Colloquim 2018,"UPD Quezon City, Philippines","November 12, 2018",2018-11-12,2018-11-12,
+165,153,2014,6th International Conference on Human Factors and Ergoonomics and Affiliated Conferences 2014,"Krakow, Poland","June 19-23, 2014",2014-06-19,2014-06-23,
+165,72,2014,6th International Conference on Human Factors and Ergoonomics and Affiliated Conferences 2014,"Krakow, Poland","June 19-23, 2014",2014-06-19,2014-06-23,
+166,153,2015,"International Conference on Electrical, Electronics and Computer Engineering","University of Perpetual Help, Las Pinas","February 12, 2015",2015-02-12,2015-02-12,Plenary Speaker
+167,153,2015,IDEA Global Entrepreneurship Symposium 2015,"Radisson Blu Hotel, Cebu City","February 26, 2015",2015-02-26,2015-02-26,Plenary Speaker
+168,153,2015,1st ASEAN Patient Safety Congress,Sofitel,"June 26, 2015",2015-06-26,2015-06-26,Panel Discussant
+169,153,2015,PIIE/ICPR Conference,Marriot Hotel,"July 5, 2015",2015-07-05,2015-07-05,Plenary Panel Discussant
+170,153,2015,6th International Conference on Applied Human Factors and Ergonomics 2015 and the Affiliated Conference,"Ceasars Palace, Las Vegas, USA","July 26-30, 2015",2015-07-26,2015-07-30,
+170,121,2015,6th International Conference on Applied Human Factors and Ergonomics 2015 and the Affiliated Conference,"Ceasars Palace, Las Vegas, USA","July 26-30, 2015",2015-07-26,2015-07-30,
+171,153,2015,6th International Conference on Applied Human Factors and Ergonomics 2015 and the Affiliated Conferences,"Ceasars Palace, Las Vegas, USA","July 26-30, 2015",2015-07-26,2015-07-30,
+171,97,2015,6th International Conference on Applied Human Factors and Ergonomics 2015 and the Affiliated Conferences,"Ceasars Palace, Las Vegas, USA","July 26-30, 2015",2015-07-26,2015-07-30,
+172,153,2015,Regional Conference on Electrical Engineering,Acacia Hotel,"October 16, 2015",2015-10-16,2015-10-16,
+173,153,2015,RTU Symposium,"Momarco Resort, Tanay","March 13, 2015",2015-03-13,2015-03-13,Speaker
+174,153,2015,"Camp Atienza Day, 51st Engineer Brigade",Camp Atienza,"October 8, 2015",2015-10-08,2015-10-08,Guest Speaker
+175,153,2015,UP Diliman General Education Conference,NIP Auditorium,"September 28, 2015",2015-09-28,2015-09-28,Speaker
+176,153,2016,IAIA 2016 International Conference,"Nagoya Congress Center, Japan","May 12-13, 2016",2016-05-12,2016-05-13,
+176,59,2016,IAIA 2016 International Conference,"Nagoya Congress Center, Japan","May 12-13, 2016",2016-05-12,2016-05-13,
+177,153,2017,3rd Regional Workshop on Country Safeguard Systems,"Westin Resort, Nusa Dua, Bali, Indonesia","April 10-11, 2017",2017-04-10,2017-04-11,
+178,153,2018,IEshikawa 2018,UPNEC Auditorium,"October 20, 2018",2018-10-20,2018-10-20,Speaker
+179,153,2018,NEC ConNECt,"UPD Quezon City, Philippines","October 29, 2018",2018-10-29,2018-10-29,
+180,153,2018,QA Orientation,UP Manila,"November 21, 2018",2018-11-21,2018-11-21,
+181,153,2018,PCA Colloqium,"UPD Quezon City, Philippines","November 12, 2018",2018-11-12,2018-11-12,
+182,154,2014,PCA Colloqium,"UPD Quezon City, Philippines","August 29, 2014",2014-08-29,2014-08-29,
+183,154,2015,PCA Colloqium,"UPD Quezon City, Philippines","November 27, 2015",2015-11-27,2015-11-27,
+184,154,2016,PCA Colloqium,"UPD Quezon City, Philippines","November 7-11, 2016",2016-11-07,2016-11-11,
+185,154,2017,PCA Colloqium,"UPD Quezon City, Philippines","November 13-17, 2017",2017-11-13,2017-11-17,
+186,154,2018,PCA Colloqium,"UPD Quezon City, Philippines","November 12, 2018",2018-11-12,2018-11-12,
+187,147,2015,Climate and Energy Decision Making Annual Seminar.,"Pittsburgh, PA, USA.","November 13-17, 2017",2017-11-13,2017-11-17,
+187,9,2015,Climate and Energy Decision Making Annual Seminar.,"Pittsburgh, PA, USA.","November 13-17, 2017",2017-11-13,2017-11-17,
+187,68,2015,Climate and Energy Decision Making Annual Seminar.,"Pittsburgh, PA, USA.","November 13-17, 2017",2017-11-13,2017-11-17,
+187,94,2015,Climate and Energy Decision Making Annual Seminar.,"Pittsburgh, PA, USA.","November 13-17, 2017",2017-11-13,2017-11-17,
+188,147,2015,College of Engineering Professorial Chair Award Colloqium 2015,"UPD Quezon City, Philippines","November 27, 2015",2015-11-27,2015-11-27,
+189,147,2016,Energy Policy Development Program Conference 2016,"Makati, PH","January 12-13, 2016",2016-01-12,2016-01-13,Presentor
+190,147,2016,The UPLB Energy Forum,UPLB,"February 15, 2016",2016-02-15,2016-02-15,Plenary Presentor
+191,147,2016,UP Center for Integrative and Development Studies Research Coloquim.,UP Diliman,"April 29, 2016",2016-04-29,2016-04-29,Presentor
+191,152,2016,UP Center for Integrative and Development Studies Research Coloquim.,UP Diliman,"April 29, 2016",2016-04-29,2016-04-29,Presentor
+191,44,2016,UP Center for Integrative and Development Studies Research Coloquim.,UP Diliman,"April 29, 2016",2016-04-29,2016-04-29,Presentor
+191,170,2016,UP Center for Integrative and Development Studies Research Coloquim.,UP Diliman,"April 29, 2016",2016-04-29,2016-04-29,Presentor
+192,147,2016,"UP Sustainable Energy Talks: Power, Transportation, and Storage",UP Diliman,"September 26, 2016",2016-09-26,2016-09-26,Presentor
+193,147,2018,LCA XVIII Conference.,"Fort Collins, Colorado, USA.","September 25-27, 2018",2018-09-25,2018-09-27,Presentor
+193,152,2018,LCA XVIII Conference.,"Fort Collins, Colorado, USA.","September 25-27, 2018",2018-09-25,2018-09-27,Presentor
+193,35,2018,LCA XVIII Conference.,"Fort Collins, Colorado, USA.","September 25-27, 2018",2018-09-25,2018-09-27,Presentor
+194,147,2017,APEC Expert Working Group Conference: Making the Case for Clean Energy Investments with Life Cycle Assessment.,"Kuala Lumpur, Malaysia. ","October 19-20, 2017",2017-10-19,2017-10-20,Invited Speaker.
+195,147,2018,Asia Vinyl Council Regional Meeting.,"Bangkok, Thailand. ","February 13, 2018",2018-02-13,2018-02-13,Invited Plenary Speaker.
+196,147,2018,Expert Meeting on Economic and Life Cycle Analysis of Solar Photovoltaic Systems in APEC Region toward Low-Carbon Society.,"Putrajaya, Malaysia.","March 13-14, 2018",2018-03-13,2018-03-14,Invited Speaker.
+197,147,2018,College PCA Colloqium.,"UP Diliman, QC, PH.","November 12, 2018",2018-11-12,2018-11-12,

@@ -1,4 +1,4 @@
-UPDATED TABLES
+UPDATED TABLES (DROP AND CREATE NEW TABLES)
 CREATE TABLE authorships
 (pub_id int references publications(pub_id),
  a_lead_id int not null,
@@ -13,6 +13,22 @@ CREATE TABLE authorships
  );
 COPY authorships 
 FROM 'C:\Users\Kyla\Desktop\IEORDproject\195chance\195app\sql tables\authorships.csv'
+DELIMITER ','
+CSV HEADER;
+
+CREATE TABLE presentations
+(pub_id int references publications(pub_id),
+ p_author_id int not null,
+ p_year varchar(64),
+ p_conf varchar (256),
+ p_loc varchar(256),
+ p_date_range varchar(256),
+ p_start_date date, --change to date type
+ p_end_date date, --change to date type
+ p_add_info varchar(512)
+ );
+COPY presentations 
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195chance\195app\sql tables\presentations.csv'
 DELIMITER ','
 CSV HEADER;
 
@@ -45,9 +61,9 @@ CSV HEADER;
 CREATE TABLE pub_lead_authors
 (pub_id int references publications(pub_id),
  a_lead_id int references authors(author_id),
- lead_author_name varchar (256),
- pub_lead_delete_ind bool default False);
-  COPY pub_lead_authors
+ lead_author_name varchar (256)
+ );
+COPY pub_lead_authors
 FROM 'C:\Users\Kyla\Desktop\IEORDproject\195chance\195app\sql tables\pub_lead_authors.csv'
 DELIMITER ','
 CSV HEADER; 
@@ -60,13 +76,27 @@ where a_lead_id>0;
 CREATE TABLE pub_contributing_authors
 (pub_id int references publications(pub_id),
  a_contributing_id int references authors(author_id),
- contributing_author_name varchar (256),
- pub_contributing_delete_ind bool default False);
-
- update pub_contributing_authors
+ contributing_author_name varchar (256)
+ );
+update pub_contributing_authors
 set
 contributing_author_name = (select author_fn || ' ' || author_ln from authors where a_contributing_id=author_id)
 where a_contributing_id>0;
+
+CREATE TABLE pres_authors
+(pub_id int references publications(pub_id),
+ p_author_id int references authors(author_id),
+ author_name varchar (256)
+ );
+COPY pres_authors
+FROM 'C:\Users\Kyla\Desktop\IEORDproject\195chance\195app\sql tables\pres_authors.csv'
+DELIMITER ','
+CSV HEADER; 
+
+update pres_authors
+set
+author_name = (select author_fn || ' ' || author_ln from authors where p_author_id=author_id)
+where p_author_id>0;
 
 CREATE TABLE up_system(
 cons_id int primary key not null,

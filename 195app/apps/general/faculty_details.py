@@ -361,8 +361,6 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 a_doi, 
                 a_isxn, 
                 a_scopus, 
-                to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS') as timestampz,
-                publications.modified_by,
                 string_agg(CAST(faculty.user_ID as varchar),  ', ')
                 
 
@@ -377,7 +375,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
             parsed = urlparse(search)
             facdetid = parse_qs(parsed.query)['id'][0]
             values_a = []
-            cols_a = ['id', 'Year', 'Lead Author(s)', 'Title', 'Criteria', 'Other Contributing Author(s)', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus',  'Last Updated', 'Last Modified By', 'author_ids']            
+            cols_a = ['id', 'Year', 'Lead Author(s)', 'Title', 'Criteria', 'Other Contributing Author(s)', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus', 'author_ids']            
             #fix additivity of searchterms and filters
             if datefilter:
                 sql_a += """AND (cast (a_year as int) >= %s)"""
@@ -545,45 +543,13 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                             html.Strong("Scopus: "), 
                                             html.Span(f"{pub_Scopus}"),], id = f"modal_scopus_{ids}"), 
                                     ],), 
-                                    # dbc.ModalFooter(
-                                    #     dbc.Button("Close", id= f'modal_close_{ids}', n_clicks = 0)
-                                    # )
                                 ], 
                                 id = f"modal_a_fac_{ids}", size ='lg',
                                 centered=True, is_open = False
                             ),  id= f'div_modal_fac_{ids}', style={'display': 'none'}
                         )
                     ]
-
-                #publication details content
-                # for i in range(len(pub_a)): 
-                #     inputs_1 = [pub_a['Date'][i], pub_a['Publication'][i], pub_a['Publisher'][i]]
-                #     if not all (inputs_1) :  
-                #         pub_details += " "
-                #     else: 
-                #         pub_details += [("Published in/on: %s in %s by %s" % (pub_a['Date'][i], pub_a['Publication'][i], pub_a['Publisher'][i]))] 
-                #     # inputs_2 = [pub_a['DOI'][i], pub_a['ISXN'][i], pub_a['Scopus'][i]]
-                #     # if not all (inputs_2): 
-                #     #     other_info += " "
-                #     # else: 
-                #     other_info += [("DOI: %s \n Issue Number: %s \n Scopus: %s"  % (pub_a['DOI'][i], pub_a['ISXN'][i], pub_a['Scopus'][i]) or " " )]
-
-                # pub_a['Publication Details'] = pub_details
-                # pub_a['Other Information'] = other_info
                 
-            
-            
-            # for j in range(len(pub_a['author_ids'])):
-            #     # print(list(((pub_a)['author_ids'][i])))
-            #     string = pub_a['author_ids'][j]
-            #     listed = string.split(', ')
-            #     if facdetid not in listed: 
-            #         pub_a = pub_a.drop(j)
-            #     else: 
-            #         pass
-            
-            pub_a.drop(['Last Updated'],axis=1,inplace=True)     
-            pub_a.drop(['Last Modified By'],axis=1,inplace=True)     
             pub_a.drop(['author_ids'],axis=1,inplace=True) 
             pub_a.drop(['id'],axis=1,inplace=True)
             pub_a.drop(['Date'],axis=1,inplace=True)
@@ -601,38 +567,33 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
 
         #presentations
         elif tab == 'tab_p':
-            sql_p = """SELECT
-                presentations.p_year,
-                publications.pub_id,
-				string_agg(
-				  CASE
-					WHEN presentations_users.pres_role IS NULL THEN faculty_fn || ' ' || faculty_ln
-					ELSE faculty_fn || ' ' || faculty_ln || ' (' || presentations_users.pres_role ||') '
-				  END,
-				  ', '
-				) AS combined_values,
+            sql_p = """SELECT publications.pub_id,
+                p_year,
+				(select string_agg(author_name, ', ')
+				 from pres_authors
+				 where pres_authors.pub_id = publications.pub_id
+				) as p_authors,
+                publications.pub_title,
                 tags.tag_short_title,
-                pub_title,
-                p_authors,
                 to_char(p_start_date, 'Month DD, YYYY'), 
                 to_char(p_end_date, 'Month  DD, YYYY'), 
                 p_conf, 
                 p_loc, 
                 p_add_info, 
                 string_agg(CAST(faculty.user_ID as varchar),  ', ')
-            FROM presentations_users
-				INNER JOIN presentations on presentations_users.pub_id = presentations.pub_id
-                LEFT OUTER JOIN faculty on presentations_users.user_id = faculty.user_id
-				INNER JOIN publications on presentations_users.pub_id = publications.pub_id
-                INNER JOIN tags on publications.tag_id = tags.tag_id
+            FROM presentations
+                LEFT OUTER JOIN faculty on presentations.p_author_id = faculty.user_id
+                INNER JOIN publications on presentations.pub_id = publications.pub_id
+                LEFT OUTER JOIN pres_authors on presentations.p_author_id = pres_authors.p_author_id
+                LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
             WHERE
-                pub_delete_ind = false
+				publications.pub_delete_ind = false 
             """
             parsed = urlparse(search)
             facdetid = parse_qs(parsed.query)['id'][0]
             values_p = []
-            cols_p = ['Year', 'id', 'Faculty Involved', 'Criteria', 'Title', 'All Authors', 'Start Date', 'End Date', 'Conference',
-                      'Location', 'Other Info', 'presenters_ids'] 
+            cols_p = ['id', 'Year', 'Presenters', 'Title', 'Criteria', 'Start Date', 'End Date',
+                      'Conference', 'Location', 'Other Info', 'presenters_ids'] 
             
             if datefilter:
                 sql_p += """AND (cast (p_year as int) >= %s)"""
@@ -642,24 +603,22 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                     values_p += [datefilter_u]
                     if searchterm:
                         sql_p += """ AND (
-                            ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                            OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                            OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                            OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                            OR (presentations_users.pres_role ILIKE %s))"""
-                        values_p += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            """
+                        values_p += [f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p += """ AND (
-                        ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                        OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                        OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                        OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                        OR (presentations_users.pres_role ILIKE %s))"""
-                    values_p += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            """
+                    values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                     if datefilter_u:
                         sql_p += """AND (cast (p_year as int) <= %s)"""
                         values_p += [datefilter_u]
@@ -675,24 +634,22 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                     values_p += [datefilter]
                     if searchterm:
                         sql_p += """ AND (
-                            ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                            OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                            OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                            OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                            OR (presentations_users.pres_role ILIKE %s))"""
-                        values_p += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            """
+                        values_p += [f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p += """ AND (
-                        ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                        OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                        OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                        OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                        OR (presentations_users.pres_role ILIKE %s))"""
-                    values_p += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            """
+                    values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                     if datefilter:
                         sql_p += """AND (cast (p_year as int) >= %s)"""
                         values_p += [datefilter]
@@ -703,14 +660,13 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
             
             elif searchterm:
                 sql_p += """ AND (
-                    ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                    OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                    OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                    OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                    OR (presentations_users.pres_role ILIKE %s))"""
-                values_p += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
-                        f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                        f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            """
+                values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if datefilter:
                     sql_p += """AND (cast (p_year as int) >= %s)"""
                     values_p += [datefilter]
@@ -730,9 +686,9 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 sql_p += """"""
                 values_p += []
 
-            sql_p += """GROUP BY p_year, publications.pub_id, tags.tag_short_title, pub_title, p_authors, to_char(p_start_date, 'Month DD, YYYY'), 
-                to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
-            ORDER BY presentations.p_year DESC"""
+            sql_p += """GROUP BY p_year, publications.pub_id, tags.tag_short_title, pub_title,
+                    p_authors, to_char(p_start_date, 'Month DD, YYYY'), to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
+                    ORDER BY presentations.p_year DESC"""
             pub_p = db.querydatafromdatabase(sql_p, values_p, cols_p)
             
             modals_p = []
@@ -756,7 +712,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 for i in range(len(pub_p)): 
                     ids = pub_p['id'][i]
                     pub_title = pub_p['Title'][i]
-                    pres_fac = pub_p['Faculty Involved'][i]
+                    pres_presenters = pub_p['Presenters'][i]
                     pres_category = pub_p['Criteria'][i]
                     pres_conf = pub_p['Conference'][i]
                     pres_start = pub_p['Start Date'][i]
@@ -774,8 +730,8 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                             html.Strong("Title: "), 
                                             html.Span(f"{pub_title}"),],id = f"modal_title_{ids}"),
                                         html.Div([
-                                            html.Strong("Faculty Involved: "), 
-                                            html.Span(f"{pres_fac}"),], id = f"modal_pres_fac_{ids}"),
+                                            html.Strong("Presentors: "), 
+                                            html.Span(f"{pres_presenters}"),], id = f"modal_pres_presenters_{ids}"),
                                         html.Div([
                                             html.Strong("Presentation Category: "), 
                                             html.Span(f"{pres_category}"),],  id = f"modal_pres_cat_{ids}"),
@@ -792,9 +748,6 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                             html.Strong("Additional Information: "), 
                                             html.Span(f"{pres_other}"),], id = f"modal_pres_other_{ids}")
                                     ],), 
-                                    # dbc.ModalFooter(
-                                    #     dbc.Button("Close", id= f'modal_close_{ids}', n_clicks = 0)
-                                    # )
                                 ], 
                                 id = f"modal_a_fac_{ids}", size ='lg',
                                 centered=True, is_open = False
@@ -802,23 +755,13 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                         )
                     ]
                 
-                #publication details content
-                # for i in range(len(pub_p)): 
-                #     pres_details += [("Presented from: %s to %s \n Presented at: %s (%s)" % (pub_p['Start Date'][i], pub_p['End Date'][i], pub_p['Conference'][i], pub_p['Location'][i]) or "No Details Provided")]
-                #     other_details += [pub_p['Other Info'][i]]
-            
-                
-                # pub_p['Presentation Details'] = pres_details
-                # pub_p['Additional Info'] = other_details
-                
-                
-            for j in range(len(pub_p['presenters_ids'])):
-                string = pub_p['presenters_ids'][j]
-                listed = string.split(', ')
-                if facdetid not in listed: 
-                    pub_p = pub_p.drop(j)
-                else: 
-                    pass
+            # for j in range(len(pub_p['presenters_ids'])):
+            #     string = pub_p['presenters_ids'][j]
+            #     listed = string.split(', ')
+            #     if facdetid not in listed: 
+            #         pub_p = pub_p.drop(j)
+            #     else: 
+            #         pass
                 
             pub_p.drop(['id'],axis=1,inplace=True)  
             pub_p.drop(['presenters_ids'],axis=1,inplace=True)    
@@ -1260,110 +1203,110 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
         raise PreventUpdate       
 
 #call all undeleted publications only
-# sql_aa = """SELECT
-#         publications.pub_id
+sql_aa = """SELECT
+        publications.pub_id
         
-#     FROM publications
-#     WHERE
-#         pub_delete_ind = false
+    FROM publications
+    WHERE
+        pub_delete_ind = false
     
-#     """
-# values_aa = []
-# cols_aa = ['id'] 
+    """
+values_aa = []
+cols_aa = ['id'] 
 
-# pub_aa = db.querydatafromdatabase(sql_aa, values_aa, cols_aa)
+pub_aa = db.querydatafromdatabase(sql_aa, values_aa, cols_aa)
 
-# for ids in pub_aa['id']: 
-#     modal_a = f"modal_a_fac_{ids}"
-#     modal_button = f"modal_button_fac_{ids}"
-#     # modal_close = f'modal_close_{ids}'
-#     div_modal = f'div_modal_fac_{ids}'
-#     @app.callback(
+for ids in pub_aa['id']: 
+    modal_a = f"modal_a_fac_{ids}"
+    modal_button = f"modal_button_fac_{ids}"
+    # modal_close = f'modal_close_{ids}'
+    div_modal = f'div_modal_fac_{ids}'
+    @app.callback(
         
-#         Output(modal_a, 'is_open'), 
+        Output(modal_a, 'is_open'), 
         
-#         [
-#             Input(modal_button, 'n_clicks'), 
-#             # Input(modal_close, 'n_clicks')
-#         ], 
-#         [
-#             State(modal_button, 'is_open')
-#         ]
-#     )
+        [
+            Input(modal_button, 'n_clicks'), 
+            # Input(modal_close, 'n_clicks')
+        ], 
+        [
+            State(modal_button, 'is_open')
+        ]
+    )
     
-#     def ihopethisworks(n_clicks, open): 
-#         if n_clicks: 
-#             return True
-#         else: 
-#             return False
+    def ihopethisworks(n_clicks, open): 
+        if n_clicks: 
+            return True
+        else: 
+            return False
 
 
-@app.callback (
-    [
-        Output('previous2', 'data'), 
-        Output('firsttime2', 'data')
+# @app.callback (
+#     [
+#         Output('previous2', 'data'), 
+#         Output('firsttime2', 'data')
         
-    ], 
-    [
-        Input('url', 'pathname'), 
-    ], 
-    [
-        State('previous2', 'data'), 
-        State('firsttime2', 'data')
-    ]
-)
-def modalloadwhen(pathname, previous, firsttime): 
-    if pathname == '/faculty_details': 
+#     ], 
+#     [
+#         Input('url', 'pathname'), 
+#     ], 
+#     [
+#         State('previous2', 'data'), 
+#         State('firsttime2', 'data')
+#     ]
+# )
+# def modalloadwhen(pathname, previous, firsttime): 
+#     if pathname == '/faculty_details': 
         
-        sql_aa = """SELECT
-                publications.pub_id
+#         sql_aa = """SELECT
+#                 publications.pub_id
                 
-                FROM publications
-                WHERE
-                    pub_delete_ind = false
+#                 FROM publications
+#                 WHERE
+#                     pub_delete_ind = false
                     
                 
-                """
-        values_aa = []
-        cols_aa = ['id'] 
+#                 """
+#         values_aa = []
+#         cols_aa = ['id'] 
 
-        pub_aa = db.querydatafromdatabase(sql_aa, values_aa, cols_aa)
-        pub_aa_list = pub_aa['id'].tolist()
+#         pub_aa = db.querydatafromdatabase(sql_aa, values_aa, cols_aa)
+#         pub_aa_list = pub_aa['id'].tolist()
         
-        if firsttime == 1: 
-            pub_aa_list = pub_aa['id'].tolist()
-            previous = pub_aa_list
-            subtracted  = pub_aa_list
+#         if firsttime == 1: 
+#             pub_aa_list = pub_aa['id'].tolist()
+#             previous = pub_aa_list
+#             subtracted  = pub_aa_list
             
-        else: 
-            subtracted  = list(set(pub_aa_list)^ set(previous))
-            previous = pub_aa_list + subtracted
+#         else: 
+#             subtracted  = list(set(pub_aa_list)^ set(previous))
+#             previous = pub_aa_list + subtracted
         
         
-        firsttime += 1
+#         firsttime += 1
         
-        for ids in subtracted: 
+#         for ids in subtracted: 
             
-            modal_a = f"modal_a_fac_{ids}"
-            modal_button = f"modal_button_fac_{ids}"
-            div_modal = f'div_modal_fac{ids}'
-            @app.callback(
+#             modal_a = f"modal_a_fac_{ids}"
+#             modal_button = f"modal_button_fac_{ids}"
+#             div_modal = f'div_modal_fac{ids}'
+#             @app.callback(
                 
-                Output( f"modal_a_fac_{ids}", 'is_open'), 
+#                 Output( f"modal_a_fac_{ids}", 'is_open'), 
                 
-                [
-                    Input(f"modal_button_fac_{ids}", 'n_clicks'), 
-                    # Input(modal_close, 'n_clicks')
-                ], 
-                [
-                    State(f"modal_button_fac_{ids}", 'is_open')
-                ]
-            )
+#                 [
+#                     Input(f"modal_button_fac_{ids}", 'n_clicks'), 
+#                     # Input(modal_close, 'n_clicks')
+#                 ], 
+#                 [
+#                     State(f"modal_button_fac_{ids}", 'is_open')
+#                 ]
+#             )
             
-            def ihopethisworks(n_clicks, open): 
-                if n_clicks: 
-                    return True
-                else: 
-                    return False
+#             def ihopethisworks(n_clicks, open): 
+#                 if n_clicks: 
+#                     return True
+#                 else: 
+#                     return False
         
-    return[previous, firsttime]
+#     return[previous, firsttime]

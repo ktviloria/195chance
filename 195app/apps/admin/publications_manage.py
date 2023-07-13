@@ -378,39 +378,34 @@ def pubmanage_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u): 
             return [table_a] ##
 
         elif tab == 'tab_p':
-            sql_p = """SELECT
+            sql_p = """SELECT publications.pub_id,
                 p_year,
-                publications.pub_id,
-                string_agg(
-				  CASE
-					WHEN presentations_users.pres_role IS NULL THEN faculty_fn || ' ' || faculty_ln
-					ELSE faculty_fn || ' ' || faculty_ln || ' (' || presentations_users.pres_role ||') '
-				  END,
-				  ', '
-				) AS combined_values,
+				(select string_agg(author_name, ', ')
+				 from pres_authors
+				 where pres_authors.pub_id = publications.pub_id
+				) as p_authors,
+                publications.pub_title,
                 tags.tag_short_title,
-                pub_title,
-                p_authors,
                 to_char(p_start_date, 'Month DD, YYYY'), 
                 to_char(p_end_date, 'Month  DD, YYYY'), 
                 p_conf, 
                 p_loc, 
-                p_add_info,
+                p_add_info, 
                 to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS'),
                 publications.modified_by
-            FROM presentations_users
-				INNER JOIN presentations on presentations_users.pub_id = presentations.pub_id
-                LEFT OUTER JOIN faculty on presentations_users.user_id = faculty.user_id
-				INNER JOIN publications on presentations_users.pub_id = publications.pub_id
-                INNER JOIN tags on publications.tag_id = tags.tag_id
+            FROM presentations
+                LEFT OUTER JOIN faculty on presentations.p_author_id = faculty.user_id
+                INNER JOIN publications on presentations.pub_id = publications.pub_id
+                LEFT OUTER JOIN pres_authors on presentations.p_author_id = pres_authors.p_author_id
+                LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
             WHERE
-                pub_delete_ind = false
+				publications.pub_delete_ind = false
             """
                 
                 # CONCAT ('Presented on ', p_start_date, ' to ', p_end_date, ' at ', p_conf, ' in ', p_loc),
             values_p = []
-            cols_p = ['Year', 'id', 'Faculty Involved', 'Criteria', 'Title', 'All Authors', 'Start Date', 'End Date', 'Conference',
-                      'Location', 'Other Info', 'Last Updated', 'Last Modified By'] 
+            cols_p = ['id', 'Year', 'Presentors', 'Title', 'Criteria', 'Start Date', 'End Date',
+                      'Conference', 'Location', 'Other Info', 'Last Updated', 'Last Modified By'] 
             
             if datefilter:
                 sql_p += """AND (cast (p_year as int) >= %s)"""
@@ -420,24 +415,22 @@ def pubmanage_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u): 
                     values_p += [datefilter_u]
                     if searchterm:
                         sql_p += """ AND (
-                            ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                            OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                            OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                            OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                            )"""
-                        values_p += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            """
+                        values_p += [f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%",]
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p += """ AND (
-                        ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                        OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                        OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                        OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                        )"""
-                    values_p += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%",]
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            """
+                    values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                     if datefilter_u:
                         sql_p += """AND (cast (p_year as int) <= %s)"""
                         values_p += [datefilter_u]
@@ -453,24 +446,22 @@ def pubmanage_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u): 
                     values_p += [datefilter]
                     if searchterm:
                         sql_p += """ AND (
-                            ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                            OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                            OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                            OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                            )"""
-                        values_p += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            """
+                        values_p += [f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%",]
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p += """ AND (
-                        ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                        OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                        OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                        OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                        )"""
-                    values_p += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%",]
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            """
+                    values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                     if datefilter:
                         sql_p += """AND (cast (p_year as int) >= %s)"""
                         values_p += [datefilter]
@@ -481,14 +472,13 @@ def pubmanage_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u): 
             
             elif searchterm:
                 sql_p += """ AND (
-                    ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                    OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                    OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                    OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                    )"""
-                values_p += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
-                        f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                        f"%{searchterm}%", f"%{searchterm}%",]
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            """
+                values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if datefilter:
                     sql_p += """AND (cast (p_year as int) >= %s)"""
                     values_p += [datefilter]
@@ -508,9 +498,9 @@ def pubmanage_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u): 
                 sql_p += """"""
                 values_p += []
 
-            sql_p += """GROUP BY p_year, publications.pub_id, tags.tag_short_title, pub_title, p_authors, to_char(p_start_date, 'Month DD, YYYY'), 
-            to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
-            ORDER BY presentations.p_year DESC"""
+            sql_p += """GROUP BY p_year, publications.pub_id, tags.tag_short_title, pub_title,
+                    p_authors, to_char(p_start_date, 'Month DD, YYYY'), to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
+                    ORDER BY presentations.p_year DESC"""
             pub_p = db.querydatafromdatabase(sql_p, values_p, cols_p)
             
             

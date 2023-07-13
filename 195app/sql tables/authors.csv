@@ -1,148 +1,148 @@
 author_id,author_user_id,author_fn,author_ln,author_mail,author_contact,author_up_constituent,author_other_aff,author_upd_unit,author_engg_dept,author_fac_ind,author_last_upd,author_delete_ind
-1,,S.,Aganad,,,Others,,,,,,FALSE
-2,,Q. A,Alberto,,,Others,,,,,,FALSE
-3,,R.,Alojado,,,Others,,,,,,FALSE
-4,,A.,Ani,,,Others,,,,,,FALSE
-5,,E.,Arellano,,,Others,,,,,,FALSE
-6,,P.,Arezes,,,Others,,,,,,FALSE
-7,,C.,Arriola III,,,Others,,,,,,FALSE
-8,,B. D.,Atanacio,,,Others,,,,,,FALSE
-9,,I. M. L.,Azevedo,,,Others,,,,,,FALSE
-10,,M. G. K.,Balatbat,,,Others,,,,,,FALSE
-11,,M.,Baldoz,,,Others,,,,,,FALSE
-12,,K.,Baliton,,,Others,,,,,,FALSE
-13,,M. K.,Baluyot,,,Others,,,,,,FALSE
-14,,R. P.,Bano,,,Others,,,,,,FALSE
-15,,A. J.,Bellen,,,Others,,,,,,FALSE
-16,,A.,Beltran,,,Others,,,,,,FALSE
-17,,I.,Bernalez,,,Others,,,,,,FALSE
-18,,E. P.,Beronio,,,Others,,,,,,FALSE
-19,,M. B.,Bien,,,Others,,,,,,FALSE
-20,,M.,Blackhurst,,,Others,,,,,,FALSE
-21,,J.,Bonostro,,,Others,,,,,,FALSE
-22,,A.,Borromeo,,,Others,,,,,,FALSE
-23,,C. J.,Boydon,,,Others,,,,,,FALSE
-24,,J. A.,Caballero,,,Others,,,,,,FALSE
-25,,A.,Calamlam,,,Others,,,,,,FALSE
-26,,G. L.,Camacho,,,Others,,,,,,FALSE
-27,,T.,Canicosa,,,Others,,,,,,FALSE
-28,,H.,Caparas,,,Others,,,,,,FALSE
-29,,C. L.,Capistrano,,,Others,,,,,,FALSE
-30,,F. B. A.,Caram,,,Others,,,,,,FALSE
-31,,P.,Carayon,,,Others,,,,,,FALSE
-32,,B.J.,Carbonera,,,Others,,,,,,FALSE
-33,,S.,Carillo,,,Others,,,,,,FALSE
-34,,R. S.,Cartmill,,,Others,,,,,,FALSE
-35,,M. C.,Cenia,,,Others,,,,,,FALSE
-36,,M. Y.,Chan,,,Others,,,,,,FALSE
-37,,J.,Colombi,,,Others,,,,,,FALSE
-38,,M. A. M.,Contreras,,,Others,,,,,,FALSE
-39,,J.,Corpuz,,,Others,,,,,,FALSE
-40,,M.,Cruz,,,Others,,,,,,FALSE
-41,,C. A.,Cucueco,,,Others,,,,,,FALSE
-42,,C.,Cuenca,,,Others,,,,,,FALSE
-43,,L. Y.,Cusapang,,,Others,,,,,,FALSE
-44,,L. A.,Danao,,,Others,,,,,,FALSE
-45,,F.,De Asis,,,Others,,,,,,FALSE
-46,,C. M.,De Guzman,,,Others,,,,,,FALSE
-47,,C. G.,De Jesus,,,Others,,,,,,FALSE
-48,,M. R. C.,De Leon,,,Others,,,,,,FALSE
-49,,T.,De Pano,,,Others,,,,,,FALSE
-50,,C. J. M.,Dela Cruz,,,Others,,,,,,FALSE
-51,,M.,Diaz,,,Others,,,,,,FALSE
-52,,A.,Dizon,,,Others,,,,,,FALSE
-53,,J.,Domingo,,,Others,,,,,,FALSE
-54,,B.,Dytoc,,,Others,,,,,,FALSE
-55,,D.,Ecat,,,Others,,,,,,FALSE
-56,,A.,Fajardo,,,Others,,,,,,FALSE
-57,,A.,Fausto,,,Others,,,,,,FALSE
-58,,G. P.,Felicio,,,Others,,,,,,FALSE
-59,,S.,Ferreira,,,Others,,,,,,FALSE
-60,,M. J.,Fider,,,Others,,,,,,FALSE
-61,,K. E.,Generoso,,,Others,,,,,,FALSE
-62,,R.,Geronia II,,,Others,,,,,,FALSE
-63,,K. M.,Gotera,,,Others,,,,,,FALSE
-64,,J.,Guerrero,,,Others,,,,,,FALSE
-65,,J. L.,Gutierrez,,,Others,,,,,,FALSE
-66,,B.,Guzman,,,Others,,,,,,FALSE
-67,,J.,Halos,,,Others,,,,,,FALSE
-68,,C.,Hendrickson,,,Others,,,,,,FALSE
-69,,P. L. T.,Hoonakker,,,Others,,,,,,FALSE
-70,,F. M.,Hubag,,,Others,,,,,,FALSE
-71,,A. S.,Hundt,,,Others,,,,,,FALSE
-72,,A. P.,Indardaya,,,Others,,,,,,FALSE
-73,,P.,Jaramillo,,,Others,,,,,,FALSE
-74,,M. S. A.,Jazmines,,,Others,,,,,,FALSE
-75,,Y. B.,Kurata,,,Others,,,,,,FALSE
-76,,J.,Lagonera,,,Others,,,,,,FALSE
-77,,K.,Lasala,,,Others,,,,,,FALSE
-78,,J. D.,Lee,,,Others,,,,,,FALSE
-79,,K.,Lee,,,Others,,,,,,FALSE
-80,,Y.,Li,,,Others,,,,,,FALSE
-81,,P. L.,Lim,,,Others,,,,,,FALSE
-82,,A.,Lopez,,,Others,,,,,,FALSE
-83,,G. L.,Maandal,,,Others,,,,,,FALSE
-84,,A.,Magadia,,,Others,,,,,,FALSE
-85,,A. M.,Magpantay,,,Others,,,,,,FALSE
-86,,L.,Mariano,,,Others,,,,,,FALSE
-87,,P.,Marigomen,,,Others,,,,,,FALSE
-88,,N.,Marinas,,,Others,,,,,,FALSE
-89,,S.,Matthews,,,Others,,,,,,FALSE
-90,,J. S.,Matuba,,,Others,,,,,,FALSE
-91,,K.,Medel,,,Others,,,,,,FALSE
-92,,J.,Medina,,,Others,,,,,,FALSE
-93,,A. G.,Mercado,,,Others,,,,,,FALSE
-94,,J. J.,Michalek,,,Others,,,,,,FALSE
-95,,I. V.,Mirasol,,,Others,,,,,,FALSE
-96,,M. A.,Naguit,,,Others,,,,,,FALSE
-97,,C.,Novabos,,,Others,,,,,,FALSE
-98,,C.,Ocampo,,,Others,,,,,,FALSE
-99,,J. A.,Olalo,,,Others,,,,,,FALSE
-100,,A.,Oleta,,,Others,,,,,,FALSE
-101,,M. J.,Orata,,,Others,,,,,,FALSE
-102,,A.,Palma,,,Others,,,,,,FALSE
-103,,B.,Patterson,,,Others,,,,,,FALSE
-104,,R. P.,Payyanadan,,,Others,,,,,,FALSE
-105,,E. J.,Perez,,,Others,,,,,,FALSE
-106,,W.,Pleto,,,Others,,,,,,FALSE
-107,,A.,Portus,,,Others,,,,,,FALSE
-108,,L.,Quilantang,,,Others,,,,,,FALSE
-109,,N.,Rasco,,,Others,,,,,,FALSE
-110,,F.,Rebelo,,,Others,,,,,,FALSE
-111,,R.,Relator,,,Others,,,,,,FALSE
-112,,O. M.,Revalo,,,Others,,,,,,FALSE
-113,,A.,Revilla,,,Others,,,,,,FALSE
-114,,L.D.,Revilla,,,Others,,,,,,FALSE
-115,,J. A.,Revilla,,,Others,,,,,,FALSE
-116,,K.,Reyes,,,Others,,,,,,FALSE
-117,,S.,Reyes,,,Others,,,,,,FALSE
-118,,V. F.,Reyes,,,Others,,,,,,FALSE
-119,,M. M.,Rivera,,,Others,,,,,,FALSE
-120,,K.,Robles,,,Others,,,,,,FALSE
-121,,E. Z.,Rustico,,,Others,,,,,,FALSE
-122,,E. Z.,Rustico Jr.,,,Others,,,,,,FALSE
-123,,P.,Samoza,,,Others,,,,,,FALSE
-124,,C. A. S.,San Miguel,,,Others,,,,,,FALSE
-125,,N.,Sanchez,,,Others,,,,,,FALSE
-126,,K.,Santos,,,Others,,,,,,FALSE
-127,,K.,Sedilla,,,Others,,,,,,FALSE
-128,,D.,Shunk,,,Others,,,,,,FALSE
-129,,N.,Simon,,,Others,,,,,,FALSE
-130,,M.,Soares,,,Others,,,,,,FALSE
-131,,R. S.,Soriano,,,Others,,,,,,FALSE
-132,,J.,Stamm,,,Others,,,,,,FALSE
-133,,D. M.,Sua-an,,,Others,,,,,,FALSE
-134,,J.,Sugay,,,Others,,,,,,FALSE
-135,,K. F.,Tabanda,,,Others,,,,,,FALSE
-136,,J.,Tantuco,,,Others,,,,,,FALSE
-137,,J.,Trinidad,,,Others,,,,,,FALSE
-138,,A.,Weis,,,Others,,,,,,FALSE
-139,,J. R.,Wirthlin,,,Others,,,,,,FALSE
-140,,K.,Wood,,,Others,,,,,,FALSE
-141,,D.,Worger,,,Others,,,,,,FALSE
-142,,T.,Wu,,,Others,,,,,,FALSE
-143,,T.,Yukcel,,,Others,,,,,,FALSE
-144,,L. C.,Yupingkun,,,Others,,,,,,FALSE
+1,,S.,Aganad,,,Non-UP,,,,,,FALSE
+2,,Q. A,Alberto,,,Non-UP,,,,,,FALSE
+3,,R.,Alojado,,,Non-UP,,,,,,FALSE
+4,,A.,Ani,,,Non-UP,,,,,,FALSE
+5,,E.,Arellano,,,Non-UP,,,,,,FALSE
+6,,P.,Arezes,,,Non-UP,,,,,,FALSE
+7,,C.,Arriola III,,,Non-UP,,,,,,FALSE
+8,,B. D.,Atanacio,,,Non-UP,,,,,,FALSE
+9,,I. M. L.,Azevedo,,,Non-UP,,,,,,FALSE
+10,,M. G. K.,Balatbat,,,Non-UP,,,,,,FALSE
+11,,M.,Baldoz,,,Non-UP,,,,,,FALSE
+12,,K.,Baliton,,,Non-UP,,,,,,FALSE
+13,,M. K.,Baluyot,,,Non-UP,,,,,,FALSE
+14,,R. P.,Bano,,,Non-UP,,,,,,FALSE
+15,,A. J.,Bellen,,,Non-UP,,,,,,FALSE
+16,,A.,Beltran,,,Non-UP,,,,,,FALSE
+17,,I.,Bernalez,,,Non-UP,,,,,,FALSE
+18,,E. P.,Beronio,,,Non-UP,,,,,,FALSE
+19,,M. B.,Bien,,,Non-UP,,,,,,FALSE
+20,,M.,Blackhurst,,,Non-UP,,,,,,FALSE
+21,,J.,Bonostro,,,Non-UP,,,,,,FALSE
+22,,A.,Borromeo,,,Non-UP,,,,,,FALSE
+23,,C. J.,Boydon,,,Non-UP,,,,,,FALSE
+24,,J. A.,Caballero,,,Non-UP,,,,,,FALSE
+25,,A.,Calamlam,,,Non-UP,,,,,,FALSE
+26,,G. L.,Camacho,,,Non-UP,,,,,,FALSE
+27,,T.,Canicosa,,,Non-UP,,,,,,FALSE
+28,,H.,Caparas,,,Non-UP,,,,,,FALSE
+29,,C. L.,Capistrano,,,Non-UP,,,,,,FALSE
+30,,F. B. A.,Caram,,,Non-UP,,,,,,FALSE
+31,,P.,Carayon,,,Non-UP,,,,,,FALSE
+32,,B.J.,Carbonera,,,Non-UP,,,,,,FALSE
+33,,S.,Carillo,,,Non-UP,,,,,,FALSE
+34,,R. S.,Cartmill,,,Non-UP,,,,,,FALSE
+35,,M. C.,Cenia,,,Non-UP,,,,,,FALSE
+36,,M. Y.,Chan,,,Non-UP,,,,,,FALSE
+37,,J.,Colombi,,,Non-UP,,,,,,FALSE
+38,,M. A. M.,Contreras,,,Non-UP,,,,,,FALSE
+39,,J.,Corpuz,,,Non-UP,,,,,,FALSE
+40,,M.,Cruz,,,Non-UP,,,,,,FALSE
+41,,C. A.,Cucueco,,,Non-UP,,,,,,FALSE
+42,,C.,Cuenca,,,Non-UP,,,,,,FALSE
+43,,L. Y.,Cusapang,,,Non-UP,,,,,,FALSE
+44,,L. A.,Danao,,,Non-UP,,,,,,FALSE
+45,,F.,De Asis,,,Non-UP,,,,,,FALSE
+46,,C. M.,De Guzman,,,Non-UP,,,,,,FALSE
+47,,C. G.,De Jesus,,,Non-UP,,,,,,FALSE
+48,,M. R. C.,De Leon,,,Non-UP,,,,,,FALSE
+49,,M. T. S.,De Pano,,,Non-UP,,,,,,FALSE
+50,,C. J. M.,Dela Cruz,,,Non-UP,,,,,,FALSE
+51,,M.,Diaz,,,Non-UP,,,,,,FALSE
+52,,A.,Dizon,,,Non-UP,,,,,,FALSE
+53,,J. R. T.,Domingo,,,Non-UP,,,,,,FALSE
+54,,B.,Dytoc,,,Non-UP,,,,,,FALSE
+55,,D. A. G.,Ecat,,,Non-UP,,,,,,FALSE
+56,,A.,Fajardo,,,Non-UP,,,,,,FALSE
+57,,A.,Fausto,,,Non-UP,,,,,,FALSE
+58,,G. P.,Felicio,,,Non-UP,,,,,,FALSE
+59,,S.,Ferreira,,,Non-UP,,,,,,FALSE
+60,,M. J.,Fider,,,Non-UP,,,,,,FALSE
+61,,K. E.,Generoso,,,Non-UP,,,,,,FALSE
+62,,R.,Geronia II,,,Non-UP,,,,,,FALSE
+63,,K. M.,Gotera,,,Non-UP,,,,,,FALSE
+64,,J.,Guerrero,,,Non-UP,,,,,,FALSE
+65,,J. L.,Gutierrez,,,Non-UP,,,,,,FALSE
+66,,B.,Guzman,,,Non-UP,,,,,,FALSE
+67,,J.,Halos,,,Non-UP,,,,,,FALSE
+68,,C.,Hendrickson,,,Non-UP,,,,,,FALSE
+69,,P. L. T.,Hoonakker,,,Non-UP,,,,,,FALSE
+70,,F. M.,Hubag,,,Non-UP,,,,,,FALSE
+71,,A. S.,Hundt,,,Non-UP,,,,,,FALSE
+72,,A. P.,Indardaya,,,Non-UP,,,,,,FALSE
+73,,P.,Jaramillo,,,Non-UP,,,,,,FALSE
+74,,M. S. A.,Jazmines,,,Non-UP,,,,,,FALSE
+75,,Y. B.,Kurata,,,Non-UP,,,,,,FALSE
+76,,J.,Lagonera,,,Non-UP,,,,,,FALSE
+77,,K.,Lasala,,,Non-UP,,,,,,FALSE
+78,,J. D.,Lee,,,Non-UP,,,,,,FALSE
+79,,K.,Lee,,,Non-UP,,,,,,FALSE
+80,,Y.,Li,,,Non-UP,,,,,,FALSE
+81,,P. L.,Lim,,,Non-UP,,,,,,FALSE
+82,,A.,Lopez,,,Non-UP,,,,,,FALSE
+83,,G. L.,Maandal,,,Non-UP,,,,,,FALSE
+84,,A.,Magadia,,,Non-UP,,,,,,FALSE
+85,,A. M.,Magpantay,,,Non-UP,,,,,,FALSE
+86,,L.,Mariano,,,Non-UP,,,,,,FALSE
+87,,P.,Marigomen,,,Non-UP,,,,,,FALSE
+88,,N.,Marinas,,,Non-UP,,,,,,FALSE
+89,,S.,Matthews,,,Non-UP,,,,,,FALSE
+90,,J. S.,Matuba,,,Non-UP,,,,,,FALSE
+91,,K.,Medel,,,Non-UP,,,,,,FALSE
+92,,J.,Medina,,,Non-UP,,,,,,FALSE
+93,,A. G.,Mercado,,,Non-UP,,,,,,FALSE
+94,,J. J.,Michalek,,,Non-UP,,,,,,FALSE
+95,,I. V.,Mirasol,,,Non-UP,,,,,,FALSE
+96,,M. A.,Naguit,,,Non-UP,,,,,,FALSE
+97,,C.,Novabos,,,Non-UP,,,,,,FALSE
+98,,C.,Ocampo,,,Non-UP,,,,,,FALSE
+99,,J. A.,Olalo,,,Non-UP,,,,,,FALSE
+100,,A.,Oleta,,,Non-UP,,,,,,FALSE
+101,,M. J.,Orata,,,Non-UP,,,,,,FALSE
+102,,A.,Palma,,,Non-UP,,,,,,FALSE
+103,,B.,Patterson,,,Non-UP,,,,,,FALSE
+104,,R. P.,Payyanadan,,,Non-UP,,,,,,FALSE
+105,,E. J.,Perez,,,Non-UP,,,,,,FALSE
+106,,W.,Pleto,,,Non-UP,,,,,,FALSE
+107,,A.,Portus,,,Non-UP,,,,,,FALSE
+108,,L.,Quilantang,,,Non-UP,,,,,,FALSE
+109,,N.,Rasco,,,Non-UP,,,,,,FALSE
+110,,F.,Rebelo,,,Non-UP,,,,,,FALSE
+111,,R.,Relator,,,Non-UP,,,,,,FALSE
+112,,O. M.,Revalo,,,Non-UP,,,,,,FALSE
+113,,A.,Revilla,,,Non-UP,,,,,,FALSE
+114,,L.D.,Revilla,,,Non-UP,,,,,,FALSE
+115,,J. A.,Revilla,,,Non-UP,,,,,,FALSE
+116,,K.,Reyes,,,Non-UP,,,,,,FALSE
+117,,S.,Reyes,,,Non-UP,,,,,,FALSE
+118,,V. F.,Reyes,,,Non-UP,,,,,,FALSE
+119,,M. M.,Rivera,,,Non-UP,,,,,,FALSE
+120,,K.,Robles,,,Non-UP,,,,,,FALSE
+121,,E. Z.,Rustico,,,Non-UP,,,,,,FALSE
+122,,E. Z.,Rustico Jr.,,,Non-UP,,,,,,FALSE
+123,,P.,Samoza,,,Non-UP,,,,,,FALSE
+124,,C. A. S.,San Miguel,,,Non-UP,,,,,,FALSE
+125,,N.,Sanchez,,,Non-UP,,,,,,FALSE
+126,,K.,Santos,,,Non-UP,,,,,,FALSE
+127,,K.,Sedilla,,,Non-UP,,,,,,FALSE
+128,,D.,Shunk,,,Non-UP,,,,,,FALSE
+129,,N.,Simon,,,Non-UP,,,,,,FALSE
+130,,M.,Soares,,,Non-UP,,,,,,FALSE
+131,,R. S.,Soriano,,,Non-UP,,,,,,FALSE
+132,,J.,Stamm,,,Non-UP,,,,,,FALSE
+133,,D. M.,Sua-an,,,Non-UP,,,,,,FALSE
+134,,J.,Sugay,,,Non-UP,,,,,,FALSE
+135,,K. F.,Tabanda,,,Non-UP,,,,,,FALSE
+136,,J.,Tantuco,,,Non-UP,,,,,,FALSE
+137,,J.,Trinidad,,,Non-UP,,,,,,FALSE
+138,,A.,Weis,,,Non-UP,,,,,,FALSE
+139,,J. R.,Wirthlin,,,Non-UP,,,,,,FALSE
+140,,K.,Wood,,,Non-UP,,,,,,FALSE
+141,,D.,Worger,,,Non-UP,,,,,,FALSE
+142,,T.,Wu,,,Non-UP,,,,,,FALSE
+143,,T.,Yukcel,,,Non-UP,,,,,,FALSE
+144,,L. C.,Yupingkun,,,Non-UP,,,,,,FALSE
 145,4,Benette,Custodio,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
 146,5,Lorelie,Grepo,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
 147,6,Mili-Ann,Tamayao,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
@@ -160,3 +160,12 @@ author_id,author_user_id,author_fn,author_ln,author_mail,author_contact,author_u
 159,18,Raymond Freth,Lagria,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
 160,19,Lizabeth Ann,Franco,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
 161,20,Pierre Allen,Villena,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
+162,,E.C.,Paningit,,,,,,,,,FALSE
+163,,J.R.,Santos,,,,,,,,,FALSE
+164,,A.C.,Blanco,,,,,,,,,FALSE
+165,,L.M.,Magpili,,,,,,,,,FALSE
+166,,M.,Dapito,,,,,,,,,FALSE
+167,,C.E.G.,Jimena,,,,,,,,,FALSE
+168,,E.,Ompad,,,,,,,,,FALSE
+169,,M. K. A.,Tacadao,,,,,,,,,FALSE
+170,,A.,Palanca,,,,,,,,,FALSE

@@ -373,7 +373,7 @@ def settings_page(pathname, tab):
             sql_pc = """SELECT 
                 dept_id,
                 dept_name 
-            from engineering_departments
+            from upd_engg_depts
             WHERE not dept_delete_ind
             ORDER BY dept_id
             """
