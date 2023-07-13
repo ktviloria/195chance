@@ -606,6 +606,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                             (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            )
                             """
                         values_p += [f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
@@ -615,6 +616,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                             (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            )
                             """
                     values_p += [f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
@@ -637,8 +639,9 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                             (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            )
                             """
-                        values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                    values_p += [f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
@@ -646,6 +649,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                             (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            )
                             """
                     values_p += [f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
@@ -663,6 +667,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                             (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            )
                             """
                 values_p += [f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",

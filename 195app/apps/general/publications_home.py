@@ -468,23 +468,23 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     values_p += [datefilter_u]
                     if searchterm:
                         sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR
-                            (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) 
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
                             """
-                        values_p += [f"%{searchterm}%",
-                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                        values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR
-                            (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) 
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
                             """
-                    values_p += [f"%{searchterm}%",
-                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                    values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                     if datefilter_u:
                         sql_p += """AND (cast (p_year as int) <= %s)"""
@@ -501,23 +501,23 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     values_p += [datefilter]
                     if searchterm:
                         sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR
-                            (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) 
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
                             """
-                        values_p += [f"%{searchterm}%",
-                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                    values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR
-                            (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) 
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
                             """
-                    values_p += [f"%{searchterm}%",
-                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                    values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                     if datefilter:
                         sql_p += """AND (cast (p_year as int) >= %s)"""
@@ -529,14 +529,14 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
             
             elif searchterm:
                 sql_p += """ AND (
-                    (pres_authors.author_name ILIKE %s) OR
-                    (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (p_year ILIKE %s)
-                ) """
-                values_p += [
-                    # f"%{searchterm}%", f"%{searchterm}%",
-                    f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                    # f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"
-                    ]
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            )
+                            """
+                values_p += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if datefilter:
                     sql_p += """AND (cast (p_year as int) >= %s)"""
                     values_p += [datefilter]
@@ -577,7 +577,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                 for i in range(len(pub_p2)): 
                     ids = pub_p2['id'][i]
                     pub_title = pub_p2['Title'][i]
-                    pres_presenters = pub_p['Presenter(s)'][i]
+                    pres_presenters = pub_p2['Presenter(s)'][i]
                     pres_category = pub_p2['Criteria'][i]
                     pres_conf = pub_p2['Conference'][i]
                     pres_start = pub_p2['Start Date'][i]
@@ -595,7 +595,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                                             html.Strong("Title: "), 
                                             html.Span(f"{pub_title}"),],id = f"modal_title_{ids}"),
                                         html.Div([
-                                            html.Strong("Presenters: "), 
+                                            html.Strong("Presenter(s): "), 
                                             html.Span(f"{pres_presenters}"),], id = f"modal_pres_presenters_{ids}"),
                                         html.Div([
                                             html.Strong("Presentation Category: "), 

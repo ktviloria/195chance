@@ -47,35 +47,31 @@ UPDATED MODULES:
         -lead author can be selected from all authors (author_id)
             -lead author can be determined as faculty: author_user_id=user_id where user_id>3
         -contributing author can be selected from all authors (author_id)
-        -alert when lead author=contributing author
-    ***FINISHED:
-        -callbacks for lead authors
-    ***TO BE WORKED ON:
-        -callbacks for contributing authors
+        -alert when contributing author in lead author
 
 6. 195app>apps>general>publications_home
     -updated table to reflect changes in database
-    ***FINISHED:
-        -filters
     ***TO BE WORKED ON:
-        -modal callbacks
+        -filters for presentations
 
 7. 195app>apps>general>faculty_details
     -updated table to reflect changes in database
-    ***FINISHED:
-        -filters
     ***TO BE WORKED ON:
-        -modal callbacks
+        -filters for presentations
 
 8. 195app>apps>admin>publications_manage
     -updated table to reflect changes in database
-    ***FINISHED:
-        -filters
+    ***TO BE WORKED ON:
+        -filters for presentations
 
 9. 195app>apps>faculty>my_publications
     -updated table to reflect changes in database
     ***FINISHED:
         -filters
+
+10. 195app>apps>forms>form_presentations
+    -changed layout
+    -changed callback
 
 
 ########
