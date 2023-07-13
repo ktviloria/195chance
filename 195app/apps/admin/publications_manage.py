@@ -404,7 +404,7 @@ def pubmanage_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u): 
                 
                 # CONCAT ('Presented on ', p_start_date, ' to ', p_end_date, ' at ', p_conf, ' in ', p_loc),
             values_p = []
-            cols_p = ['id', 'Year', 'Presentors', 'Title', 'Criteria', 'Start Date', 'End Date',
+            cols_p = ['id', 'Year', 'Presenters', 'Title', 'Criteria', 'Start Date', 'End Date',
                       'Conference', 'Location', 'Other Info', 'Last Updated', 'Last Modified By'] 
             
             if datefilter:
