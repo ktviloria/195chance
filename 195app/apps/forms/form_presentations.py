@@ -34,271 +34,306 @@ layout= html.Div(
         ), 
         html.H2("Presentation Details"), 
         html.H6("* Indicates required field", style={"color": "#d9534f", "font-style": "italic"}),
-        dbc.Alert('Please supply required fields.', color="danger", id='p_inputs_alert2', is_open=False),
         html.Hr(), 
         # General pub info needed
-        html.Div(
+        dbc.Row(
             [
-                #Authors involved
-                dbc.Row( 
-                    [   
-                        # dbc.Col(
-                        #     [
-                        #     dbc.Label("Presentation Role"),
-                        #     dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                        #     ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                        # ), 
-                        # dbc.Col( 
-                        #     html.Div( 
-                        #         dcc.Dropdown( 
-                        #             options=[
-                        #                     {'label': 'Presenter', 'value': 'Presenter'},
-                        #                     {'label': 'Co-Presenter', 'value': 'Co-Presenter'}
-                        #                 ], 
-                        #             id= 'form_prole_fac2', 
-                        #         ),
-                        #         className="dash-bootstrap" 
-                        #     ), 
-                        #     width=4,
-                        # ), 
-                        dbc.Col(
+                #Add/Modify publication form
+                dbc.Col(
+                    [
+                        html.Div(
                             [
-                            dbc.Label("Presenter(s)"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ), 
-                        dbc.Col( 
-                                dcc.Dropdown( 
-                                    id= 'form_p_pres', multi= True, searchable = True
+                                #alerts
+                                dbc.Alert('Please supply required fields.', color="danger", id='p_inputs_alert2', is_open=False),
+                                #Authors involved
+                                dbc.Row( 
+                                    [   
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Presenter(s)"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
+                                            ), 
+                                        dbc.Col( 
+                                                dcc.Dropdown( 
+                                                    id= 'form_p_pres', multi= True, searchable = True
+                                                ),
+                                            width=6,
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ), 
+                                #Publication tag
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Publication Criteria"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
+                                            ),  
+                                        dbc.Col( 
+                                            html.Div( 
+                                                dcc.Dropdown( 
+                                                    id='form_p_tag2', 
+                                                ),
+                                                className="dash-bootstrap" 
+                                            ), 
+                                            width=6, 
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ), 
+                                #Publication Title
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Publication Title"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
+                                            ), 
+                                        dbc.Col( 
+                                            dbc.Textarea( 
+                                                #type="text", 
+                                                id="form_p_title2", placeholder="Enter publication title" 
+                                            ), 
+                                            width=6, 
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ), 
+                                #conference
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Conference"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
+                                            ), 
+                                        dbc.Col( 
+                                            dbc.Textarea( 
+                                                #type="text", 
+                                                id="form_p_conf2", placeholder="Enter conference", style={"height":"15px"} 
+                                            ), 
+                                            width=6,
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
                                 ),
-                            width=6,
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ), 
-                #Publication tag
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("Publication Criteria"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ),  
-                        dbc.Col( 
-                            html.Div( 
-                                dcc.Dropdown( 
-                                    id='form_p_tag2', 
+                                #location
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Label("Location", width=2, style={'display': 'flex', 'align-items': 'center'}), 
+                                        dbc.Col( 
+                                            dbc.Textarea( 
+                                                #type="text", 
+                                                id="form_p_loc2", placeholder="Enter location of conference", style={"height":"15px"}  
+                                            ), 
+                                            width=6,
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
                                 ),
-                                className="dash-bootstrap" 
-                            ), 
-                            width=6, 
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ), 
-                #Publication Title
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("Publication Title"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ), 
-                        dbc.Col( 
-                            dbc.Textarea( 
-                                #type="text", 
-                                id="form_p_title2", placeholder="Enter publication title" 
-                            ), 
-                            width=6, 
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ), 
-            ],
-            id='form_p_gen2'
-        ),
-        # presentations
-        html.Div(
-            [
-                # #authors
-                # dbc.Row( 
-                #     [ 
-                #         dbc.Col(
-                #             [
-                #             dbc.Label("Authors"),
-                #             dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                #             ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                #             ), 
-                #         dbc.Col( 
-                #             dbc.Textarea( 
-                #                 #type="text", 
-                #                 id="form_p_authors2", placeholder="Enter all authors of presentation/publication" 
-                #             ), 
-                #             width=6,
-                #         ), 
-                #     ], 
-                #     className="mb-3", 
-                # ), 
-                #conference
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("Conference"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ), 
-                        dbc.Col( 
-                            dbc.Textarea( 
-                                #type="text", 
-                                id="form_p_conf2", placeholder="Enter conference", style={"height":"15px"} 
-                            ), 
-                            width=6,
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ),
-                #location
-                dbc.Row( 
-                    [ 
-                        dbc.Label("Location", width=2, style={'display': 'flex', 'align-items': 'center'}), 
-                        dbc.Col( 
-                            dbc.Textarea( 
-                                #type="text", 
-                                id="form_p_loc2", placeholder="Enter location of conference", style={"height":"15px"}  
-                            ), 
-                            width=6,
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ),
-                #pres year
-                # dbc.Row( 
-                #     [ 
-                #         dbc.Label("Presentation Year", width=2), 
-                #         dbc.Col( 
-                #             dbc.Input(
-                #                 type="text", id="form_p_presyear", placeholder="Enter year of presentation" 
-                #             ), 
-                #             width=6,
-                #         ), 
-                #     ], 
-                #     className="mb-3", 
-                # ),
-                #pres date - start
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("Start Date"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ), 
-                        dbc.Col( 
-                            dcc.DatePickerSingle(
-                                id='form_p_start_date2',
-                                placeholder="MM/DD/YYYY",
-                                display_format="MM/DD/YYYY",
-                                min_date_allowed=date(2014, 1, 1),
-                                max_date_allowed=date.today(),
-                                initial_visible_month=date.today(),
-                                #note: I couldn't adjust the width of the box to fit the placeholder
-                            ), className="DateInput_input_1"
-                                    #html.Div(id='output-container-date-picker-range')
-                                #type="text", id="form_p_presdate", placeholder="Enter date(s) of presentation YYYY or MM/DD/YYYY" 
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ),
-                #pres date - end
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("End Date"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ), 
-                        dbc.Col( 
-                            dcc.DatePickerSingle(
-                                id='form_p_end_date2',
-                                placeholder="MM/DD/YYYY",
-                                display_format="MM/DD/YYYY",
-                                min_date_allowed=date(2014, 1, 1),
-                                max_date_allowed=date.today(),
-                                initial_visible_month=date.today(),
-                                #note: I couldn't adjust the width of the box to fit the placeholder
-                            ), className="DateInput_input_1"
-                                    #html.Div(id='output-container-date-picker-range')
-                                #type="text", id="form_p_presdate", placeholder="Enter date(s) of presentation YYYY or MM/DD/YYYY" 
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ),
+                                #pres date - start
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Start Date"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
+                                            ), 
+                                        dbc.Col( 
+                                            dcc.DatePickerSingle(
+                                                id='form_p_start_date2',
+                                                placeholder="MM/DD/YYYY",
+                                                display_format="MM/DD/YYYY",
+                                                min_date_allowed=date(2014, 1, 1),
+                                                max_date_allowed=date.today(),
+                                                initial_visible_month=date.today(),
+                                                #note: I couldn't adjust the width of the box to fit the placeholder
+                                            ), className="DateInput_input_1"
+                                                    #html.Div(id='output-container-date-picker-range')
+                                                #type="text", id="form_p_presdate", placeholder="Enter date(s) of presentation YYYY or MM/DD/YYYY" 
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ),
+                                #pres date - end
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("End Date"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
+                                            ), 
+                                        dbc.Col( 
+                                            dcc.DatePickerSingle(
+                                                id='form_p_end_date2',
+                                                placeholder="MM/DD/YYYY",
+                                                display_format="MM/DD/YYYY",
+                                                min_date_allowed=date(2014, 1, 1),
+                                                max_date_allowed=date.today(),
+                                                initial_visible_month=date.today(),
+                                                #note: I couldn't adjust the width of the box to fit the placeholder
+                                            ), className="DateInput_input_1"
+                                                    #html.Div(id='output-container-date-picker-range')
+                                                #type="text", id="form_p_presdate", placeholder="Enter date(s) of presentation YYYY or MM/DD/YYYY" 
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ),
 
-                #if you want to use date range picker, just separated start and end date above in case these need to be shown separately in the database
-                # dbc.Row( 
-                #     [ 
-                #         dbc.Label("Date Range", width=2), 
-                #         dbc.Col( 
-                #             dcc.DatePickerRange(
-                #             id='p_date_range',
-                #             min_date_allowed=date(2014, 1, 1),
-                #             max_date_allowed=date.today(),
-                #             initial_visible_month=date.today(),
-                #             start_date_placeholder_text="MM/DD/YYYY",
-                #             end_date_placeholder_text="MM/DD/YYYY",
-                #                 #note: I couldn't adjust the width of the box to fit the placeholder
-                #             ),
-                #                     #html.Div(id='output-container-date-picker-range')
-                #                 #type="text", id="form_p_presdate", placeholder="Enter date(s) of presentation YYYY or MM/DD/YYYY" 
-                #         ), 
-                #     ], 
-                #     className="mb-3", 
-                # ),
-                #pres add info
-                dbc.Row( 
-                    [ 
-                        dbc.Label("Additional Information", width=2, style={'display': 'flex', 'align-items': 'center'}), 
-                        dbc.Col( 
-                            dbc.Textarea( 
-                                #type="text", 
-                                id="form_p_addinfo2", placeholder="Enter any additional information", style={"min-height":"80px"} 
-                            ), 
-                            width=6,
-                        ), 
-                    ], 
-                    className="mb-3", 
+                                #if you want to use date range picker, just separated start and end date above in case these need to be shown separately in the database
+                                # dbc.Row( 
+                                #     [ 
+                                #         dbc.Label("Date Range", width=2), 
+                                #         dbc.Col( 
+                                #             dcc.DatePickerRange(
+                                #             id='p_date_range',
+                                #             min_date_allowed=date(2014, 1, 1),
+                                #             max_date_allowed=date.today(),
+                                #             initial_visible_month=date.today(),
+                                #             start_date_placeholder_text="MM/DD/YYYY",
+                                #             end_date_placeholder_text="MM/DD/YYYY",
+                                #                 #note: I couldn't adjust the width of the box to fit the placeholder
+                                #             ),
+                                #                     #html.Div(id='output-container-date-picker-range')
+                                #                 #type="text", id="form_p_presdate", placeholder="Enter date(s) of presentation YYYY or MM/DD/YYYY" 
+                                #         ), 
+                                #     ], 
+                                #     className="mb-3", 
+                                # ),
+
+                                #pres add info
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Label("Additional Information", width=2, style={'display': 'flex', 'align-items': 'center'}), 
+                                        dbc.Col( 
+                                            dbc.Textarea( 
+                                                #type="text", 
+                                                id="form_p_addinfo2", placeholder="Enter any additional information", style={"min-height":"80px"} 
+                                            ), 
+                                            width=6,
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ),
+                                #delete div
+                                html.Div( 
+                                    dbc.Row( 
+                                        [ 
+                                            dbc.Label("Wish to delete?", width=2), 
+                                            dbc.Col( 
+                                                dbc.Checklist( 
+                                                    id='form_p_removerecord2', 
+                                                    options=[ 
+                                                        { 
+                                                            'label': "Mark for Deletion", 'value': 1 
+                                                        } 
+                                                    ], 
+                                                    style={'fontWeight':'bold'}, 
+                                                ), 
+                                                width=6, 
+                                            ), 
+                                        ], 
+                                        className="mb-3", 
+                                    ), 
+                                    id = 'form_p_removerecord_div2' 
+                                ), 
+                                html.Hr(), 
+                                dbc.Button('Submit', color='danger', id='form_p_submitbtn2'),
+                            ],
+                            style={'width': '100%'}
+                        )
+                    ],
+                    width=7, style={'display': 'flex', 'align-items': 'center'}
+                ),
+                #Add author card
+                dbc.Col(
+                    dbc.Row(
+                            dbc.Card(
+                                [
+                                    dbc.CardHeader(
+                                        [
+                                            html.H2("Add Presenter into options"),
+                                            html.H6("Please select presenter to be added in the form to the left if a presenter of this presentation", style={"margin-bottom": "15px", "color": "#d9534f", "font-style": "italic"})
+                                        ]
+                                    ),
+                                    dbc.CardBody(
+                                        [
+                                            dbc.Alert('Please supply required fields.', color="danger", id='p_add_inputs_alert', is_open=False),
+                                            dbc.Row( 
+                                                [ 
+                                                    dbc.Col(
+                                                        [
+                                                        dbc.Label("First Name/Initials"),
+                                                        dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                                        ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                                        ),  
+                                                    dbc.Col( 
+                                                        dbc.Textarea( 
+                                                            #type="text", 
+                                                            id="form_p_add_author_fn", placeholder="Enter presenter's first name/initials",
+                                                        ), 
+                                                        width=8,
+                                                    ), 
+                                                ], 
+                                                className="mb-3", 
+                                            ),
+                                            dbc.Row( 
+                                                [ 
+                                                    dbc.Col(
+                                                        [
+                                                        dbc.Label("Last Name"),
+                                                        dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                                        ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                                        ),  
+                                                    dbc.Col( 
+                                                        dbc.Textarea( 
+                                                            #type="text", 
+                                                            id="form_p_add_author_ln", placeholder="Enter presenter's last name",
+                                                        ), 
+                                                        width=8,
+                                                    ), 
+                                                ], 
+                                                className="mb-3", 
+                                            ),
+                                            dbc.Row( 
+                                                [ 
+                                                    dbc.Col(
+                                                        [
+                                                        dbc.Label("UP Affiliation"),
+                                                        dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                                        ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                                        ), 
+                                                    dbc.Col( 
+                                                        html.Div( 
+                                                            dcc.Dropdown( 
+                                                                id='form_p_add_author_up_aff', optionHeight=60
+                                                            ),
+                                                            className="dash-bootstrap" 
+                                                        ), 
+                                                        width=8,
+                                                    ), 
+                                                ], 
+                                                className="mb-3", 
+                                            ), 
+                                        ]
+                                    ),
+                                    dbc.CardFooter(
+                                        dbc.Button('Submit', color='danger', id='form_p_add_author_submitbtn')
+                                    )
+                                ]
+                            )
+                    ),
+                    width=5, style={'display': 'flex', 'align-items': 'baseline'}
                 )
-            ],
-            id='form_p2'
-            
+            ]
         ),
-        html.Div( 
-            dbc.Row( 
-                [ 
-                    dbc.Label("Wish to delete?", width=2), 
-                    dbc.Col( 
-                        dbc.Checklist( 
-                            id='form_p_removerecord2', 
-                            options=[ 
-                                { 
-                                    'label': "Mark for Deletion", 'value': 1 
-                                } 
-                            ], 
-                            style={'fontWeight':'bold'}, 
-                        ), 
-                        width=6, 
-                    ), 
-                ], 
-                className="mb-3", 
-            ), 
-            id = 'form_p_removerecord_div2' 
-        ), 
-        html.Hr(), 
-        dbc.Button('Submit', color='danger', id='form_p_submitbtn2'), 
         dbc.Modal( 
             [    
                 dbc.ModalHeader(dbc.ModalTitle("Saving Progress"), style=mod_style), 
@@ -311,9 +346,22 @@ layout= html.Div(
             id="form_p_modal2", 
             is_open=False, 
         ),  
+        dbc.Modal( 
+            [    
+                dbc.ModalHeader(dbc.ModalTitle("Saving Progress"), style=mod_style), 
+                dbc.ModalBody("tempmessage", id='form_p_add_author_feedback_message'), 
+                dbc.ModalFooter( 
+                    dbc.Button("Okay", color='secondary', id="form_p_add_author_closebtn", className="ms-auto", n_clicks=0) 
+                ),           
+            ], 
+            centered=True, 
+            id="form_p_add_author_modal", 
+            is_open=False, 
+        ),
     ] 
 ) 
 
+#Dropwdown
 @app.callback(
      [
         Output('form_p_toload2', 'data'), 
@@ -331,7 +379,6 @@ layout= html.Div(
         
     ] 
 )
-
 def form_a_load_dropdown(pathname, pres, search, currentuserid): 
     if pathname == '/form_presentations': 
         sql_presentor = """ SELECT
@@ -369,6 +416,85 @@ def form_a_load_dropdown(pathname, pres, search, currentuserid):
         raise PreventUpdate 
     return(to_load, removerecord_div, presentor_opts, tag_options )  
 
+#Add Presenter Submit process
+@app.callback(
+    [
+        Output('form_p_add_author_modal', 'is_open'), 
+        Output('form_p_add_author_feedback_message', 'children'), 
+        Output('p_add_inputs_alert', 'is_open'),
+        Output('form_p_add_author_closebtn', 'href'),
+    ], 
+    [
+        Input('form_p_add_author_submitbtn', 'n_clicks'), 
+        Input('form_p_add_author_closebtn', 'n_clicks') 
+    ], 
+    [
+        State('form_p_add_author_fn', 'value'),
+        State('form_p_add_author_ln', 'value'),
+        State('form_p_add_author_up_aff', 'value'),
+        State('url', 'search' ),
+        # State('currentuserid', 'data')
+    ]
+)
+def form_a_submitprocess (add_submit_btn, add_close_btn,
+                            firstname, lastname, affiliation,
+                            add_search):
+    ctx = dash.callback_context
+    if ctx.triggered: 
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        add_openmodal = False 
+        add_feedbackmessage  = ' '
+        add_inputsalert = False
+        add_okay_href = None 
+    else: 
+        raise PreventUpdate
+    
+    if eventid == 'form_p_add_author_submitbtn' and add_submit_btn:     
+        add_inputs = [firstname, lastname, affiliation]
+    
+        if not all(add_inputs): 
+            add_inputsalert = True
+            
+        else:
+            add_openmodal = True  
+            parsed = urlparse(add_search)
+            mode = parse_qs(parsed.query)['mode'][0]
+            
+            a_add_timestamp = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            a_add_timestamp_time = dt.datetime.strptime(a_add_timestamp,'%Y-%m-%d %H:%M:%S')
+
+            sql_max_author_inquiry = """SELECT MAX(author_id) from authors"""
+            max_author_val = []
+            max_author_colname = ['max']
+            max_author_value_db = db.querydatafromdatabase (sql_max_author_inquiry, max_author_val, max_author_colname)
+            max_author_id = int(max_author_value_db['max'][0]) + 1
+
+            form_a_sqlcode_add_author = """INSERT INTO authors(
+                    author_id,  
+                    author_fn,
+                    author_ln,
+                    author_up_constituent, 
+                    author_delete_ind, 
+                    author_last_upd
+                )
+                VALUES (%s, %s, %s, %s, %s, %s)
+                """                 
+            form_a_values_add_author = [max_author_id, firstname, lastname, affiliation, False, a_add_timestamp_time]
+            db.modifydatabase(form_a_sqlcode_add_author, form_a_values_add_author)
+            
+            add_feedbackmessage = 'Author added to database. Please reload page.'
+            # add_okay_href = '/publications_manage'
+            add_okay_href = '/form_authorships' + add_search
+            # driver = webdriver.Chrome()
+            # driver.refresh()
+
+    elif eventid == 'form_p_add_author_closebtn' and add_close_btn: 
+        pass
+    else: 
+        raise PreventUpdate
+    return [add_openmodal, add_feedbackmessage, add_inputsalert, add_okay_href]
+
+#Load Data
 @app.callback (
     [
         Output('form_p_pres', 'value'),
@@ -390,7 +516,6 @@ def form_a_load_dropdown(pathname, pres, search, currentuserid):
         State('form_p_loadonce', 'data')
     ]
 )
-
 def form_p_load (timestamp, to_load, search, loadonce): 
     parsed = urlparse(search)
     mode = parse_qs(parsed.query)['mode'][0]
@@ -461,7 +586,8 @@ def form_p_load (timestamp, to_load, search, loadonce):
     return [form_p_pres, form_p_tag_id, form_p_pub_title, 
             form_p_conf, form_p_loc, form_p_start_date, form_p_end_date, 
             form_p_add_info, loadonce]
-    
+
+#Add Presentation Submit Process   
 @app.callback(
     [
         Output('form_p_modal2', 'is_open'), 
@@ -487,7 +613,6 @@ def form_p_load (timestamp, to_load, search, loadonce):
         State('currentuserid', 'data')
     ]
 )
-
 def form_p_submitprocess (submit_btn, close_btn, p_pres,
                           p_tag, p_title, p_conf, 
                           p_loc, p_start_date, p_end_date, p_addinfo, search, removerecord, cuser_id):

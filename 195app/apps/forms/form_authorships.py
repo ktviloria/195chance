@@ -14,7 +14,11 @@ from datetime import date, datetime
  
 from app import app
 from apps import dbconnect as db
- 
+
+# from selenium import webdriver 
+# import urllib
+# import urllib2
+
 from urllib.parse import urlparse, parse_qs
 
 mod_style = { 
@@ -34,241 +38,331 @@ layout= html.Div(
         ), 
         html.H2("Publication Details"), 
         html.H6("* Indicates required field", style={"color": "#d9534f", "font-style": "italic"}),
-        dbc.Alert('Please supply required fields.', color="danger", id='a_inputs_alert', is_open=False),
-        dbc.Alert('Please supply required fields.', color="danger", id='a_lead_alert', is_open=False),
-        dbc.Alert('Please supply either a DOI or ISXN', color="danger", id='a_inputs_alert2', is_open=False),
-        dbc.Alert('Lead authors cannot be other contributing authors. Please check your selection.', color="danger", id='a_authors_alert', is_open=False),
         html.Hr(), 
         # General pub info needed
-        html.Div(
+        dbc.Row(
             [
-                #Authors involved
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("Lead Author(s)"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ), 
-                        dbc.Col( 
-                            dcc.Dropdown( 
-                                    id='form_a_lead', multi = True, searchable = True
-                                ),
-                            width=6
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ), 
-                dbc.Row(
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("Contributing Author(s)"),
-                            #dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ), 
-                        dbc.Col( 
-                                dcc.Dropdown( 
-                                    id='form_a_contributing', multi = True, searchable = True
-                                ),
-                            width=6
-                        ), 
-                    ], 
-                    className="mb-3",  
-                ), 
-                #Publication tag
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("Criteria"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ), 
-                        dbc.Col( 
-                            html.Div( 
-                                dcc.Dropdown( 
-                                    id='form_a_tag', optionHeight=60
-                                ),
-                                className="dash-bootstrap" 
-                            ), 
-                            width=6,
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ), 
-                #Publication Title
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("Publication Title"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ),  
-                        dbc.Col( 
-                            dbc.Textarea( 
-                                #type="text", 
-                                id="form_a_title", placeholder="Enter title",
-                            ), 
-                            width=6,
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ), 
-            ],
-            id='form_a_gen'
-        ),
-        # authorships
-        html.Div(
-            [
-                #Publication Date
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("Publication Date"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ), 
-                        dbc.Col( 
-                            html.Div(
-                                dcc.DatePickerSingle(
-                                    id='form_a_date',
-                                    placeholder="MM/DD/YYYY",
-                                    display_format="MM/DD/YYYY",
-                                    min_date_allowed=date(2014, 1, 1),
-                                    max_date_allowed=date.today(),
-                                    initial_visible_month=date.today(),                                    
-                                ), className="DateInput_input_1"
- 
-                            ), 
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ),
-                #publisher
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("Publisher"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ), 
-                        dbc.Col( 
-                            dbc.Textarea( 
-                                #type="text", 
-                                id="form_a_publisher", placeholder="Enter publishing house or publishing company", style={"height":"15px"}  
-                            ), 
-                            width=6, 
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ),
-                #Name of Publication
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("Name of Journal"),
-                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ), 
-                        dbc.Col( 
-                            dbc.Textarea( 
-                                #type="text", 
-                                id="form_a_pubname", placeholder="Enter name of publication or journal",
-                                style={"height":"15px"}
-                            ), 
-                            width=6,
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ),
-                #Scopus
-                dbc.Row( 
-                    [ 
-                        dbc.Label("Scopus (Optional)", width=2, style={'display': 'flex', 'align-items': 'center'}), 
-                        dbc.Col( 
-                            dbc.Input( 
-                                type="text", id="form_a_scopus", placeholder="Enter scopus" 
-                            ), 
-                            width=6,
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ),
-                dbc.Row(
+                #Add/Modify publication form
+                dbc.Col(
                     [
-                    dbc.Col(
-                        html.H6("Please provide at least one of the following:", style={"margin-bottom": "15px", "color": "#d9534f", "font-style": "italic"})
+                        html.Div(
+                            [
+                                #alerts
+                                dbc.Alert('Please supply required fields.', color="danger", id='a_inputs_alert', is_open=False),
+                                dbc.Alert('Please supply required fields.', color="danger", id='a_lead_alert', is_open=False),
+                                dbc.Alert('Please supply either a DOI or ISXN', color="danger", id='a_inputs_alert2', is_open=False),
+                                dbc.Alert('Lead authors cannot be other contributing authors. Please check your selection.', color="danger", id='a_authors_alert', is_open=False),
+                                #Authors involved
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Lead Author(s)"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ), 
+                                        dbc.Col( 
+                                            dcc.Dropdown( 
+                                                    id='form_a_lead', multi = True, searchable = True
+                                                ),
+                                            width=8
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ), 
+                                dbc.Row(
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Contributing Author(s)"),
+                                            #dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ), 
+                                        dbc.Col( 
+                                                dcc.Dropdown( 
+                                                    id='form_a_contributing', multi = True, searchable = True
+                                                ),
+                                            width=8
+                                        ), 
+                                    ], 
+                                    className="mb-3",  
+                                ), 
+                                #Publication tag
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Criteria"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ), 
+                                        dbc.Col( 
+                                            html.Div( 
+                                                dcc.Dropdown( 
+                                                    id='form_a_tag', optionHeight=60
+                                                ),
+                                                className="dash-bootstrap" 
+                                            ), 
+                                            width=8,
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ), 
+                                #Publication Title
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Publication Title"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ),  
+                                        dbc.Col( 
+                                            dbc.Textarea( 
+                                                #type="text", 
+                                                id="form_a_title", placeholder="Enter title",
+                                            ), 
+                                            width=8,
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ), 
+                                #Publication Date
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Publication Date"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ), 
+                                        dbc.Col( 
+                                            html.Div(
+                                                dcc.DatePickerSingle(
+                                                    id='form_a_date',
+                                                    placeholder="MM/DD/YYYY",
+                                                    display_format="MM/DD/YYYY",
+                                                    min_date_allowed=date(2014, 1, 1),
+                                                    max_date_allowed=date.today(),
+                                                    initial_visible_month=date.today(),                                    
+                                                ), className="DateInput_input_1"
+                
+                                            ), 
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ),
+                                #Publisher
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Publisher"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ), 
+                                        dbc.Col( 
+                                            dbc.Textarea( 
+                                                #type="text", 
+                                                id="form_a_publisher", placeholder="Enter publishing house or publishing company", style={"height":"15px"}  
+                                            ), 
+                                            width=8, 
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ),
+                                #Name of Publication
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("Name of Journal"),
+                                            dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ), 
+                                        dbc.Col( 
+                                            dbc.Textarea( 
+                                                #type="text", 
+                                                id="form_a_pubname", placeholder="Enter name of publication or journal",
+                                                style={"height":"15px"}
+                                            ), 
+                                            width=8,
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ),
+                                #Scopus
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Label("Scopus (Optional)",
+                                            width=3, style={'display': 'flex', 'align-items': 'center'}), 
+                                        dbc.Col( 
+                                            dbc.Input( 
+                                                type="text", id="form_a_scopus", placeholder="Enter scopus" 
+                                            ), 
+                                            width=8,
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ),
+                                #Text prompt for requiring DOI/ISXN
+                                dbc.Row(
+                                    [
+                                    dbc.Col(
+                                        html.H6("Please provide at least one of the following:", style={"margin-bottom": "15px", "color": "#d9534f", "font-style": "italic"})
+                                        )
+                                    ]
+                                ),
+                                #DOI
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("DOI"),
+                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ),  
+                                        dbc.Col( 
+                                            dbc.Input( 
+                                                type="text", 
+                                                id="form_a_doi", placeholder="Enter DOI"
+                                            ), 
+                                            width=8,
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ),
+                                #isxn
+                                dbc.Row( 
+                                    [ 
+                                        dbc.Col(
+                                            [
+                                            dbc.Label("ISBN/ISSN"),
+                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ),  
+                                        dbc.Col( 
+                                            dbc.Input( 
+                                                type="text", 
+                                                id="form_a_isxn", placeholder="Enter ISBN/ISSN"
+                                            ), 
+                                            width=8,
+                                        ), 
+                                    ], 
+                                    className="mb-3", 
+                                ),
+                                #delete div
+                                html.Div( 
+                                    dbc.Row( 
+                                        [ 
+                                            dbc.Label("Wish to delete?", width=2), 
+                                            dbc.Col( 
+                                                dbc.Checklist( 
+                                                    id='form_a_removerecord', 
+                                                    options=[ 
+                                                        { 
+                                                            'label': "Mark for Deletion", 'value': 1 
+                                                        } 
+                                                    ], 
+                                                    style={'fontWeight':'bold'}, 
+                                                ), 
+                                                width=8, 
+                                            ), 
+                                        ], 
+                                        className="mb-3", 
+                                    ), 
+                                    id = 'form_a_removerecord_div' 
+                                ), 
+                                html.Hr(), 
+                                dbc.Button('Submit', color='danger', id='form_a_submitbtn')
+                            ],
+                            style={'width': '100%'}
                         )
-                    ]
+                    ],
+                    width=7, style={'display': 'flex', 'align-items': 'center'}
                 ),
-                #DOI
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("DOI"),
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ),  
-                        dbc.Col( 
-                            dbc.Input( 
-                                type="text", 
-                                id="form_a_doi", placeholder="Enter DOI"
-                            ), 
-                            width=6,
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ),
-                #isxn
-                dbc.Row( 
-                    [ 
-                        dbc.Col(
-                            [
-                            dbc.Label("ISBN/ISSN"),
-                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
-                            ),  
-                        dbc.Col( 
-                            dbc.Input( 
-                                type="text", 
-                                id="form_a_isxn", placeholder="Enter ISBN/ISSN"
-                            ), 
-                            width=6,
-                        ), 
-                    ], 
-                    className="mb-3", 
-                ),
-            ],
-            id='form_a'
+                #Add author card
+                dbc.Col(
+                    dbc.Row(
+                            dbc.Card(
+                                [
+                                    dbc.CardHeader(
+                                        [
+                                            html.H2("Add Author into options"),
+                                            html.H6("Please select author to be added in the form to the left if author is a lead or contributing author of this publication", style={"margin-bottom": "15px", "color": "#d9534f", "font-style": "italic"})
+                                            # dbc.FormText("Please select author to be added in the form to the left if author is a lead or contributing author of this publication",
+                                            #             style = {"font-style": "italic", 'font-size':'13px'}),
+                                        ]
+                                    ),
+                                    dbc.CardBody(
+                                        [
+                                            dbc.Alert('Please supply required fields.', color="danger", id='a_add_inputs_alert', is_open=False),
+                                            dbc.Row( 
+                                                [ 
+                                                    dbc.Col(
+                                                        [
+                                                        dbc.Label("First Name/Initials"),
+                                                        dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                                        ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                                        ),  
+                                                    dbc.Col( 
+                                                        dbc.Textarea( 
+                                                            #type="text", 
+                                                            id="form_a_add_author_fn", placeholder="Enter author's first name/initials",
+                                                        ), 
+                                                        width=8,
+                                                    ), 
+                                                ], 
+                                                className="mb-3", 
+                                            ),
+                                            dbc.Row( 
+                                                [ 
+                                                    dbc.Col(
+                                                        [
+                                                        dbc.Label("Last Name"),
+                                                        dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                                        ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                                        ),  
+                                                    dbc.Col( 
+                                                        dbc.Textarea( 
+                                                            #type="text", 
+                                                            id="form_a_add_author_ln", placeholder="Enter author's last name",
+                                                        ), 
+                                                        width=8,
+                                                    ), 
+                                                ], 
+                                                className="mb-3", 
+                                            ),
+                                            dbc.Row( 
+                                                [ 
+                                                    dbc.Col(
+                                                        [
+                                                        dbc.Label("UP Affiliation"),
+                                                        dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                                        ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                                        ), 
+                                                    dbc.Col( 
+                                                        html.Div( 
+                                                            dcc.Dropdown( 
+                                                                id='form_a_add_author_up_aff', optionHeight=60
+                                                            ),
+                                                            className="dash-bootstrap" 
+                                                        ), 
+                                                        width=8,
+                                                    ), 
+                                                ], 
+                                                className="mb-3", 
+                                            ), 
+                                        ]
+                                    ),
+                                    dbc.CardFooter(
+                                        dbc.Button('Submit', color='danger', id='form_a_add_author_submitbtn')
+                                    )
+                                ]
+                            )
+                    ),
+                    width=5, style={'display': 'flex', 'align-items': 'baseline'}
+                )
+            ]
         ),
-        html.Div( 
-            dbc.Row( 
-                [ 
-                    dbc.Label("Wish to delete?", width=2), 
-                    dbc.Col( 
-                        dbc.Checklist( 
-                            id='form_a_removerecord', 
-                            options=[ 
-                                { 
-                                    'label': "Mark for Deletion", 'value': 1 
-                                } 
-                            ], 
-                            style={'fontWeight':'bold'}, 
-                        ), 
-                        width=4, 
-                    ), 
-                ], 
-                className="mb-3", 
-            ), 
-            id = 'form_a_removerecord_div' 
-        ), 
-        html.Hr(), 
-        dbc.Button('Submit', color='danger', id='form_a_submitbtn'), 
         dbc.Modal( 
             [    
                 dbc.ModalHeader(dbc.ModalTitle("Saving Progress"), style=mod_style), 
@@ -279,6 +373,18 @@ layout= html.Div(
             ], 
             centered=True, 
             id="form_a_modal", 
+            is_open=False, 
+        ),  
+        dbc.Modal( 
+            [    
+                dbc.ModalHeader(dbc.ModalTitle("Saving Progress"), style=mod_style), 
+                dbc.ModalBody("tempmessage", id='form_a_add_author_feedback_message'), 
+                dbc.ModalFooter( 
+                    dbc.Button("Okay", color='secondary', id="form_a_add_author_closebtn", className="ms-auto", n_clicks=0) 
+                ),           
+            ], 
+            centered=True, 
+            id="form_a_add_author_modal", 
             is_open=False, 
         ),  
     ] 
@@ -314,11 +420,10 @@ def form_a_load_removerecord(pathname, search):
         Output ('form_a_lead', 'options'),
         Output ('form_a_contributing', 'options'), 
         Output ('form_a_tag', 'options'),
-        # Output ('form_a_involvement', 'options'), 
+        Output('form_a_add_author_up_aff', 'options')
     ], 
     [
         Input('url', 'pathname'), 
-        # Input('form_a_authorship_role', 'value') , 
         Input('form_a_lead', 'value'),
         Input('form_a_contributing', 'value')
     ], 
@@ -328,6 +433,7 @@ def form_a_load_removerecord(pathname, search):
 )
 def form_a_load_dropdown(pathname, lead, contributing, currentuserid): 
     if pathname == '/form_authorships': 
+        #lead author options
         sql_lead_author = """ SELECT
             DISTINCT (author_fn ||' '|| author_ln) as label, author_id as value,
 			author_user_id
@@ -342,6 +448,7 @@ def form_a_load_dropdown(pathname, lead, contributing, currentuserid):
 
         lead_author_opts = lead_author_involved.to_dict('records')
 
+        #contributing author options
         sql_contributing_author = """ SELECT
             DISTINCT (author_fn ||' '|| author_ln) as label, author_id as value
             from authors
@@ -368,7 +475,7 @@ def form_a_load_dropdown(pathname, lead, contributing, currentuserid):
         #                                 if x[id] != lead
         #                                 and x[id] != contributing]
         
-        #tag dropdown
+        #criteria options
         sql_tags = """SELECT DISTINCT (tag_title) AS label, tag_id AS value 
             from tags 
             WHERE tag_sub = 'A' and not tag_delete_ind 
@@ -379,22 +486,102 @@ def form_a_load_dropdown(pathname, lead, contributing, currentuserid):
         cols_tag = ['label', 'value']
         tag_included = db.querydatafromdatabase(sql_tags, values_tag, cols_tag)
         tag_options = tag_included.to_dict('records')
-        
-        # #involvement dropdown
-        # sql_involvement = """ SELECT a_author_subcat_label as label, a_author_subcat_id  as value 
-        #     from authorship_subcategory
-        #     WHERE not sub_delete_ind
-        #     ORDER BY value 
-        # """
-        # values_involvement = []
-        # cols_involvement = ['label', 'value']
-        # involvement_included = db.querydatafromdatabase(sql_involvement, values_involvement, cols_involvement)
-        # involvement_options = involvement_included.to_dict('records') 
+
+        #up_aff options
+        sql_up_aff = """SELECT DISTINCT (cons_name) AS label, cons_id AS value 
+            from up_system 
+            WHERE cons_delete_ind = false
+                
+            ORDER BY value
+        """
+        values_up_aff  = []
+        cols_up_aff = ['label', 'value']
+        up_aff_included = db.querydatafromdatabase(sql_up_aff, values_up_aff, cols_up_aff)
+        up_aff_options = up_aff_included.to_dict('records')
         
     else: 
          raise PreventUpdate 
-    return(lead_author_opts, contributing_author_opts, tag_options)
+    return(lead_author_opts, contributing_author_opts, tag_options, up_aff_options)
+
+#Add Author Submit process
+@app.callback(
+    [
+        Output('form_a_add_author_modal', 'is_open'), 
+        Output('form_a_add_author_feedback_message', 'children'), 
+        Output('a_add_inputs_alert', 'is_open'),
+        Output('form_a_add_author_closebtn', 'href'),
+    ], 
+    [
+        Input('form_a_add_author_submitbtn', 'n_clicks'), 
+        Input('form_a_add_author_closebtn', 'n_clicks') 
+    ], 
+    [
+        State('form_a_add_author_fn', 'value'),
+        State('form_a_add_author_ln', 'value'),
+        State('form_a_add_author_up_aff', 'value'),
+        State('url', 'search' ),
+        # State('currentuserid', 'data')
+    ]
+)
+def form_a_submitprocess (add_submit_btn, add_close_btn,
+                            firstname, lastname, affiliation,
+                            add_search):
+    ctx = dash.callback_context
+    if ctx.triggered: 
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        add_openmodal = False 
+        add_feedbackmessage  = ' '
+        add_inputsalert = False
+        add_okay_href = None 
+    else: 
+        raise PreventUpdate
     
+    if eventid == 'form_a_add_author_submitbtn' and add_submit_btn:     
+        add_inputs = [firstname, lastname, affiliation]
+    
+        if not all(add_inputs): 
+            add_inputsalert = True
+            
+        else:
+            add_openmodal = True  
+            parsed = urlparse(add_search)
+            mode = parse_qs(parsed.query)['mode'][0]
+            
+            a_add_timestamp = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            a_add_timestamp_time = dt.datetime.strptime(a_add_timestamp,'%Y-%m-%d %H:%M:%S')
+
+            sql_max_author_inquiry = """SELECT MAX(author_id) from authors"""
+            max_author_val = []
+            max_author_colname = ['max']
+            max_author_value_db = db.querydatafromdatabase (sql_max_author_inquiry, max_author_val, max_author_colname)
+            max_author_id = int(max_author_value_db['max'][0]) + 1
+
+            form_a_sqlcode_add_author = """INSERT INTO authors(
+                    author_id,  
+                    author_fn,
+                    author_ln,
+                    author_up_constituent, 
+                    author_delete_ind, 
+                    author_last_upd
+                )
+                VALUES (%s, %s, %s, %s, %s, %s)
+                """                 
+            form_a_values_add_author = [max_author_id, firstname, lastname, affiliation, False, a_add_timestamp_time]
+            db.modifydatabase(form_a_sqlcode_add_author, form_a_values_add_author)
+            
+            add_feedbackmessage = 'Author added to database. Please reload page.'
+            # add_okay_href = '/publications_manage'
+            add_okay_href = '/form_authorships' + add_search
+            # driver = webdriver.Chrome()
+            # driver.refresh()
+
+    elif eventid == 'form_a_add_author_closebtn' and add_close_btn: 
+        pass
+    else: 
+        raise PreventUpdate
+    return [add_openmodal, add_feedbackmessage, add_inputsalert, add_okay_href]
+
+#Load Data    
 @app.callback(
     [
         Output('form_a_lead', 'value'),
@@ -418,7 +605,6 @@ def form_a_load_dropdown(pathname, lead, contributing, currentuserid):
         State('onlyloadonce', 'data')
     ],
 )
-
 def form_a_load(timestamp, to_load, search, onlyloadonce): 
     parsed = urlparse(search)
     mode = parse_qs(parsed.query)['mode'][0]
@@ -518,7 +704,7 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
             form_a_pub_title, form_a_tag_id, form_a_date, form_a_publisher, form_a_pub_name, 
             form_a_doi, form_a_isxn, form_a_scopus, onlyloadonce ]
 
-
+#Add Publication Submit process
 @app.callback(
     [
         Output('form_a_modal', 'is_open'), 
@@ -549,7 +735,6 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
         State('currentuserid', 'data')
     ]
 )
-
 def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing, 
                           a_title, a_tag, a_date, a_publisher, a_pubname,
                           a_doi, a_isxn, a_scopus, search, removerecord, cuser_id):
@@ -660,7 +845,6 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                     a_contributing_list = [a_contributing_list]
 
                 #LEAD AUTHOR ADD
-
                 for i in range(len(a_lead)): 
                     sql_pub_lead = """INSERT INTO pub_lead_authors(
                         pub_id, 
