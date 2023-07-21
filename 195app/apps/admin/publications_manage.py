@@ -870,7 +870,6 @@ def pubmanage_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u): 
     else: 
         return ["No records to display."]   
 
-
 #DOWNLOAD FUNCTIONS    
 @app.callback(
     
@@ -901,33 +900,36 @@ def download_pubman(tab, n_clicks,searchterm, datefilter, datefilter_u):
         #print(not n_clicks)
     
         if tab == 'tab_a':
-            sql_a_down = """SELECT
-                        authorships.a_year,
-                        publications.pub_id,
-                        a_lead_author, 
-                        a_contributing_author,
-                        tags.tag_short_title,
-                        pub_title, 
-                        To_char(a_date, 'Month YYYY'),
-                        a_pub_name, 
-                        a_publisher, 
-                        a_doi, 
-                        a_isxn, 
-                        a_scopus, 
-                        to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS') as timestampz,
-                        publications.modified_by
+            sql_a_down = """SELECT  publications.pub_id,
+                    a_year,
+                    (select string_agg(lead_author_name, ', ')
+                    from pub_lead_authors
+                    where pub_lead_authors.pub_id = publications.pub_id
+                    ) as lead_authors,
+                    publications.pub_title,
+                    tags.tag_short_title,
+                    (select string_agg(contributing_author_name, ', ')
+                    from pub_contributing_authors
+                    where pub_contributing_authors.pub_id = publications.pub_id
+                    ) as contributing_authors,
+                    To_char(a_date, 'Month YYYY'),
+                    a_pub_name, 
+                    a_publisher, 
+                    a_doi, 
+                    a_isxn, 
+                    a_scopus, 
+                    to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS') as timestampz,
+                    publications.modified_by
 
-                        FROM authorships_users
-                        INNER JOIN authorships on authorships_users.pub_id = authorships.pub_id
-                        LEFT OUTER JOIN faculty on authorships_users.user_id = faculty.user_id
-                        INNER JOIN publications on authorships_users.pub_id = publications.pub_id
-                        LEFT OUTER JOIN authorship_role on authorships_users.authorship_role = authorship_role.a_label_id
-                        LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
-                        WHERE publications.pub_delete_ind = false 
-                        
+                    FROM authorships
+                    INNER JOIN publications on authorships.pub_id = publications.pub_id
+                    LEFT OUTER JOIN pub_lead_authors on authorships.a_lead_id = pub_lead_authors.a_lead_id
+                    LEFT OUTER JOIN pub_contributing_authors on authorships.a_contributing_id = pub_contributing_authors.a_contributing_id
+                    LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
+                    WHERE publications.pub_delete_ind = false
                     """
             values_a_down =[]
-            cols_a_down = ['Year','id', 'Lead Author(s)',  'Other Contributing Author(s)', 'Criteria', 'Title',  'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus',  'Last Updated', 'Last Modified By'] 
+            cols_a_down = ['id', 'Year', 'Lead Author(s)', 'Title', 'Criteria', 'Other Contributing Author(s)', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus',  'Last Updated', 'Last Modified By'] 
             
             #fix additivity of searchterms and filters
             if datefilter:
@@ -938,22 +940,22 @@ def download_pubman(tab, n_clicks,searchterm, datefilter, datefilter_u):
                     values_a_down += [datefilter_u]
                     if searchterm:
                         sql_a_down += """ AND (
-                            ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) OR (a_year ILIKE %s)
-                            OR (a_lead_author ILIKE %s) OR (a_pub_name ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
-                            OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s) OR (tag_short_title ILIKE %s)
-                            )"""
-                        values_a_down += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%"]
+                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
+                    OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
+                ) """
+                        values_a_down += [f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                 if searchterm:
-                    sql_a_down += """ AND (
-                        ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) OR (a_year ILIKE %s)
-                        OR (a_lead_author ILIKE %s) OR (a_pub_name ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
-                        OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s) OR (tag_short_title ILIKE %s)
-                        )"""
-                    values_a_down += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%"]
+                    sql_a += """ AND (
+                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
+                    OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
+                ) """
+                    values_a_down += [f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                     if datefilter_u:
                         sql_a_down += """AND (cast (a_year as int) <= %s)"""
                         values_a_down += [datefilter_u]
@@ -969,22 +971,22 @@ def download_pubman(tab, n_clicks,searchterm, datefilter, datefilter_u):
                     values_a_down += [datefilter]
                     if searchterm:
                         sql_a_down += """ AND (
-                            ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) OR (a_year ILIKE %s)
-                            OR (a_lead_author ILIKE %s) OR (a_pub_name ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
-                            OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s) OR (tag_short_title ILIKE %s)
-                            )"""
-                        values_a_down += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%"]
+                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
+                    OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
+                ) """
+                        values_a_down += [f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                 if searchterm:
-                    sql_a_down += """ AND (
-                        ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) OR (a_year ILIKE %s)
-                        OR (a_lead_author ILIKE %s) OR (a_pub_name ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
-                        OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s) OR (tag_short_title ILIKE %s)
-                        )"""
-                    values_a_down += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%"]
+                    sql_a += """ AND (
+                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
+                    OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
+                ) """
+                    values_a_down += [f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                     if datefilter:
                         sql_a_down += """AND (cast (a_year as int) >= %s)"""
                         values_a_down += [datefilter]
@@ -994,13 +996,13 @@ def download_pubman(tab, n_clicks,searchterm, datefilter, datefilter_u):
             
             elif searchterm:
                 sql_a_down += """ AND (
-                    ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) OR (a_year ILIKE %s)
-                    OR (a_lead_author ILIKE %s) OR (a_pub_name ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
-                    OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s) OR (tag_short_title ILIKE %s)
-                    )"""
-                values_a_down += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                        f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
-                        f"%{searchterm}%", f"%{searchterm}%"]
+                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
+                    OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
+                ) """
+                values_a_down += [f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                     f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                 if datefilter:
                     sql_a_down += """AND (cast (a_year as int) >= %s)"""
                     values_a_down += [datefilter]
@@ -1020,10 +1022,9 @@ def download_pubman(tab, n_clicks,searchterm, datefilter, datefilter_u):
                 sql_a_down += """"""
                 values_a_down += []
 
-            sql_a_down += """GROUP BY publications.pub_id, authorships.a_year, tags.tag_short_title,
-                        a_lead_author, a_contributing_author, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
-                        a_doi, a_isxn, a_scopus, to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS'),publications.modified_by
-                        ORDER BY authorships.a_year DESC"""         
+            sql_a_down += """GROUP BY publications.pub_id, a_year, tags.tag_short_title, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
+                a_doi, a_isxn, a_scopus, publications.modified_by, to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS')
+            ORDER BY authorships.a_year DESC"""       
             pub_a_down = db.querydatafromdatabase(sql_a_down, values_a_down, cols_a_down)
             
             download_table_a = dcc.send_data_frame(pub_a_down.to_csv, "publications_download.csv")
@@ -1031,38 +1032,32 @@ def download_pubman(tab, n_clicks,searchterm, datefilter, datefilter_u):
             return download_table_a, n_clicks ##
         
         elif tab =='tab_p':
-            sql_p_down = """SELECT
-                    p_year,
-                    publications.pub_id,
-                    string_agg(
-                    CASE
-                        WHEN presentations_users.pres_role IS NULL THEN faculty_fn || ' ' || faculty_ln
-                        ELSE faculty_fn || ' ' || faculty_ln || ' (' || presentations_users.pres_role ||') '
-                    END,
-                    ', '
-                    ) AS combined_values,
-                    tags.tag_short_title,
-                    pub_title,
-                    p_authors,
-                    to_char(p_start_date, 'Month DD, YYYY'), 
-                    to_char(p_end_date, 'Month  DD, YYYY'), 
-                    p_conf, 
-                    p_loc, 
-                    p_add_info,
-                    to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS'),
-                    publications.modified_by
-                FROM presentations_users
-                    INNER JOIN presentations on presentations_users.pub_id = presentations.pub_id
-                    LEFT OUTER JOIN faculty on presentations_users.user_id = faculty.user_id
-                    INNER JOIN publications on presentations_users.pub_id = publications.pub_id
-                    INNER JOIN tags on publications.tag_id = tags.tag_id
-                WHERE
-                    pub_delete_ind = false
+            sql_p_down = """SELECT publications.pub_id,
+                p_year,
+				(select string_agg(author_name, ', ')
+				 from pres_authors
+				 where pres_authors.pub_id = publications.pub_id
+				) as p_authors,
+                publications.pub_title,
+                tags.tag_short_title,
+                to_char(p_start_date, 'Month DD, YYYY'), 
+                to_char(p_end_date, 'Month  DD, YYYY'), 
+                p_conf, 
+                p_loc, 
+                p_add_info, 
+                to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS'),
+                publications.modified_by
+            FROM presentations
+                LEFT OUTER JOIN faculty on presentations.p_author_id = faculty.user_id
+                INNER JOIN publications on presentations.pub_id = publications.pub_id
+                LEFT OUTER JOIN pres_authors on presentations.p_author_id = pres_authors.p_author_id
+                LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
+            WHERE
+				publications.pub_delete_ind = false
             """
             values_p_down = []
-            cols_p_down = ['Year', 'id', 'Faculty Involved', 'Criteria', 'Title', 'All Authors', 'Start Date', 'End Date', 'Conference',
-                      'Location', 'Other Info', 'Last Updated', 'Last Modified By'] 
-            
+            cols_p_down = ['id', 'Year', 'Presenters', 'Title', 'Criteria', 'Start Date', 'End Date',
+                      'Conference', 'Location', 'Other Info', 'Last Updated', 'Last Modified By']     
             
             if datefilter:
                 sql_p_down += """AND (cast (p_year as int) >= %s)"""
@@ -1072,24 +1067,24 @@ def download_pubman(tab, n_clicks,searchterm, datefilter, datefilter_u):
                     values_p_down += [datefilter_u]
                     if searchterm:
                         sql_p_down += """ AND (
-                            ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                            OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                            OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                            OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                            )"""
-                        values_p_down += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            )
+                            """
+                        values_p_down += [f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%",]
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p_down += """ AND (
-                        ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                        OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                        OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                        OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                        )"""
-                    values_p_down += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%",]
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            )
+                            """
+                    values_p_down += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                     if datefilter_u:
                         sql_p_down += """AND (cast (p_year as int) <= %s)"""
                         values_p_down += [datefilter_u]
@@ -1105,24 +1100,23 @@ def download_pubman(tab, n_clicks,searchterm, datefilter, datefilter_u):
                     values_p_down += [datefilter]
                     if searchterm:
                         sql_p_down += """ AND (
-                            ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                            OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                            OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                            OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                            )"""
-                        values_p_down += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            """
+                        values_p_down += [f"%{searchterm}%", f"%{searchterm}%",
                                 f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                                f"%{searchterm}%", f"%{searchterm}%",]
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p_down += """ AND (
-                        ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                        OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                        OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                        OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                        )"""
-                    values_p_down += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
-                            f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                            f"%{searchterm}%", f"%{searchterm}%",]
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            )
+                            """
+                    values_p_down += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                     if datefilter:
                         sql_p_down += """AND (cast (p_year as int) >= %s)"""
                         values_p_down += [datefilter]
@@ -1133,14 +1127,14 @@ def download_pubman(tab, n_clicks,searchterm, datefilter, datefilter_u):
             
             elif searchterm:
                 sql_p_down += """ AND (
-                    ((faculty_fn || ' ' || faculty_ln) ILIKE %s) OR (pub_title ILIKE %s) 
-                    OR (p_authors ILIKE %s) OR (p_year ILIKE %s) OR (p_conf ILIKE %s)
-                    OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
-                    OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
-                    )"""
-                values_p_down += [f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", 
-                        f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
-                        f"%{searchterm}%", f"%{searchterm}%",]
+                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
+                            OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
+                            )
+                            """
+                values_p_down += [f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%",
+                                f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if datefilter:
                     sql_p_down += """AND (cast (p_year as int) >= %s)"""
                     values_p_down += [datefilter]
@@ -1160,9 +1154,9 @@ def download_pubman(tab, n_clicks,searchterm, datefilter, datefilter_u):
                 sql_p_down += """"""
                 values_p_down += []
                 
-            sql_p_down += """GROUP BY p_year, publications.pub_id, tags.tag_short_title, pub_title, p_authors, to_char(p_start_date, 'Month DD, YYYY'), 
-            to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
-            ORDER BY presentations.p_year DESC"""
+            sql_p_down += """GROUP BY p_year, publications.pub_id, tags.tag_short_title, pub_title,
+                    p_authors, to_char(p_start_date, 'Month DD, YYYY'), to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
+                    ORDER BY presentations.p_year DESC"""
             pub_p_down = db.querydatafromdatabase(sql_p_down, values_p_down, cols_p_down)
 
             download_table_p = dcc.send_data_frame(pub_p_down.to_csv, "presentations_download.csv")
@@ -1416,7 +1410,3 @@ def download_pubman(tab, n_clicks,searchterm, datefilter, datefilter_u):
             return download_table_o, n_clicks ##
         else: 
             PreventUpdate
-
-            
-
-            

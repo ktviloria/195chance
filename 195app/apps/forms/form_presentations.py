@@ -427,7 +427,7 @@ def form_p_load (timestamp, to_load, search, loadonce):
                             'form_p_tag_id', 'form_p_pub_title',
                             'form_p_conf', 'form_p_loc', 'form_p_start_date', 'form_p_end_date', 'form_p_add_info']
             form_p_df = db.querydatafromdatabase(form_p_sql, form_p_val, form_p_colname)
-            
+
             form_p_pres_sql = """SELECT distinct p_author_id
                 from
                     presentations
@@ -439,6 +439,7 @@ def form_p_load (timestamp, to_load, search, loadonce):
             form_p_pres_val = [int(form_p_id)]
             form_p_pres_cols = ['p_pres_ids']
             form_p_pres_df = db.querydatafromdatabase(form_p_pres_sql, form_p_pres_val, form_p_pres_cols)
+
             form_p_pres = []
             for i in range(len(form_p_pres_df['p_pres_ids'])): 
                 form_p_pres.append(form_p_pres_df['p_pres_ids'][i])
@@ -454,6 +455,7 @@ def form_p_load (timestamp, to_load, search, loadonce):
         else: 
             raise PreventUpdate
         loadonce += 1
+        print("loadonce:", loadonce)  # Check the updated value of loadonce
     else: 
         raise PreventUpdate
     return [form_p_pres, form_p_tag_id, form_p_pub_title, 
@@ -558,6 +560,8 @@ def form_p_submitprocess (submit_btn, close_btn, p_pres,
                 form_p_values_addpub = [sql_pub_max, p_tag, p_title, False, p_timestamp_time, p_username_modifier]
                 db.modifydatabase(form_p_sqlcode_add_publications, form_p_values_addpub)
                 
+                if p_pres == None:
+                    p_pres = []
                 if type(p_pres) == int: 
                     p_pres = [p_pres]
                 
@@ -569,7 +573,6 @@ def form_p_submitprocess (submit_btn, close_btn, p_pres,
                     )
                     VALUES (%s, %s)
                     """
-                    
                     pres_values = [sql_pub_max, p_pres[i]]
                     db.modifydatabase(sql_pres, pres_values)
 
@@ -581,27 +584,27 @@ def form_p_submitprocess (submit_btn, close_btn, p_pres,
                     val_pres_upd = []
                     db.modifydatabase(sql_pres_upd, val_pres_upd)
                 
-                form_p_sqlcode_add_presentations = """INSERT INTO presentations(
-                    pub_id, 
-                    p_author_id, 
-                    p_conf, 
-                    p_loc, 
-                    p_start_date,
-                    p_end_date, 
-                    p_add_info, 
-                    p_year, 
-                    p_date_range
-                )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s )
-                """
-                
-                str_to_date = datetime.strptime(p_end_date, '%Y-%m-%d').date()
-                p_year = str_to_date.year
-                p_date_range = str(p_start_date + ' ' + p_end_date )
+                    form_p_sqlcode_add_presentations = """INSERT INTO presentations(
+                        pub_id, 
+                        p_author_id, 
+                        p_conf, 
+                        p_loc, 
+                        p_start_date,
+                        p_end_date, 
+                        p_add_info, 
+                        p_year, 
+                        p_date_range
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s )
+                    """
+                    
+                    str_to_date = datetime.strptime(p_end_date, '%Y-%m-%d').date()
+                    p_year = str_to_date.year
+                    p_date_range = str(p_start_date + ' ' + p_end_date )
 
-                form_p_values_addpresentations = [sql_pub_max, p_pres[i], p_conf, p_loc, p_start_date, p_end_date, p_addinfo, p_year, p_date_range]
-                db.modifydatabase(form_p_sqlcode_add_presentations, form_p_values_addpresentations)
-                
+                    form_p_values_addpresentations = [sql_pub_max, p_pres[i], p_conf, p_loc, p_start_date, p_end_date, p_addinfo, p_year, p_date_range]
+                    db.modifydatabase(form_p_sqlcode_add_presentations, form_p_values_addpresentations)
+                    
                 feedbackmessage = 'Presentation entry added to database.'
                 if cuser_id <= 3: 
                     okay_href = '/publications_manage'
@@ -655,25 +658,26 @@ def form_p_submitprocess (submit_btn, close_btn, p_pres,
                     val_pres_upd =[]
                     db.modifydatabase(sql_pres_upd, val_pres_upd)               
                 
-                sql_update_presentations = """INSERT INTO presentations 
-                    (pub_id,
-                    p_author_id, 
-                    p_conf, 
-                    p_loc, 
-                    p_start_date, 
-                    p_end_date,
-                    p_add_info, 
-                    p_year, 
-                    p_date_range)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) 
-                """
+                    sql_update_presentations = """INSERT INTO presentations 
+                        (pub_id,
+                        p_author_id, 
+                        p_conf, 
+                        p_loc, 
+                        p_start_date, 
+                        p_end_date,
+                        p_add_info, 
+                        p_year, 
+                        p_date_range)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) 
+                    """
+                    
+                    str_to_date = datetime.strptime(p_end_date, '%Y-%m-%d').date()
+                    p_year = str_to_date.year
+                    p_date_range = str(p_start_date + ' to ' + p_end_date )
+                    
+                    values_update_presentations = [int(form_p_editmodeid), p_pres[i], p_conf, p_loc, p_start_date, p_end_date, p_addinfo, p_year, p_date_range]
+                    db.modifydatabase(sql_update_presentations, values_update_presentations)
                 
-                str_to_date = datetime.strptime(p_end_date, '%Y-%m-%d').date()
-                p_year = str_to_date.year
-                p_date_range = str(p_start_date + ' to ' + p_end_date )
-                
-                values_update_presentations = [int(form_p_editmodeid), p_pres[i], p_conf, p_loc, p_start_date, p_end_date, p_addinfo, p_year, p_date_range]
-                db.modifydatabase(sql_update_presentations, values_update_presentations)
                 feedbackmessage = 'Presentation details updated.'
                 if cuser_id <= 3: 
                     okay_href = '/publications_manage'

@@ -658,7 +658,6 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                     a_contributing_list = []
                 if type(a_contributing_list) == int: 
                     a_contributing_list = [a_contributing_list]
-                print(a_contributing_list)
 
                 #LEAD AUTHOR ADD
 
@@ -709,7 +708,6 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
                 
                 # CONTRIBUTING AUTHOR ADD
                 for i in range(len(a_contributing_list)):
-                    print(a_contributing_list)
                     sql_pub_contributing = """INSERT INTO pub_contributing_authors(
                             pub_id, 
                             a_contributing_id
