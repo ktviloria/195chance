@@ -208,16 +208,12 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
         if tab == 'tab_a':
             sql_a = """SELECT  publications.pub_id,
                 a_year,
-				(select string_agg(lead_author_name, ', ')
-				 from pub_lead_authors
-				 where pub_lead_authors.pub_id = publications.pub_id
-				) as lead_authors,
-                publications.pub_title,
+				lead_authors_agg.lead_author_names,
+				lead_authors_agg.lead_up_affiliations,
+				publications.pub_title,
                 tags.tag_short_title,
-				(select string_agg(contributing_author_name, ', ')
-				 from pub_contributing_authors
-				 where pub_contributing_authors.pub_id = publications.pub_id
-				) as contributing_authors,
+				contributing_authors_agg.contributing_author_names,
+				contributing_authors_agg.contributing_up_affiliations,
                 To_char(a_date, 'Month YYYY'),
                 a_pub_name, 
                 a_publisher, 
@@ -227,20 +223,37 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
 
                 FROM authorships
                 INNER JOIN publications on authorships.pub_id = publications.pub_id
-                LEFT OUTER JOIN pub_lead_authors on authorships.a_lead_id = pub_lead_authors.a_lead_id
-				LEFT OUTER JOIN pub_contributing_authors on authorships.a_contributing_id = pub_contributing_authors.a_contributing_id
-                LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
-                WHERE publications.pub_delete_ind = false     
+                LEFT OUTER JOIN (
+					SELECT
+						pub_id,
+						string_agg(lead_author_name, ', ') AS lead_author_names,
+						string_agg(author_up_constituent, ', ') AS lead_up_affiliations
+					FROM pub_lead_authors
+					INNER JOIN authors ON pub_lead_authors.a_lead_id = authors.author_id
+					GROUP BY pub_id
+				) AS lead_authors_agg ON publications.pub_id = lead_authors_agg.pub_id
+				LEFT OUTER JOIN (
+					SELECT
+						pub_id,
+						string_agg(contributing_author_name, ', ') AS contributing_author_names,
+						string_agg(author_up_constituent, ', ') AS contributing_up_affiliations
+					FROM pub_contributing_authors
+					INNER JOIN authors ON pub_contributing_authors.a_contributing_id = authors.author_id
+					GROUP BY pub_id
+				) AS contributing_authors_agg ON publications.pub_id = contributing_authors_agg.pub_id
+				LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
+                WHERE publications.pub_delete_ind = false   
                 """
-    
             values_a = []
-            cols_a = ['id', 'Year', 'Lead Author(s)', 'Title', 'Criteria', 'Other Contributing Author(s)', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus'] 
+            cols_a = ['id', 'Year', 'Lead Author(s)', 'Lead Authors Affiliation', 'Title', 'Criteria', 'Other Contributing Author(s)', 'Contributing Authors Affiliation', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus'] 
             
             sql_a2 = sql_a
-            sql_a2 += """GROUP BY publications.pub_id, a_year, tags.tag_short_title, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
+            sql_a2 += """GROUP BY publications.pub_id, a_year,
+				lead_authors_agg.lead_author_names, lead_authors_agg.lead_up_affiliations,
+				contributing_authors_agg.contributing_author_names, contributing_authors_agg.contributing_up_affiliations,
+				tags.tag_short_title, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
                 a_doi, a_isxn, a_scopus, publications.modified_by, to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS')
-            ORDER BY authorships.a_year DESC"""
-            
+				ORDER BY authorships.a_year DESC"""
             pub_a2 = db.querydatafromdatabase(sql_a2, values_a, cols_a)
              
             
@@ -253,7 +266,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     values_a += [datefilter_u]
                     if searchterm:
                         sql_a += """ AND (
-                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (lead_author_names ILIKE %s) OR (contributing_author_names ILIKE %s) OR
                     (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
                     OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
                 ) """
@@ -262,7 +275,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                                      f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                 if searchterm:
                     sql_a += """ AND (
-                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (lead_author_names ILIKE %s) OR (contributing_author_names ILIKE %s) OR
                     (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
                     OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
                 ) """
@@ -284,7 +297,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     values_a += [datefilter]
                     if searchterm:
                         sql_a += """ AND (
-                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (lead_author_names ILIKE %s) OR (contributing_author_names ILIKE %s) OR
                     (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
                     OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
                 ) """
@@ -293,7 +306,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                                      f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                 if searchterm:
                     sql_a += """ AND (
-                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (lead_author_names ILIKE %s) OR (contributing_author_names ILIKE %s) OR
                     (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
                     OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
                 ) """
@@ -309,7 +322,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
             
             elif searchterm:
                 sql_a += """ AND (
-                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (lead_author_names ILIKE %s) OR (contributing_author_names ILIKE %s) OR
                     (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
                     OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
                 ) """
@@ -335,9 +348,12 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                 sql_a += """"""
                 values_a += []
                 
-            sql_a += """GROUP BY publications.pub_id, a_year, tags.tag_short_title, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
+            sql_a += """GROUP BY publications.pub_id, a_year,
+				lead_authors_agg.lead_author_names, lead_authors_agg.lead_up_affiliations,
+				contributing_authors_agg.contributing_author_names, contributing_authors_agg.contributing_up_affiliations,
+				tags.tag_short_title, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
                 a_doi, a_isxn, a_scopus, publications.modified_by, to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS')
-            ORDER BY authorships.a_year DESC"""
+				ORDER BY authorships.a_year DESC"""
             pub_a = db.querydatafromdatabase(sql_a, values_a, cols_a)        
             
             modals_a = []
@@ -352,20 +368,65 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     ]
                 pub_a['More Details'] = buttons_a 
                 
-            if pub_a2.shape[0]:    
+            if pub_a2.shape[0]:
                 for i in range(len(pub_a2)): 
                     ids = pub_a2['id'][i]
                     pub_title = pub_a2['Title'][i]
-                    pub_lead = pub_a2['Lead Author(s)'][i]
+                    pub_lead_list = pub_a2['Lead Author(s)'][i].split(', ')
+                    pub_lead_aff_list = pub_a2['Lead Authors Affiliation'][i].split(', ')
                     pub_category = pub_a2['Criteria'][i]
+                    
+                    # Handling 'Other Contributing Author(s)' column
                     pub_contributing = pub_a2['Other Contributing Author(s)'][i]
+                    if pub_contributing:
+                        # Convert single value to list
+                        if ',' not in pub_contributing:
+                            pub_contributing_list = [pub_contributing]
+                        else:
+                            pub_contributing_list = pub_contributing.split(', ')
+                    else:
+                        # Handle None or empty values
+                        pub_contributing_list = []
+                    
+                    pub_contributing_aff = pub_a2['Contributing Authors Affiliation'][i]
+                    if pub_contributing_aff:
+                        # Convert single value to list
+                        if ',' not in pub_contributing_aff:
+                            pub_contributing_aff_list = [pub_contributing_aff]
+                        else:
+                            pub_contributing_aff_list = pub_contributing_aff.split(', ')
+                    else:
+                        # Handle None or empty values
+                        pub_contributing_aff_list = []
+
                     pub_date = pub_a2['Date'][i]
                     pub_publication = pub_a2['Publication'][i]
                     pub_publisher = pub_a2['Publisher'][i]
                     pub_DOI = pub_a2['DOI'][i]
                     pub_ISXN = pub_a2['ISXN'][i]
                     pub_Scopus = pub_a2['Scopus'][i]
+
+                    pub_lead_up_list = []
+                    pub_lead_other_list = []
+                    pub_contributing_up_list = []
+                    pub_contributing_other_list = []
+
+                    for pub_lead, pub_lead_aff in zip(pub_lead_list, pub_lead_aff_list):
+                        if pub_lead_aff == 'UP Diliman':
+                            pub_lead_up_list.append(pub_lead)
+                        else:
+                            pub_lead_other_list.append(pub_lead)
+                    pub_lead_up = ', '.join(pub_lead_up_list)
+                    pub_lead_other = ', '.join(pub_lead_other_list)
                     
+                    for pub_contributing, pub_contributing_aff in zip(pub_contributing_list, pub_contributing_aff_list):
+                        if pub_contributing_aff == 'UP Diliman':
+                            pub_contributing_up_list.append(pub_contributing)
+                        else:
+                            pub_contributing_other_list.append(pub_contributing)
+                    pub_contributing_up = ', '.join(pub_contributing_up_list)
+                    pub_contributing_other = ', '.join(pub_contributing_other_list)
+
                     modals_a += [
                         html.Div(
                             dbc.Modal(
@@ -374,14 +435,20 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                                     dbc.ModalBody([
                                         html.Div([
                                             html.Strong("Title: "),
-                                            html.Span(f"{pub_title}"), ], id = f"modal_title_{ids}"
+                                            html.Span(f"{pub_title}")], id = f"modal_title_{ids}"
                                         ),
                                         html.Div([
                                             html.Strong("Lead Author(s): "),
-                                            html.Span(f"{pub_lead}"),], id = f"modal_lead_authors_{ids}"),
+                                            html.Span(f"{pub_lead_up}", style={"font-style": "italic"}),
+                                            html.Span(', '),
+                                            html.Span(f"{pub_lead_other}")
+                                        ], id = f"modal_lead_authors_{ids}"),
                                         html.Div([
                                             html.Strong("Other Contributing Author(s): "),
-                                            html.Span(f"{pub_contributing}"),], id = f"modal_contributing_authors_{ids}"),
+                                            html.Span(f"{pub_contributing_up}", style={"font-style": "italic"}),
+                                            html.Span(', '),
+                                            html.Span(f"{pub_contributing_other}")
+                                        ], id = f"modal_contributing_authors_{ids}"),
                                         html.Div([
                                             html.Strong("Publication Category: "), 
                                             html.Span(f"{pub_category}"),], id = f"modal_pub_category_{ids}"
@@ -430,10 +497,8 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
         elif tab == 'tab_p':
             sql_p = """SELECT publications.pub_id,
                 p_year,
-				(select string_agg(author_name, ', ')
-				 from pres_authors
-				 where pres_authors.pub_id = publications.pub_id
-				) as p_authors,
+				pres_authors_agg.pres_author_names,
+                pres_authors_agg.pres_up_affiliations,
                 publications.pub_title,
                 tags.tag_short_title,
                 to_char(p_start_date, 'Month DD, YYYY'), 
@@ -443,18 +508,26 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                 p_add_info
             FROM presentations
                 INNER JOIN publications on presentations.pub_id = publications.pub_id
-                LEFT OUTER JOIN pres_authors on presentations.p_author_id = pres_authors.p_author_id
+                LEFT OUTER JOIN (
+					SELECT
+						pub_id,
+						string_agg(author_name, ', ') AS pres_author_names,
+						string_agg(author_up_constituent, ', ') AS pres_up_affiliations
+					FROM pres_authors
+					INNER JOIN authors ON pres_authors.p_author_id = authors.author_id
+					GROUP BY pub_id
+				) AS pres_authors_agg ON publications.pub_id = pres_authors_agg.pub_id
                 LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
             WHERE
 				publications.pub_delete_ind = false 
             """
             
             values_p = []
-            cols_p = ['id', 'Year', 'Presenter(s)', 'Title', 'Criteria', 'Start Date', 'End Date',
+            cols_p = ['id', 'Year', 'Presenter(s)', 'Presenters Affiliation', 'Title', 'Criteria', 'Start Date', 'End Date',
                       'Conference', 'Location', 'Other Info']
             
             sql_p2 = sql_p 
-            sql_p2 += """GROUP BY publications.pub_id, p_year, pres_authors.author_name, tags.tag_short_title, pub_title,
+            sql_p2 += """GROUP BY publications.pub_id, p_year, pres_authors_agg.pres_author_names, pres_authors_agg.pres_up_affiliations, tags.tag_short_title, pub_title,
                     to_char(p_start_date, 'Month DD, YYYY'), to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
             ORDER BY p_year DESC"""
             
@@ -468,7 +541,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     values_p += [datefilter_u]
                     if searchterm:
                         sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            (pres_author_names ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
@@ -478,7 +551,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                                 f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            (pres_author_names ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
@@ -501,7 +574,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     values_p += [datefilter]
                     if searchterm:
                         sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            (pres_author_names ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
@@ -511,7 +584,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                                 f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            (pres_author_names ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
@@ -529,7 +602,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
             
             elif searchterm:
                 sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            (pres_author_names ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
@@ -556,7 +629,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                 sql_p += """"""
                 values_p += []
                 
-            sql_p += """GROUP BY publications.pub_id, p_year, pres_authors.author_name, tags.tag_short_title, pub_title,
+            sql_p += """GROUP BY publications.pub_id, p_year, pres_authors_agg.pres_author_names, pres_authors_agg.pres_up_affiliations, tags.tag_short_title, pub_title,
                     to_char(p_start_date, 'Month DD, YYYY'), to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
             ORDER BY p_year DESC"""
             pub_p = db.querydatafromdatabase(sql_p, values_p, cols_p)
@@ -577,7 +650,8 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                 for i in range(len(pub_p2)): 
                     ids = pub_p2['id'][i]
                     pub_title = pub_p2['Title'][i]
-                    pres_presenters = pub_p2['Presenter(s)'][i]
+                    pres_presenters_list = pub_p2['Presenter(s)'][i].split(', ')
+                    pres_presenters_aff_list = pub_p2['Presenters Affiliation'][i].split(', ')
                     pres_category = pub_p2['Criteria'][i]
                     pres_conf = pub_p2['Conference'][i]
                     pres_start = pub_p2['Start Date'][i]
@@ -585,6 +659,16 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     pres_loc = pub_p2['Location'][i]
                     pres_other = pub_p2['Other Info'][i]
                     
+                    pres_presenters_up_list = []
+                    pres_presenters_other_list = []
+                    for pres_presenters, pres_presenters_aff in zip(pres_presenters_list, pres_presenters_aff_list):
+                        if pres_presenters_aff == 'UP Diliman':
+                            pres_presenters_up_list.append(pres_presenters)
+                        else:
+                            pres_presenters_other_list.append(pres_presenters)
+                    pres_presenters_up = ', '.join(pres_presenters_up_list)
+                    pres_presenters_other = ', '.join(pres_presenters_other_list)
+
                     modals_p += [
                         html.Div(
                             dbc.Modal(
@@ -596,7 +680,10 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                                             html.Span(f"{pub_title}"),],id = f"modal_title_{ids}"),
                                         html.Div([
                                             html.Strong("Presenter(s): "), 
-                                            html.Span(f"{pres_presenters}"),], id = f"modal_pres_presenters_{ids}"),
+                                            html.Span(f"{pres_presenters_up}", style={"font-style": "italic"}),
+                                            html.Span(', '),
+                                            html.Span(f"{pres_presenters_other}")
+                                        ], id = f"modal_pres_presenters_{ids}"),
                                         html.Div([
                                             html.Strong("Presentation Category: "), 
                                             html.Span(f"{pres_category}"),],  id = f"modal_pres_cat_{ids}"),

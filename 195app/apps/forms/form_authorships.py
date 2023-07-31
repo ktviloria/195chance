@@ -770,6 +770,7 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
         #     a_pubname
         # ]
         a_contributing_list = a_contributing
+        print (a_lead , '= ', a_contributing)
         for a_contributing in a_contributing:
             if a_contributing in a_lead:
                 authoralert = True

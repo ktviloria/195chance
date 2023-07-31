@@ -160,12 +160,12 @@ author_id,author_user_id,author_fn,author_ln,author_mail,author_contact,author_u
 159,18,Raymond Freth,Lagria,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
 160,19,Lizabeth Ann,Franco,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
 161,20,Pierre Allen,Villena,,,UP Diliman,,College of Engineering,Department of Industrial Engineering and Operations Research,IE Faculty,,FALSE
-162,,E.C.,Paningit,,,,,,,,,FALSE
-163,,J.R.,Santos,,,,,,,,,FALSE
-164,,A.C.,Blanco,,,,,,,,,FALSE
-165,,L.M.,Magpili,,,,,,,,,FALSE
-166,,M.,Dapito,,,,,,,,,FALSE
-167,,C.E.G.,Jimena,,,,,,,,,FALSE
-168,,E.,Ompad,,,,,,,,,FALSE
-169,,M. K. A.,Tacadao,,,,,,,,,FALSE
-170,,A.,Palanca,,,,,,,,,FALSE
+162,,E.C.,Paningit,,,Non-UP,,,,,,FALSE
+163,,J.R.,Santos,,,Non-UP,,,,,,FALSE
+164,,A.C.,Blanco,,,Non-UP,,,,,,FALSE
+165,,L.M.,Magpili,,,Non-UP,,,,,,FALSE
+166,,M.,Dapito,,,Non-UP,,,,,,FALSE
+167,,C.E.G.,Jimena,,,Non-UP,,,,,,FALSE
+168,,E.,Ompad,,,Non-UP,,,,,,FALSE
+169,,M. K. A.,Tacadao,,,Non-UP,,,,,,FALSE
+170,,A.,Palanca,,,Non-UP,,,,,,FALSE
