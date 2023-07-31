@@ -350,6 +350,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
 				lead_authors_agg.lead_up_affiliations,
 				publications.pub_title,
                 tags.tag_short_title,
+                contributing_authors_agg.contributing_user_ids,
 				contributing_authors_agg.contributing_author_names,
 				contributing_authors_agg.contributing_up_affiliations,
                 To_char(a_date, 'Month YYYY'),
@@ -361,7 +362,8 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 string_agg(CAST(faculty.user_ID as varchar),  ', ')
             
                 FROM authorships
-                LEFT OUTER JOIN faculty on authorships.a_lead_id = faculty.user_id or authorships.a_contributing_id = faculty.user_id
+                INNER JOIN authors on authorships.a_lead_id=authors.author_id or authorships.a_contributing_id=authors.author_id
+                LEFT OUTER JOIN faculty on authors.author_user_id = faculty.user_id
                 INNER JOIN publications on authorships.pub_id = publications.pub_id
                 LEFT OUTER JOIN (
 					SELECT
@@ -384,12 +386,14 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
 					GROUP BY pub_id
 				) AS contributing_authors_agg ON publications.pub_id = contributing_authors_agg.pub_id
                 LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
-                WHERE publications.pub_delete_ind = false  
+                WHERE publications.pub_delete_ind = false
+                AND faculty.user_ID = %s
             """
             parsed = urlparse(search)
             facdetid = parse_qs(parsed.query)['id'][0]
-            values_a = []
-            cols_a = ['id', 'Year', 'Lead User ids', 'Lead Author(s)', 'Lead Authors Affiliation', 'Title', 'Criteria', 'Contributing User ids', 'Other Contributing Author(s)', 'Contributing Authors Affiliation', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus', 'author_ids']            
+            values_a = [f"{facdetid}"]
+            cols_a = ['id', 'Year', 'Lead User ids', 'Lead Author(s)', 'Lead Authors Affiliation', 'Title', 'Criteria', 'Contributing User ids', 'Other Contributing Author(s)', 'Contributing Authors Affiliation', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus', 'author_ids']   
+
             #fix additivity of searchterms and filters
             if datefilter:
                 sql_a += """AND (cast (a_year as int) >= %s)"""
@@ -645,7 +649,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                             ),  id= f'div_modal_fac_{ids}', style={'display': 'none'}
                         )
                     ]
-                
+            
             pub_a.drop(['author_ids'],axis=1,inplace=True) 
             pub_a.drop(['id'],axis=1,inplace=True)
             pub_a.drop(['Lead User ids'],axis=1,inplace=True)
@@ -681,11 +685,13 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 p_add_info, 
                 string_agg(CAST(faculty.user_ID as varchar),  ', ')
             FROM presentations
-                LEFT OUTER JOIN faculty on presentations.p_author_id = faculty.user_id
+                INNER JOIN authors ON presentations.p_author_id = authors.author_id
+                LEFT OUTER JOIN faculty on authors.author_user_id = faculty.user_id
                 INNER JOIN publications on presentations.pub_id = publications.pub_id
                 LEFT OUTER JOIN (
 					SELECT
 						pub_id,
+                        string_agg(authors.author_user_id::text, ', ') AS pres_user_ids,
 						string_agg(author_name, ', ') AS pres_author_names,
 						string_agg(author_up_constituent, ', ') AS pres_up_affiliations
 					FROM pres_authors
@@ -694,11 +700,12 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
 				) AS pres_authors_agg ON publications.pub_id = pres_authors_agg.pub_id
                 LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
             WHERE
-				publications.pub_delete_ind = false 
+				publications.pub_delete_ind = false
+                AND faculty.user_ID = %s
             """
             parsed = urlparse(search)
             facdetid = parse_qs(parsed.query)['id'][0]
-            values_p = []
+            values_p = [f"{facdetid}"]
             cols_p = ['id', 'Year', 'Presenter User ids', 'Presenter(s)', 'Presenters Affiliation', 'Title', 'Criteria', 'Start Date', 'End Date',
                       'Conference', 'Location', 'Other Info', 'presenters_ids'] 
             
@@ -911,6 +918,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 
             pub_p.drop(['id'],axis=1,inplace=True)  
             pub_p.drop(['presenters_ids'],axis=1,inplace=True)
+            pub_p.drop(['Presenter User ids'],axis=1,inplace=True) 
             pub_p.drop(['Presenters Affiliation'],axis=1,inplace=True)    
             pub_p.drop(['Start Date'],axis=1,inplace=True)
             pub_p.drop(['End Date'],axis=1,inplace=True)
@@ -1352,11 +1360,9 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
 #call all undeleted publications only
 sql_aa = """SELECT
         publications.pub_id
-        
     FROM publications
     WHERE
         pub_delete_ind = false
-    
     """
 values_aa = []
 cols_aa = ['id'] 
@@ -1366,12 +1372,9 @@ pub_aa = db.querydatafromdatabase(sql_aa, values_aa, cols_aa)
 for ids in pub_aa['id']: 
     modal_a = f"modal_a_fac_{ids}"
     modal_button = f"modal_button_fac_{ids}"
-    # modal_close = f'modal_close_{ids}'
     div_modal = f'div_modal_fac_{ids}'
     @app.callback(
-        
         Output(modal_a, 'is_open'), 
-        
         [
             Input(modal_button, 'n_clicks'), 
             # Input(modal_close, 'n_clicks')
@@ -1380,7 +1383,6 @@ for ids in pub_aa['id']:
             State(modal_button, 'is_open')
         ]
     )
-    
     def ihopethisworks(n_clicks, open): 
         if n_clicks: 
             return True
