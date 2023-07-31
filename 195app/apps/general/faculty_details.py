@@ -1357,12 +1357,10 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
     else: 
         raise PreventUpdate       
 
-#call all undeleted publications only
-sql_aa = """SELECT
-        publications.pub_id
+#modal callback for undeleted publications only  - stops working after any admin/faculty task that != viewing lists
+sql_aa = """SELECT publications.pub_id
     FROM publications
-    WHERE
-        pub_delete_ind = false
+    WHERE pub_delete_ind = false
     """
 values_aa = []
 cols_aa = ['id'] 
@@ -1379,9 +1377,7 @@ for ids in pub_aa['id']:
             Input(modal_button, 'n_clicks'), 
             # Input(modal_close, 'n_clicks')
         ], 
-        [
-            State(modal_button, 'is_open')
-        ]
+        State(modal_button, 'is_open')
     )
     def ihopethisworks(n_clicks, open): 
         if n_clicks: 
@@ -1389,7 +1385,7 @@ for ids in pub_aa['id']:
         else: 
             return False
 
-
+##modal callback?
 # @app.callback (
 #     [
 #         Output('previous2', 'data'), 
@@ -1407,14 +1403,9 @@ for ids in pub_aa['id']:
 # def modalloadwhen(pathname, previous, firsttime): 
 #     if pathname == '/faculty_details': 
         
-#         sql_aa = """SELECT
-#                 publications.pub_id
-                
+#         sql_aa = """SELECT publications.pub_id
 #                 FROM publications
-#                 WHERE
-#                     pub_delete_ind = false
-                    
-                
+#                 WHERE pub_delete_ind = false
 #                 """
 #         values_aa = []
 #         cols_aa = ['id'] 
@@ -1431,25 +1422,19 @@ for ids in pub_aa['id']:
 #             subtracted  = list(set(pub_aa_list)^ set(previous))
 #             previous = pub_aa_list + subtracted
         
-        
 #         firsttime += 1
         
 #         for ids in subtracted: 
-            
 #             modal_a = f"modal_a_fac_{ids}"
 #             modal_button = f"modal_button_fac_{ids}"
 #             div_modal = f'div_modal_fac{ids}'
 #             @app.callback(
-                
 #                 Output( f"modal_a_fac_{ids}", 'is_open'), 
-                
 #                 [
 #                     Input(f"modal_button_fac_{ids}", 'n_clicks'), 
 #                     # Input(modal_close, 'n_clicks')
 #                 ], 
-#                 [
-#                     State(f"modal_button_fac_{ids}", 'is_open')
-#                 ]
+#                 State(f"modal_button_fac_{ids}", 'is_open')
 #             )
             
 #             def ihopethisworks(n_clicks, open): 

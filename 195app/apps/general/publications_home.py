@@ -1194,99 +1194,85 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
     else: 
         raise PreventUpdate      
 
-# sql_aa = """SELECT
-#         publications.pub_id
-#     FROM publications
-#     WHERE
-#         pub_delete_ind = false
+#modal callback for undeleted publications only - stops working after any admin/faculty task that != viewing lists
+sql_aa = """SELECT publications.pub_id
+    FROM publications
+    WHERE pub_delete_ind = false
+    """
+values_aa = []
+cols_aa = ['id'] 
+
+pub_aa = db.querydatafromdatabase(sql_aa, values_aa, cols_aa)
+
+for ids in pub_aa['id']: 
+    modal_a = f"modal_a_{ids}"
+    modal_button = f"modal_button_{ids}"
+    modal_close = f'modal_close_{ids}'
+    div_modal = f'div_modal_{ids}'
+    @app.callback(
+        Output(modal_a, 'is_open'), 
+        [
+            Input(modal_button, 'n_clicks'), 
+        ], 
+        State(modal_button, 'is_open')
+    )
     
-#     """
-# values_aa = []
-# cols_aa = ['id'] 
-
-# pub_aa = db.querydatafromdatabase(sql_aa, values_aa, cols_aa)
-
-
-# for ids in pub_aa['id']: 
-#     modal_a = f"modal_a_{ids}"
-#     modal_button = f"modal_button_{ids}"
-#     modal_close = f'modal_close_{ids}'
-#     div_modal = f'div_modal_{ids}'
-#     @app.callback(
-        
-#         Output(modal_a, 'is_open'), 
-        
-#         [
-#             Input(modal_button, 'n_clicks'), 
-#         ], 
-#         [
-#             State(modal_button, 'is_open')
-#         ]
-#     )
-    
-#     def ihopethisworks(n_clicks, open): 
-#         if n_clicks: 
-#             return True
-#         else: 
-#             return False
-
-@app.callback (
-    [
-        Output('previous', 'data'), 
-        Output('firsttime', 'data')
-    ], 
-    [
-        Input('url', 'pathname'), 
-    ], 
-    [
-        State('previous', 'data'), 
-        State('firsttime', 'data')
-    ]
-)
-def modalloadwhen(pathname, previous, firsttime): 
-    if pathname == '/publications_home': 
-        sql_aa = """SELECT
-                publications.pub_id
-                FROM publications
-                WHERE
-                    pub_delete_ind = false
-                """
-        values_aa = []
-        cols_aa = ['id'] 
-
-        pub_aa = db.querydatafromdatabase(sql_aa, values_aa, cols_aa)
-        pub_aa_list = pub_aa['id'].tolist()
-        
-        if firsttime == 1: 
-            pub_aa_list = pub_aa['id'].tolist()
-            previous = pub_aa_list
-            subtracted  = pub_aa_list
-            
+    def ihopethisworks(n_clicks, open): 
+        if n_clicks: 
+            return True
         else: 
-            subtracted  = list(set(pub_aa_list)^ set(previous))
-            previous = pub_aa_list + subtracted
-        
-        firsttime += 1
-        
-        for ids in subtracted: 
-            modal_a = f"modal_a_{ids}"
-            modal_button = f"modal_button_{ids}"
-            div_modal = f'div_modal_{ids}'
-            @app.callback(
-                Output(modal_a, 'is_open'), 
-                [
-                    Input(modal_button, 'n_clicks'), 
-                    # Input(modal_close, 'n_clicks')
-                ], 
-                [
-                    State(modal_button, 'is_open')
-                ]
-            )
-            def ihopethisworks(n_clicks, open): 
-                if n_clicks: 
-                    return True
-                else: 
-                    return False
-        
-    return[previous, firsttime]
-    
+            return False
+
+# #modal callback? 
+# @app.callback(
+#     [
+#         Output('previous', 'data'),
+#         Output('firsttime', 'data')
+#     ],
+#     [
+#         Input('url', 'pathname'),
+#     ],
+#     [
+#         State('previous', 'data'),
+#         State('firsttime', 'data')
+#     ]
+# )
+# def modalloadwhen(pathname, previous, firsttime):
+#     print("Callback triggered!")
+#     if pathname == '/publications_home':
+#         sql_aa = """SELECT publications.pub_id
+#                     FROM publications
+#                     WHERE pub_delete_ind = false
+#                 """
+#         values_aa = []
+#         cols_aa = ['id']
+
+#         pub_aa = db.querydatafromdatabase(sql_aa, values_aa, cols_aa)
+#         pub_aa_list = pub_aa['id'].tolist()
+
+#         if firsttime == 1:
+#             previous = pub_aa_list
+#             subtracted = pub_aa_list
+#         else:
+#             subtracted = list(set(pub_aa_list) ^ set(previous))
+#             previous += subtracted
+
+#         firsttime += 1
+
+#         for ids in subtracted:
+#             modal_a = f"modal_a_{ids}"
+#             modal_button = f"modal_button_{ids}"
+#             div_modal = f'div_modal_{ids}'
+#             @app.callback(
+#                 Output(modal_a, 'is_open'),
+#                 [
+#                     Input(modal_button, 'n_clicks'),
+#                 ],
+#                 State(modal_button, 'is_open')
+#             )
+#             def ihopethisworks(n_clicks, is_open):
+#                 if n_clicks:
+#                     return not is_open
+#                 return is_open
+
+#     return [previous, firsttime]
