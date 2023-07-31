@@ -429,7 +429,7 @@ def loadupdunits(pathname):
 def loadenggdept(pathname):
     if pathname == '/author_profile':
         sql_filter3 = """SELECT DISTINCT (dept_name) as label, (dept_name) as value
-            FROM engineering_departments
+            FROM upd_engg_depts
             WHERE dept_delete_ind = FALSE
             ORDER BY value ASC"""
         values_filter3 = []
@@ -574,7 +574,14 @@ def authorprof_submitprocess (submit_btn, close_btn,
                     facaddopenalert = True
                 else:
                         openmodal = True 
+                        sql_max = """SELECT MAX(author_id) from authors
+                        """
+                        sql_max_val = []
+                        max_colname = ['max']
+                        author_max_value_db =  db.querydatafromdatabase(sql_max, sql_max_val,max_colname )
+                        author_max_value = int(author_max_value_db['max'][0]) + 1
                         sql_add = """INSERT INTO authors(
+                            author_id,
                             author_ln, 
                             author_fn, 
                             author_mail,
@@ -587,9 +594,9 @@ def authorprof_submitprocess (submit_btn, close_btn,
                             author_delete_ind, 
                             author_last_upd
                         )
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                         """
-                        values_add =[lastname, firstname, mail, contact, up_aff, other_aff, upd_unit, engg_dept, iefacind, False, author_timestamp_time]
+                        values_add =[author_max_value, lastname, firstname, mail, contact, up_aff, other_aff, upd_unit, engg_dept, iefacind, False, author_timestamp_time]
                         db.modifydatabase(sql_add,values_add)
                         feedbackmessage = f"Author added to DelPHI."
                         okay_href = '/author_manage'

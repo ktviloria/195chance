@@ -770,10 +770,10 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
         #     a_pubname
         # ]
         a_contributing_list = a_contributing
-        print (a_lead , '= ', a_contributing)
-        for a_contributing in a_contributing:
-            if a_contributing in a_lead:
-                authoralert = True
+        if a_contributing is not None:
+            for a_contributing in a_contributing:
+                if a_contributing in a_lead:
+                    authoralert = True
         if not all(inputs): 
             inputsalert = True
         elif (not(a_doi) and not(a_isxn)): 

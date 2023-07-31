@@ -215,7 +215,7 @@ def authors_loadauthorslist(pathname, searchterm, upfilter, updfilter, enggfilte
                 author_id,
                 author_ln || ', '|| author_fn as author_full_name,
                 CASE
-                    WHEN author_up_constituent = 'Non-UP' THEN author_up_constituent || ' (' || author_other_aff ||') '
+                    WHEN author_up_constituent = 'Non-UP'  AND author_other_aff is not NULL  THEN author_up_constituent || ' (' || author_other_aff ||') '
                     ELSE author_up_constituent
                 END as specified_aff,
                 author_upd_unit,

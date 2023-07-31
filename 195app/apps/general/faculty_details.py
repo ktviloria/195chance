@@ -345,16 +345,12 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
         if tab == 'tab_a':
             sql_a = """SELECT  publications.pub_id,
                 a_year,
-				(select string_agg(lead_author_name, ', ')
-				 from pub_lead_authors
-				 where pub_lead_authors.pub_id = publications.pub_id
-				) as lead_authors,
-                publications.pub_title,
+				lead_authors_agg.lead_author_names,
+				lead_authors_agg.lead_up_affiliations,
+				publications.pub_title,
                 tags.tag_short_title,
-				(select string_agg(contributing_author_name, ', ')
-				 from pub_contributing_authors
-				 where pub_contributing_authors.pub_id = publications.pub_id
-				) as contributing_authors,
+				contributing_authors_agg.contributing_author_names,
+				contributing_authors_agg.contributing_up_affiliations,
                 To_char(a_date, 'Month YYYY'),
                 a_pub_name, 
                 a_publisher, 
@@ -367,15 +363,31 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 FROM authorships
                 LEFT OUTER JOIN faculty on authorships.a_lead_id = faculty.user_id or authorships.a_contributing_id = faculty.user_id
                 INNER JOIN publications on authorships.pub_id = publications.pub_id
-                LEFT OUTER JOIN pub_lead_authors on authorships.a_lead_id = pub_lead_authors.a_lead_id
-				LEFT OUTER JOIN pub_contributing_authors on authorships.a_contributing_id = pub_contributing_authors.a_contributing_id
+                LEFT OUTER JOIN (
+					SELECT
+						pub_id,
+						string_agg(lead_author_name, ', ') AS lead_author_names,
+						string_agg(author_up_constituent, ', ') AS lead_up_affiliations
+					FROM pub_lead_authors
+					INNER JOIN authors ON pub_lead_authors.a_lead_id = authors.author_id
+					GROUP BY pub_id
+				) AS lead_authors_agg ON publications.pub_id = lead_authors_agg.pub_id
+				LEFT OUTER JOIN (
+					SELECT
+						pub_id,
+						string_agg(contributing_author_name, ', ') AS contributing_author_names,
+						string_agg(author_up_constituent, ', ') AS contributing_up_affiliations
+					FROM pub_contributing_authors
+					INNER JOIN authors ON pub_contributing_authors.a_contributing_id = authors.author_id
+					GROUP BY pub_id
+				) AS contributing_authors_agg ON publications.pub_id = contributing_authors_agg.pub_id
                 LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
                 WHERE publications.pub_delete_ind = false  
             """
             parsed = urlparse(search)
             facdetid = parse_qs(parsed.query)['id'][0]
             values_a = []
-            cols_a = ['id', 'Year', 'Lead Author(s)', 'Title', 'Criteria', 'Other Contributing Author(s)', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus', 'author_ids']            
+            cols_a = ['id', 'Year', 'Lead Author(s)', 'Lead Authors Affiliation', 'Title', 'Criteria', 'Other Contributing Author(s)', 'Contributing Authors Affiliation', 'Date', 'Publication', 'Publisher', 'DOI','ISXN', 'Scopus', 'author_ids']            
             #fix additivity of searchterms and filters
             if datefilter:
                 sql_a += """AND (cast (a_year as int) >= %s)"""
@@ -385,7 +397,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                     values_a += [datefilter_u]
                     if searchterm:
                         sql_a += """ AND (
-                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (lead_author_names ILIKE %s) OR (contributing_author_names ILIKE %s) OR
                     (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
                     OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
                 ) """
@@ -394,7 +406,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                      f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                 if searchterm:
                     sql_a += """ AND (
-                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (lead_author_names ILIKE %s) OR (contributing_author_names ILIKE %s) OR
                     (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
                     OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
                 ) """
@@ -416,7 +428,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                     values_a += [datefilter]
                     if searchterm:
                         sql_a += """ AND (
-                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (lead_author_names ILIKE %s) OR (contributing_author_names ILIKE %s) OR
                     (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
                     OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
                 ) """
@@ -425,7 +437,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                      f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%", f"%{searchterm}%"]
                 if searchterm:
                     sql_a += """ AND (
-                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (lead_author_names ILIKE %s) OR (contributing_author_names ILIKE %s) OR
                     (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
                     OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
                 ) """
@@ -441,7 +453,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
             
             elif searchterm:
                 sql_a += """ AND (
-                    (pub_lead_authors.lead_author_name ILIKE %s) OR (pub_contributing_authors.contributing_author_name ILIKE %s) OR
+                    (lead_author_names ILIKE %s) OR (contributing_author_names ILIKE %s) OR
                     (pub_title ILIKE %s) OR (tag_short_title ILIKE %s) OR (a_year ILIKE %s) OR ((To_char(a_date, 'Month YYYY')) ILIKE %s)
                     OR (a_pub_name ILIKE %s) OR (a_publisher ILIKE %s) OR (a_doi ILIKE %s) OR (a_isxn ILIKE %s) OR (a_scopus ILIKE %s)
                 ) """
@@ -467,24 +479,23 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 sql_a += """"""
                 values_a += []
             
-            sql_a += """GROUP BY publications.pub_id, a_year, tags.tag_short_title, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
+            sql_a += """GROUP BY publications.pub_id, a_year,
+				lead_authors_agg.lead_author_names, lead_authors_agg.lead_up_affiliations,
+				contributing_authors_agg.contributing_author_names, contributing_authors_agg.contributing_up_affiliations,
+				tags.tag_short_title, To_char(a_date, 'Month YYYY'),a_pub_name, a_publisher, 
                 a_doi, a_isxn, a_scopus, publications.modified_by, to_char(publications.pub_last_upd::timestamp, 'Month DD YYYY HH24:MI:SS')
-            ORDER BY authorships.a_year DESC"""
+				ORDER BY authorships.a_year DESC"""
             pub_a = db.querydatafromdatabase(sql_a, values_a, cols_a)
             
             
             modals_a = []
             if pub_a.shape[0]: 
                 buttons_a = [] 
-                # pub_details = []
-                # other_info = []
-                
-                
+
                 #modal button generation
                 for ids in pub_a['id']: 
                     buttons_a += [
                         html.Div(
-                            # dbc.Button('View', id = f"modal_button_{ids}", href=f"/publication_details_a?mode=view&id={ids}", size='sm', color='primary', ), 
                             dbc.Button('View', id = f"modal_button_fac_{ids}", size='sm', color='danger', ), 
                             style={'text-align': 'center'} 
                         ) 
@@ -494,9 +505,25 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 for i in range(len(pub_a)): 
                     ids = pub_a['id'][i]
                     pub_title = pub_a['Title'][i]
-                    pub_lead = pub_a['Lead Author(s)'][i]
+                    pub_lead_list = pub_a['Lead Author(s)'][i].split(', ')
+                    pub_lead_aff_list = pub_a['Lead Authors Affiliation'][i].split(', ')
                     pub_category = pub_a['Criteria'][i]
                     pub_contributing = pub_a['Other Contributing Author(s)'][i]
+                    if pub_contributing:
+                        if ',' not in pub_contributing:
+                            pub_contributing_list = [pub_contributing]
+                        else:
+                            pub_contributing_list = pub_contributing.split(', ')
+                    else:
+                        pub_contributing_list = []
+                    pub_contributing_aff = pub_a['Contributing Authors Affiliation'][i]
+                    if pub_contributing_aff:
+                        if ',' not in pub_contributing_aff:
+                            pub_contributing_aff_list = [pub_contributing_aff]
+                        else:
+                            pub_contributing_aff_list = pub_contributing_aff.split(', ')
+                    else:
+                        pub_contributing_aff_list = []
                     pub_date = pub_a['Date'][i]
                     pub_publication = pub_a['Publication'][i]
                     pub_publisher = pub_a['Publisher'][i]
@@ -504,6 +531,27 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                     pub_ISXN = pub_a['ISXN'][i]
                     pub_Scopus = pub_a['Scopus'][i]
                     
+                    pub_lead_up_list = []
+                    pub_lead_other_list = []
+                    pub_contributing_up_list = []
+                    pub_contributing_other_list = []
+
+                    for pub_lead, pub_lead_aff in zip(pub_lead_list, pub_lead_aff_list):
+                        if pub_lead_aff == 'UP Diliman':
+                            pub_lead_up_list.append(pub_lead)
+                        else:
+                            pub_lead_other_list.append(pub_lead)
+                    pub_lead_up = ', '.join(pub_lead_up_list)
+                    pub_lead_other = ', '.join(pub_lead_other_list)
+                    
+                    for pub_contributing, pub_contributing_aff in zip(pub_contributing_list, pub_contributing_aff_list):
+                        if pub_contributing_aff == 'UP Diliman':
+                            pub_contributing_up_list.append(pub_contributing)
+                        else:
+                            pub_contributing_other_list.append(pub_contributing)
+                    pub_contributing_up = ', '.join(pub_contributing_up_list)
+                    pub_contributing_other = ', '.join(pub_contributing_other_list)
+
                     modals_a += [
                         html.Div(
                             dbc.Modal(
@@ -516,14 +564,20 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                         ),
                                         html.Div([
                                             html.Strong("Lead Author(s): "),
-                                            html.Span(f"{pub_lead}"),], id = f"modal_lead_authors_{ids}"),
+                                            html.Span(f"{pub_lead_up}", style={"font-style": "italic"}),
+                                            html.Span(', '),
+                                            html.Span(f"{pub_lead_other}")
+                                        ], id = f"modal_lead_authors_{ids}"),
+                                        html.Div([
+                                            html.Strong("Other Contributing Author(s): "),
+                                            html.Span(f"{pub_contributing_up}", style={"font-style": "italic"}),
+                                            html.Span(', '),
+                                            html.Span(f"{pub_contributing_other}")
+                                        ], id = f"modal_contributing_authors_{ids}"),
                                         html.Div([
                                             html.Strong("Publication Category: "), 
                                             html.Span(f"{pub_category}"),], id = f"modal_pub_category_{ids}"
                                         ), 
-                                        html.Div([
-                                            html.Strong("Other Contributing Author(s): "),
-                                            html.Span(f"{pub_contributing}"),], id = f"modal_contributing_authors_{ids}"),
                                         html.Div([
                                             html.Strong("Date of Publication: "), 
                                             html.Span(f"{pub_date}"),], id = f"modal_date_{ids}"),
@@ -552,6 +606,8 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 
             pub_a.drop(['author_ids'],axis=1,inplace=True) 
             pub_a.drop(['id'],axis=1,inplace=True)
+            pub_a.drop(['Lead Authors Affiliation'],axis=1,inplace=True)
+            pub_a.drop(['Contributing Authors Affiliation'],axis=1,inplace=True)
             pub_a.drop(['Date'],axis=1,inplace=True)
             pub_a.drop(['Publication'],axis=1,inplace=True)
             pub_a.drop(['Publisher'],axis=1,inplace=True)
@@ -569,10 +625,8 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
         elif tab == 'tab_p':
             sql_p = """SELECT publications.pub_id,
                 p_year,
-				(select string_agg(author_name, ', ')
-				 from pres_authors
-				 where pres_authors.pub_id = publications.pub_id
-				) as p_authors,
+				pres_authors_agg.pres_author_names,
+                pres_authors_agg.pres_up_affiliations,
                 publications.pub_title,
                 tags.tag_short_title,
                 to_char(p_start_date, 'Month DD, YYYY'), 
@@ -584,7 +638,15 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
             FROM presentations
                 LEFT OUTER JOIN faculty on presentations.p_author_id = faculty.user_id
                 INNER JOIN publications on presentations.pub_id = publications.pub_id
-                LEFT OUTER JOIN pres_authors on presentations.p_author_id = pres_authors.p_author_id
+                LEFT OUTER JOIN (
+					SELECT
+						pub_id,
+						string_agg(author_name, ', ') AS pres_author_names,
+						string_agg(author_up_constituent, ', ') AS pres_up_affiliations
+					FROM pres_authors
+					INNER JOIN authors ON pres_authors.p_author_id = authors.author_id
+					GROUP BY pub_id
+				) AS pres_authors_agg ON publications.pub_id = pres_authors_agg.pub_id
                 LEFT OUTER JOIN tags on publications.tag_id = tags.tag_id
             WHERE
 				publications.pub_delete_ind = false 
@@ -592,7 +654,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
             parsed = urlparse(search)
             facdetid = parse_qs(parsed.query)['id'][0]
             values_p = []
-            cols_p = ['id', 'Year', 'Presenters', 'Title', 'Criteria', 'Start Date', 'End Date',
+            cols_p = ['id', 'Year', 'Presenter(s)', 'Presenters Affiliation', 'Title', 'Criteria', 'Start Date', 'End Date',
                       'Conference', 'Location', 'Other Info', 'presenters_ids'] 
             
             if datefilter:
@@ -603,7 +665,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                     values_p += [datefilter_u]
                     if searchterm:
                         sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            (pres_author_names ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
@@ -613,7 +675,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                 f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            (pres_author_names ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
@@ -636,7 +698,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                     values_p += [datefilter]
                     if searchterm:
                         sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            (pres_author_names ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
@@ -646,7 +708,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                 f"%{searchterm}%", f"%{searchterm}%",f"%{searchterm}%"]
                 if searchterm:
                     sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            (pres_author_names ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
@@ -664,7 +726,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
             
             elif searchterm:
                 sql_p += """ AND (
-                            (pres_authors.author_name ILIKE %s) OR (pub_title ILIKE %s) 
+                            (pres_author_names ILIKE %s) OR (pub_title ILIKE %s) 
                             OR (p_conf ILIKE %s) OR (p_loc ILIKE %s) OR (p_add_info ILIKE %s) OR (tag_short_title ILIKE %s)
                             OR (p_year ILIKE %s) OR (to_char(p_start_date, 'Month DD, YYYY') ILIKE %s) OR (to_char(p_end_date, 'Month DD, YYYY')ILIKE %s)
                             )
@@ -691,18 +753,14 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 sql_p += """"""
                 values_p += []
 
-            sql_p += """GROUP BY p_year, publications.pub_id, tags.tag_short_title, pub_title,
-                    p_authors, to_char(p_start_date, 'Month DD, YYYY'), to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
-                    ORDER BY presentations.p_year DESC"""
+            sql_p += """GROUP BY publications.pub_id, p_year, pres_authors_agg.pres_author_names, pres_authors_agg.pres_up_affiliations, tags.tag_short_title, pub_title,
+                    to_char(p_start_date, 'Month DD, YYYY'), to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
+            ORDER BY p_year DESC"""
             pub_p = db.querydatafromdatabase(sql_p, values_p, cols_p)
             
             modals_p = []
             if pub_p.shape[0]:
                 buttons_p = [] 
-                # pres_details = []
-                # other_details = []
-                
-                
                 #modal button generation
                 for id in pub_p['id']: 
                     buttons_p += [
@@ -717,7 +775,8 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 for i in range(len(pub_p)): 
                     ids = pub_p['id'][i]
                     pub_title = pub_p['Title'][i]
-                    pres_presenters = pub_p['Presenters'][i]
+                    pres_presenters_list = pub_p['Presenter(s)'][i].split(', ')
+                    pres_presenters_aff_list = pub_p['Presenters Affiliation'][i].split(', ')
                     pres_category = pub_p['Criteria'][i]
                     pres_conf = pub_p['Conference'][i]
                     pres_start = pub_p['Start Date'][i]
@@ -725,6 +784,16 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                     pres_loc = pub_p['Location'][i]
                     pres_other = pub_p['Other Info'][i]
                     
+                    pres_presenters_up_list = []
+                    pres_presenters_other_list = []
+                    for pres_presenters, pres_presenters_aff in zip(pres_presenters_list, pres_presenters_aff_list):
+                        if pres_presenters_aff == 'UP Diliman':
+                            pres_presenters_up_list.append(pres_presenters)
+                        else:
+                            pres_presenters_other_list.append(pres_presenters)
+                    pres_presenters_up = ', '.join(pres_presenters_up_list)
+                    pres_presenters_other = ', '.join(pres_presenters_other_list)
+
                     modals_p += [
                         html.Div(
                             dbc.Modal(
@@ -735,8 +804,11 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                             html.Strong("Title: "), 
                                             html.Span(f"{pub_title}"),],id = f"modal_title_{ids}"),
                                         html.Div([
-                                            html.Strong("Presentors: "), 
-                                            html.Span(f"{pres_presenters}"),], id = f"modal_pres_presenters_{ids}"),
+                                            html.Strong("Presenter(s): "), 
+                                            html.Span(f"{pres_presenters_up}", style={"font-style": "italic"}),
+                                            html.Span(', '),
+                                            html.Span(f"{pres_presenters_other}")
+                                        ], id = f"modal_pres_presenters_{ids}"),
                                         html.Div([
                                             html.Strong("Presentation Category: "), 
                                             html.Span(f"{pres_category}"),],  id = f"modal_pres_cat_{ids}"),
@@ -769,7 +841,8 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
             #         pass
                 
             pub_p.drop(['id'],axis=1,inplace=True)  
-            pub_p.drop(['presenters_ids'],axis=1,inplace=True)    
+            pub_p.drop(['presenters_ids'],axis=1,inplace=True)
+            pub_p.drop(['Presenters Affiliation'],axis=1,inplace=True)    
             pub_p.drop(['Start Date'],axis=1,inplace=True)
             pub_p.drop(['End Date'],axis=1,inplace=True)
             pub_p.drop(['Conference'],axis=1,inplace=True)
