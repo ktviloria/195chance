@@ -379,8 +379,16 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     pub_lead_aff_list = pub_a2['Lead Authors Affiliation'][i].split(', ')
                     if len(pub_lead_user_list) < len(pub_lead_list):
                         pub_lead_user_list += [None] * (len(pub_lead_list) - len(pub_lead_user_list))
-                    
                     pub_category = pub_a2['Criteria'][i]
+                    pub_contributing_user = pub_a2['Contributing User ids'][i]
+                    if pub_contributing_user is not None:
+                        if ',' not in pub_contributing_user:
+                            pub_contributing_user_list = [pub_contributing_user]
+                        else:
+                            pub_contributing_user_list = pub_contributing_user.split(', ')
+                    else:
+                        pub_contributing_user_list = []
+
                     pub_contributing = pub_a2['Other Contributing Author(s)'][i]
                     if pub_contributing:
                         if ',' not in pub_contributing:
@@ -389,6 +397,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                             pub_contributing_list = pub_contributing.split(', ')
                     else:
                         pub_contributing_list = []
+
                     pub_contributing_aff = pub_a2['Contributing Authors Affiliation'][i]
                     if pub_contributing_aff:
                         if ',' not in pub_contributing_aff:
@@ -397,6 +406,8 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                             pub_contributing_aff_list = pub_contributing_aff.split(', ')
                     else:
                         pub_contributing_aff_list = []
+                    if len(pub_contributing_user_list) < len(pub_contributing_list):
+                        pub_contributing_user_list += [None] * (len(pub_contributing_list) - len(pub_contributing_user_list))
                     pub_date = pub_a2['Date'][i]
                     pub_publication = pub_a2['Publication'][i]
                     pub_publisher = pub_a2['Publisher'][i]
@@ -407,14 +418,15 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     pub_lead_faculty_list = []
                     pub_lead_up_list = []
                     pub_lead_other_list = []
+                    pub_contributing_faculty_list = []
                     pub_contributing_up_list = []
                     pub_contributing_other_list = []
 
-                    for pub_lead, pub_lead_aff, pub_user in zip(pub_lead_list, pub_lead_aff_list, pub_lead_user_list):
+                    for pub_lead, pub_lead_aff, pub_lead_user in zip(pub_lead_list, pub_lead_aff_list, pub_lead_user_list):
                         if pub_lead_aff.strip() == 'UP Diliman':
-                            if pub_user is not None:
-                                pub_user = int(pub_user)
-                                if pub_user > 0:
+                            if pub_lead_user is not None:
+                                pub_lead_user = int(pub_lead_user)
+                                if pub_lead_user > 0:
                                     pub_lead_faculty_list.append(pub_lead)
                             else:
                                 pub_lead_up_list.append(pub_lead)
@@ -424,11 +436,17 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     pub_lead_up = ', '.join(pub_lead_up_list)
                     pub_lead_other = ', '.join(pub_lead_other_list)
                     
-                    for pub_contributing, pub_contributing_aff in zip(pub_contributing_list, pub_contributing_aff_list):
-                        if pub_contributing_aff == 'UP Diliman':
-                            pub_contributing_up_list.append(pub_contributing)
+                    for pub_contributing_user, pub_contributing, pub_contributing_aff in zip(pub_contributing_user_list, pub_contributing_list, pub_contributing_aff_list):
+                        if pub_contributing_aff.strip() == 'UP Diliman':
+                            if pub_contributing_user is not None:
+                                pub_contributing_user = int(pub_contributing_user)
+                                if pub_contributing_user > 0:
+                                    pub_contributing_faculty_list.append(pub_contributing)
+                            else:
+                                pub_contributing_up_list.append(pub_contributing)
                         else:
                             pub_contributing_other_list.append(pub_contributing)
+                    pub_contributing_faculty = ', '.join(pub_contributing_faculty_list)
                     pub_contributing_up = ', '.join(pub_contributing_up_list)
                     pub_contributing_other = ', '.join(pub_contributing_other_list)
 
@@ -460,9 +478,10 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                                             html.Span(', '),
                                             html.Span(f"{pub_lead_other}")
                                         ], id = f"modal_lead_authors_{ids}"),
-
                                         html.Div([
                                             html.Strong("Other Contributing Author(s): "),
+                                            html.Span(f"{pub_contributing_faculty}", style={"font-style": "italic", "color":"red"}),
+                                            html.Span(', '),
                                             html.Span(f"{pub_contributing_up}", style={"font-style": "italic"}),
                                             html.Span(', '),
                                             html.Span(f"{pub_contributing_other}")
@@ -499,6 +518,8 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     ]
            
             pub_a.drop(['id'],axis=1,inplace=True)
+            pub_a.drop(['Lead User ids'],axis=1,inplace=True)
+            pub_a.drop(['Contributing User ids'],axis=1,inplace=True)
             pub_a.drop(['Lead Authors Affiliation'],axis=1,inplace=True)
             pub_a.drop(['Contributing Authors Affiliation'],axis=1,inplace=True)
             pub_a.drop(['Date'],axis=1,inplace=True)
@@ -517,6 +538,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
         elif tab == 'tab_p':
             sql_p = """SELECT publications.pub_id,
                 p_year,
+                pres_authors_agg.pres_user_ids,
 				pres_authors_agg.pres_author_names,
                 pres_authors_agg.pres_up_affiliations,
                 publications.pub_title,
@@ -531,6 +553,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                 LEFT OUTER JOIN (
 					SELECT
 						pub_id,
+                        string_agg(authors.author_user_id::text, ', ') AS pres_user_ids,
 						string_agg(author_name, ', ') AS pres_author_names,
 						string_agg(author_up_constituent, ', ') AS pres_up_affiliations
 					FROM pres_authors
@@ -543,13 +566,15 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
             """
             
             values_p = []
-            cols_p = ['id', 'Year', 'Presenter(s)', 'Presenters Affiliation', 'Title', 'Criteria', 'Start Date', 'End Date',
+            cols_p = ['id', 'Year', 'Presenter User ids', 'Presenter(s)', 'Presenters Affiliation', 'Title', 'Criteria', 'Start Date', 'End Date',
                       'Conference', 'Location', 'Other Info']
             
             sql_p2 = sql_p 
-            sql_p2 += """GROUP BY publications.pub_id, p_year, pres_authors_agg.pres_author_names, pres_authors_agg.pres_up_affiliations, tags.tag_short_title, pub_title,
+            sql_p2 += """GROUP BY publications.pub_id, p_year,
+                    pres_authors_agg.pres_user_ids, pres_authors_agg.pres_author_names, pres_authors_agg.pres_up_affiliations,
+                    tags.tag_short_title, pub_title,
                     to_char(p_start_date, 'Month DD, YYYY'), to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
-            ORDER BY p_year DESC"""
+                    ORDER BY p_year DESC"""
             
             pub_p2 = db.querydatafromdatabase(sql_p2, values_p, cols_p)
 
@@ -649,9 +674,11 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                 sql_p += """"""
                 values_p += []
                 
-            sql_p += """GROUP BY publications.pub_id, p_year, pres_authors_agg.pres_author_names, pres_authors_agg.pres_up_affiliations, tags.tag_short_title, pub_title,
+            sql_p += """GROUP BY publications.pub_id, p_year,
+                    pres_authors_agg.pres_user_ids, pres_authors_agg.pres_author_names, pres_authors_agg.pres_up_affiliations,
+                    tags.tag_short_title, pub_title,
                     to_char(p_start_date, 'Month DD, YYYY'), to_char(p_end_date, 'Month  DD, YYYY'), p_conf, p_loc, p_add_info
-            ORDER BY p_year DESC"""
+                    ORDER BY p_year DESC"""
             pub_p = db.querydatafromdatabase(sql_p, values_p, cols_p)
 
             modals_p = []
@@ -670,22 +697,33 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                 for i in range(len(pub_p2)): 
                     ids = pub_p2['id'][i]
                     pub_title = pub_p2['Title'][i]
+                    pub_presenters_user_list = pub_p2['Presenter User ids'][i].split(', ')
                     pres_presenters_list = pub_p2['Presenter(s)'][i].split(', ')
                     pres_presenters_aff_list = pub_p2['Presenters Affiliation'][i].split(', ')
+                    if len(pub_presenters_user_list) < len(pres_presenters_list):
+                        pub_presenters_user_list += [None] * (len(pres_presenters_list) - len(pub_presenters_user_list))
                     pres_category = pub_p2['Criteria'][i]
                     pres_conf = pub_p2['Conference'][i]
                     pres_start = pub_p2['Start Date'][i]
                     pres_end = pub_p2['End Date'][i]
                     pres_loc = pub_p2['Location'][i]
                     pres_other = pub_p2['Other Info'][i]
-                    
+
+                    pres_presenters_faculty_list = []
                     pres_presenters_up_list = []
                     pres_presenters_other_list = []
-                    for pres_presenters, pres_presenters_aff in zip(pres_presenters_list, pres_presenters_aff_list):
+
+                    for pres_user, pres_presenters, pres_presenters_aff in zip(pub_presenters_user_list, pres_presenters_list, pres_presenters_aff_list):
                         if pres_presenters_aff == 'UP Diliman':
-                            pres_presenters_up_list.append(pres_presenters)
+                            if pres_user is not None:
+                                pres_user = int(pres_user)
+                                if pres_user > 0:
+                                    pres_presenters_faculty_list.append(pres_presenters)
+                            else:
+                                pres_presenters_up_list.append(pres_presenters)
                         else:
                             pres_presenters_other_list.append(pres_presenters)
+                    pres_presenters_faculty = ', '.join(pres_presenters_faculty_list)
                     pres_presenters_up = ', '.join(pres_presenters_up_list)
                     pres_presenters_other = ', '.join(pres_presenters_other_list)
 
@@ -696,10 +734,22 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                                     dbc.ModalHeader(dbc.ModalTitle("Record Details"), style=mod_style), 
                                     dbc.ModalBody([
                                         html.Div([
+                                            dbc.FormText("Presenter Affiliation Legend:", style = {"font-weight": "bold"}),
+                                            html.Span(': '),
+                                            dbc.FormText("IE Faculty", style = {"font-style": "italic", "color":"red"}),
+                                            html.Span(', '),
+                                            dbc.FormText("UP Diliman", style = {"font-style": "italic"}),
+                                            html.Span(', '),
+                                            dbc.FormText("Other UP constituent or Non-UP"),
+                                            ], id = f"modal_pres_legend_{ids}"
+                                        ),
+                                        html.Div([
                                             html.Strong("Title: "), 
                                             html.Span(f"{pub_title}"),],id = f"modal_title_{ids}"),
                                         html.Div([
                                             html.Strong("Presenter(s): "), 
+                                            html.Span(f"{pres_presenters_faculty}", style={"font-style": "italic", "color":"red"}),
+                                            html.Span(', '),
                                             html.Span(f"{pres_presenters_up}", style={"font-style": "italic"}),
                                             html.Span(', '),
                                             html.Span(f"{pres_presenters_other}")
@@ -727,6 +777,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                         )
                     ]
             pub_p.drop(['id'],axis=1,inplace=True)
+            pub_p.drop(['Presenter User ids'],axis=1,inplace=True)
             pub_p.drop(['Presenters Affiliation'],axis=1,inplace=True)
             pub_p.drop(['Start Date'],axis=1,inplace=True)
             pub_p.drop(['End Date'],axis=1,inplace=True)
