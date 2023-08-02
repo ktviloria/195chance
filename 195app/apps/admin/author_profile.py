@@ -141,7 +141,7 @@ layout= html.Div(
                                             ),  
                                             dbc.Col( 
                                                 dbc.Input( 
-                                                    type="text", id="authorprof_up_aff_others", placeholder="Please specify your affiliation." 
+                                                    type="text", id="authorprof_up_aff_others", placeholder="Please specify affiliation." 
                                                 ),
                                                 width = 9
                                             ),
@@ -166,7 +166,7 @@ layout= html.Div(
                                     dbc.Col( 
                                         html.Div( 
                                             dcc.Dropdown( 
-                                                id='authorprof_upd_unit_dropdown', clearable=True, searchable=True, placeholder="UP Affiliation"
+                                                id='authorprof_upd_unit_dropdown', clearable=True, searchable=True, placeholder="UP Diliman Unit"
                                             ),
                                             className="dash-bootstrap" 
                                         ), 
@@ -190,7 +190,7 @@ layout= html.Div(
                                     dbc.Col( 
                                         html.Div( 
                                             dcc.Dropdown( 
-                                                id='authorprof_engg_dept_dropdown',clearable=True, searchable=True, placeholder="UP Affiliation"
+                                                id='authorprof_engg_dept_dropdown',clearable=True, searchable=True, placeholder="UPD Engineering Department"
                                             ),
                                             className="dash-bootstrap" 
                                         ), 

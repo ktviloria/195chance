@@ -39,7 +39,7 @@ layout= html.Div(
         html.H2("Publication Details"), 
         html.H6("* Indicates required field", style={"color": "#d9534f", "font-style": "italic"}),
         html.Hr(), 
-        # General pub info needed
+        # Add publication form and add author button
         dbc.Row(
             [
                 #Add/Modify publication form
@@ -59,7 +59,7 @@ layout= html.Div(
                                             [
                                             dbc.Label("Lead Author(s)"),
                                             dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
                                             ), 
                                         dbc.Col( 
                                             dcc.Dropdown( 
@@ -76,7 +76,7 @@ layout= html.Div(
                                             [
                                             dbc.Label("Contributing Author(s)"),
                                             #dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
                                             ), 
                                         dbc.Col( 
                                                 dcc.Dropdown( 
@@ -94,7 +94,7 @@ layout= html.Div(
                                             [
                                             dbc.Label("Criteria"),
                                             dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
                                             ), 
                                         dbc.Col( 
                                             html.Div( 
@@ -115,7 +115,7 @@ layout= html.Div(
                                             [
                                             dbc.Label("Publication Title"),
                                             dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
                                             ),  
                                         dbc.Col( 
                                             dbc.Textarea( 
@@ -134,7 +134,7 @@ layout= html.Div(
                                             [
                                             dbc.Label("Publication Date"),
                                             dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
                                             ), 
                                         dbc.Col( 
                                             html.Div(
@@ -159,7 +159,7 @@ layout= html.Div(
                                             [
                                             dbc.Label("Publisher"),
                                             dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
                                             ), 
                                         dbc.Col( 
                                             dbc.Textarea( 
@@ -178,7 +178,7 @@ layout= html.Div(
                                             [
                                             dbc.Label("Name of Journal"),
                                             dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
                                             ), 
                                         dbc.Col( 
                                             dbc.Textarea( 
@@ -195,7 +195,7 @@ layout= html.Div(
                                 dbc.Row( 
                                     [ 
                                         dbc.Label("Scopus (Optional)",
-                                            width=3, style={'display': 'flex', 'align-items': 'center'}), 
+                                            width=2, style={'display': 'flex', 'align-items': 'center'}), 
                                         dbc.Col( 
                                             dbc.Input( 
                                                 type="text", id="form_a_scopus", placeholder="Enter scopus" 
@@ -219,7 +219,7 @@ layout= html.Div(
                                         dbc.Col(
                                             [
                                             dbc.Label("DOI"),
-                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
                                             ),  
                                         dbc.Col( 
                                             dbc.Input( 
@@ -237,7 +237,7 @@ layout= html.Div(
                                         dbc.Col(
                                             [
                                             dbc.Label("ISBN/ISSN"),
-                                            ], width=3, style={'display': 'flex', 'align-items': 'center'}
+                                            ], width=2, style={'display': 'flex', 'align-items': 'center'}
                                             ),  
                                         dbc.Col( 
                                             dbc.Input( 
@@ -277,92 +277,19 @@ layout= html.Div(
                             style={'width': '100%'}
                         )
                     ],
-                    width=7, style={'display': 'flex', 'align-items': 'center'}
+                    width=9, style={'display': 'flex', 'align-items': 'center'}
                 ),
-                #Add author card
+                #Add author button
                 dbc.Col(
-                    dbc.Row(
-                            dbc.Card(
-                                [
-                                    dbc.CardHeader(
-                                        [
-                                            html.H2("Add Author into options"),
-                                            html.H6("Please select author to be added in the form to the left if author is a lead or contributing author of this publication", style={"margin-bottom": "15px", "color": "#d9534f", "font-style": "italic"})
-                                            # dbc.FormText("Please select author to be added in the form to the left if author is a lead or contributing author of this publication",
-                                            #             style = {"font-style": "italic", 'font-size':'13px'}),
-                                        ]
-                                    ),
-                                    dbc.CardBody(
-                                        [
-                                            dbc.Alert('Please supply required fields.', color="danger", id='a_add_inputs_alert', is_open=False),
-                                            dbc.Row( 
-                                                [ 
-                                                    dbc.Col(
-                                                        [
-                                                        dbc.Label("First Name/Initials"),
-                                                        dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                                                        ], width=3, style={'display': 'flex', 'align-items': 'center'}
-                                                        ),  
-                                                    dbc.Col( 
-                                                        dbc.Textarea( 
-                                                            #type="text", 
-                                                            id="form_a_add_author_fn", placeholder="Enter author's first name/initials",
-                                                        ), 
-                                                        width=8,
-                                                    ), 
-                                                ], 
-                                                className="mb-3", 
-                                            ),
-                                            dbc.Row( 
-                                                [ 
-                                                    dbc.Col(
-                                                        [
-                                                        dbc.Label("Last Name"),
-                                                        dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                                                        ], width=3, style={'display': 'flex', 'align-items': 'center'}
-                                                        ),  
-                                                    dbc.Col( 
-                                                        dbc.Textarea( 
-                                                            #type="text", 
-                                                            id="form_a_add_author_ln", placeholder="Enter author's last name",
-                                                        ), 
-                                                        width=8,
-                                                    ), 
-                                                ], 
-                                                className="mb-3", 
-                                            ),
-                                            dbc.Row( 
-                                                [ 
-                                                    dbc.Col(
-                                                        [
-                                                        dbc.Label("UP Affiliation"),
-                                                        dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
-                                                        ], width=3, style={'display': 'flex', 'align-items': 'center'}
-                                                        ), 
-                                                    dbc.Col( 
-                                                        html.Div( 
-                                                            dcc.Dropdown( 
-                                                                id='form_a_add_author_up_aff', optionHeight=60
-                                                            ),
-                                                            className="dash-bootstrap" 
-                                                        ), 
-                                                        width=8,
-                                                    ), 
-                                                ], 
-                                                className="mb-3", 
-                                            ), 
-                                        ]
-                                    ),
-                                    dbc.CardFooter(
-                                        dbc.Button('Submit', color='danger', id='form_a_add_author_submitbtn')
-                                    )
-                                ]
-                            )
-                    ),
-                    width=5, style={'display': 'flex', 'align-items': 'baseline'}
-                )
+                    dbc.Row([
+                        dbc.Col(html.H6('Author not in options?', style={'text-align': 'right', "font-style": "italic"}), width = 6),
+                        dbc.Col(dbc.Button('Add Author', color='danger', id='form_a_add_author_btn'), width=6),
+                    ]),
+                    width=3, style={'align-items': 'baseline'}
+                ),
             ]
         ),
+        #Submit publication modal
         dbc.Modal( 
             [    
                 dbc.ModalHeader(dbc.ModalTitle("Saving Progress"), style=mod_style), 
@@ -374,13 +301,208 @@ layout= html.Div(
             centered=True, 
             id="form_a_modal", 
             is_open=False, 
-        ),  
-        dbc.Modal( 
-            [    
-                dbc.ModalHeader(dbc.ModalTitle("Saving Progress"), style=mod_style), 
-                dbc.ModalBody("tempmessage", id='form_a_add_author_feedback_message'), 
+        ),
+        #Add author modal
+        dbc.Modal(   
+            [
+                dbc.ModalHeader(
+                    dbc.Row(dbc.ModalTitle("Add Author Into Dropdown Options")),
+                style=mod_style), 
+                dbc.ModalBody(
+                    [
+                    html.H6("* Indicates required field", style={"color": "#d9534f", "font-style": "italic"}),
+                    dbc.Alert('Please supply required fields.', color="danger", id='a_add_inputs_alert', is_open=False),
+                    dbc.Alert('Author successfully added to database. Please reload page to reflect added author in options.', color="success", id='a_add_success_alert', is_open=False),
+                    dbc.Row( 
+                        [ 
+                            dbc.Col(
+                                [
+                                    dbc.Label("First Name/Initials"),
+                                    dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                ],
+                                width=5, style={'display': 'flex', 'align-items': 'center'}
+                            ),  
+                            dbc.Col( 
+                                dbc.Textarea(id="form_a_add_author_fn", placeholder="Enter author's first name/initials"), 
+                                width=7,
+                            ), 
+                        ], 
+                        className="mb-3", 
+                    ),
+                    dbc.Row( 
+                        [ 
+                            dbc.Col(
+                                [
+                                    dbc.Label("Last Name"),
+                                    dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                ],
+                                width=5, style={'display': 'flex', 'align-items': 'center'}
+                            ),  
+                            dbc.Col( 
+                                dbc.Textarea(id="form_a_add_author_ln", placeholder="Enter author's last name"), 
+                                width=7,
+                            ), 
+                        ], 
+                        className="mb-3", 
+                    ),
+                    dbc.Row( 
+                        [ 
+                            dbc.Col(
+                                dbc.Label("Email"),
+                                width=5, style={'display': 'flex', 'align-items': 'center'}
+                            ),  
+                            dbc.Col( 
+                                dbc.Textarea(id="form_a_add_author_mail", placeholder="Enter author's email"), 
+                                width=7,
+                            ), 
+                        ], 
+                        className="mb-3", 
+                    ),
+                    dbc.Row( 
+                        [ 
+                            dbc.Col(
+                                dbc.Label("Contact Number"),
+                                width=5, style={'display': 'flex', 'align-items': 'center'}
+                            ),  
+                            dbc.Col( 
+                                dbc.Textarea(id="form_a_add_author_contact", placeholder="Enter author's contact number"), 
+                                width=7,
+                            ), 
+                        ], 
+                        className="mb-3", 
+                    ),
+                    #UP Affiliation Dropdown
+                    dbc.Row( 
+                        [ 
+                            dbc.Col(
+                                [
+                                    dbc.Label("UP Affiliation"),
+                                    dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"})
+                                ],
+                                width=5, style={'display': 'flex', 'align-items': 'center'}
+                            ), 
+                            dbc.Col( 
+                                html.Div( 
+                                    dcc.Dropdown(id='form_a_add_author_up_aff_dropdown', optionHeight=60, placeholder="UP Affiliation"),
+                                    className="dash-bootstrap" 
+                                ), 
+                                width=7,
+                            ), 
+                        ], 
+                        className="mb-3", 
+                    ), 
+                    html.Div(
+                                    dbc.Row(
+                                        [
+                                             dbc.Col(
+                                                [
+                                                    dbc.Label("Specify Other Affiliation", id = 'form_a_up_aff_others_label'), 
+                                                    dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"}),
+                                                ],
+                                                width=5
+                                            ),  
+                                            dbc.Col( 
+                                                dbc.Input( 
+                                                    type="text", id="form_a_up_aff_others", placeholder="Please specify affiliation." 
+                                                ),
+                                                width = 7
+                                            ),
+                                        ]
+                                    ),
+                                    id="form_a_up_aff_others_div"
+                                ),
+                    # UPD Unit Dropdown
+                    html.Div(
+                            dbc.Row( 
+                                [ 
+                                    dbc.Col(
+                                        [
+                                            dbc.Label("UP Diliman Unit", id = 'form_a_upd_unit_label'), 
+                                            # dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"}),
+                                        ],
+                                        width=5
+                                    ),  
+                                    dbc.Col( 
+                                        html.Div( 
+                                            dcc.Dropdown( 
+                                                id='form_a_upd_unit_dropdown', clearable=True, searchable=True, placeholder="UP Diliman Unit"
+                                            ),
+                                            className="dash-bootstrap" 
+                                        ), 
+                                    ), 
+                                ], 
+                                className="mb-3", 
+                            ),
+                            id = 'form_a_upd_unit_div'
+                        ),
+                    # UPD Engineering Department Dropdown
+                    html.Div(
+                            dbc.Row( 
+                                [ 
+                                    dbc.Col(
+                                        [
+                                            dbc.Label("UPD Engineering Department", id = 'form_a_engg_dept_label'), 
+                                            # dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"}),
+                                        ],
+                                        width=5
+                                    ),  
+                                    dbc.Col( 
+                                        html.Div( 
+                                            dcc.Dropdown( 
+                                                id='form_a_engg_dept_dropdown',clearable=True, searchable=True, placeholder="UPD Engineering Department"
+                                            ),
+                                            className="dash-bootstrap" 
+                                        ), 
+                                    ), 
+                                ], 
+                                className="mb-3", 
+                            ),
+                            id = 'form_a_engg_dept_div'
+                        ),
+                    # UPD IE Faculty Indication Dropdown
+                    html.Div(
+                            dbc.Row( 
+                                [ 
+                                    dbc.Col(
+                                        [
+                                            dbc.Label("UPD IE Faculty Indication", id = 'form_a_iefacind_label'), 
+                                            # dbc.Label("*", style={"color": "#d9534f", "font-style": "bold"}, id='authorprof_iefacind_star'),
+                                        ],
+                                        width=5
+                                    ),  
+                                    dbc.Col( 
+                                        [
+                                            html.Div( 
+                                                dcc.Dropdown( 
+                                                    id='form_a_iefacind_dropdown', 
+                                                    options = [
+                                                        {'label':'IE Faculty', 'value':'IE Faculty'},
+                                                        {'label':'Inactive IE Faculty', 'value':'Inactive IE Faculty'},
+                                                        {'label':'Non-IE Faculty', 'value':'Non-IE Faculty'},
+                                                    ]
+                                                ),
+                                                className="dash-bootstrap",
+                                            ), 
+                                            # html.Div( 
+                                            #     dcc.Dropdown( 
+                                            #         id='authorprof_noniefacind', 
+                                            #         options = [
+                                            #             {'label': 'N/A: Non-UP Affiliated', 'value': 'Non-UP'},
+                                            #         ]
+                                            #     ),
+                                            #     className="dash-bootstrap",
+                                            # ), 
+                                        ]
+                                    ), 
+                                ], 
+                                className="mb-3", 
+                            ),
+                            id = 'form_a_iefacind_div'
+                        ), 
+                    ]
+                ),
                 dbc.ModalFooter( 
-                    dbc.Button("Okay", color='secondary', id="form_a_add_author_closebtn", className="ms-auto", n_clicks=0) 
+                    dbc.Button('Submit', color='danger', id='form_a_submit_author_submitbtn') 
                 ),           
             ], 
             centered=True, 
@@ -388,7 +510,7 @@ layout= html.Div(
             is_open=False, 
         ),  
     ] 
-) 
+)
 
 # Delete Record Style
 @app.callback ( 
@@ -413,14 +535,14 @@ def form_a_load_removerecord(pathname, search):
          raise PreventUpdate 
     return [to_load, removerecord_div]
 
-#Dropdown
+# Load Dropdown Options
 @app.callback (
     [
         # Output('form_a_toload', 'data'), 
         Output ('form_a_lead', 'options'),
         Output ('form_a_contributing', 'options'), 
         Output ('form_a_tag', 'options'),
-        Output('form_a_add_author_up_aff', 'options')
+        Output('form_a_add_author_up_aff_dropdown', 'options')
     ], 
     [
         Input('url', 'pathname'), 
@@ -488,7 +610,7 @@ def form_a_load_dropdown(pathname, lead, contributing, currentuserid):
         tag_options = tag_included.to_dict('records')
 
         #up_aff options
-        sql_up_aff = """SELECT DISTINCT (cons_name) AS label, cons_id AS value 
+        sql_up_aff = """SELECT DISTINCT (cons_name) AS label, cons_name AS value 
             from up_system 
             WHERE cons_delete_ind = false
                 
@@ -503,83 +625,136 @@ def form_a_load_dropdown(pathname, lead, contributing, currentuserid):
          raise PreventUpdate 
     return(lead_author_opts, contributing_author_opts, tag_options, up_aff_options)
 
-#Add Author Submit process
+# UP Criteria Style       
 @app.callback(
     [
-        Output('form_a_add_author_modal', 'is_open'), 
-        Output('form_a_add_author_feedback_message', 'children'), 
-        Output('a_add_inputs_alert', 'is_open'),
-        Output('form_a_add_author_closebtn', 'href'),
+        Output('form_a_up_aff_others_div', 'style'),
+        Output('form_a_upd_unit_div', 'style'),
+        Output('form_a_engg_dept_div', 'style'),
+        Output('form_a_iefacind_div', 'style'),
     ], 
     [
-        Input('form_a_add_author_submitbtn', 'n_clicks'), 
-        Input('form_a_add_author_closebtn', 'n_clicks') 
-    ], 
-    [
-        State('form_a_add_author_fn', 'value'),
-        State('form_a_add_author_ln', 'value'),
-        State('form_a_add_author_up_aff', 'value'),
-        State('url', 'search' ),
-        # State('currentuserid', 'data')
+        Input('url', 'pathname'), 
+        Input('form_a_add_author_up_aff_dropdown', 'value'),
+        Input('form_a_upd_unit_dropdown', 'value'),
+        Input('form_a_engg_dept_dropdown', 'value'),
     ]
 )
-def form_a_submitprocess (add_submit_btn, add_close_btn,
-                            firstname, lastname, affiliation,
-                            add_search):
-    ctx = dash.callback_context
-    if ctx.triggered: 
-        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
-        add_openmodal = False 
-        add_feedbackmessage  = ' '
-        add_inputsalert = False
-        add_okay_href = None 
-    else: 
-        raise PreventUpdate
-    
-    if eventid == 'form_a_add_author_submitbtn' and add_submit_btn:     
-        add_inputs = [firstname, lastname, affiliation]
-    
-        if not all(add_inputs): 
-            add_inputsalert = True
-            
+def facinddiv (pathname, up_aff, upd_unit, engg_dept): 
+    if pathname == '/form_authorships':
+        if up_aff == '':
+            up_aff = None
+        if up_aff == None:
+            up_aff_others_div = {'display': 'none'}
+            upd_unit_div = {'display': 'none'}
+            engg_dept_div = {'display': 'none'}
+            ie_fac_ind_div = {'display': 'none'}
+        elif up_aff == 'Non-UP':
+            up_aff_others_div = {'display': 'contents'}
+            upd_unit_div = {'display': 'none'}
+            engg_dept_div = {'display': 'none'}
+            ie_fac_ind_div = {'display': 'none'}
+        elif up_aff == 'UP Diliman':
+            up_aff_others_div = {'display': 'none'}
+            upd_unit_div = {'display': 'contents'}
+            engg_dept_div = {'display': 'none'}
+            ie_fac_ind_div = {'display': 'none'}
+            if upd_unit == '':
+                upd_unit = None
+            if upd_unit == None:
+                engg_dept_div = {'display': 'none'}
+                ie_fac_ind_div = {'display': 'none'}
+            elif upd_unit == 'College of Engineering':
+                engg_dept_div = {'display': 'contents'}
+                ie_fac_ind_div = {'display': 'none'}
+                if engg_dept == '':
+                    engg_dept = None
+                if engg_dept == None:
+                    ie_fac_ind_div = {'display': 'none'}
+                elif engg_dept == 'Department of Industrial Engineering and Operations Research':
+                    ie_fac_ind_div = {'display': 'contents'}
+                else:
+                    ie_fac_ind_div = {'display': 'none'}
+            else:
+                engg_dept_div = {'display': 'none'}
+                ie_fac_ind_div = {'display': 'none'}
         else:
-            add_openmodal = True  
-            parsed = urlparse(add_search)
-            mode = parse_qs(parsed.query)['mode'][0]
-            
-            a_add_timestamp = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            a_add_timestamp_time = dt.datetime.strptime(a_add_timestamp,'%Y-%m-%d %H:%M:%S')
-
-            sql_max_author_inquiry = """SELECT MAX(author_id) from authors"""
-            max_author_val = []
-            max_author_colname = ['max']
-            max_author_value_db = db.querydatafromdatabase (sql_max_author_inquiry, max_author_val, max_author_colname)
-            max_author_id = int(max_author_value_db['max'][0]) + 1
-
-            form_a_sqlcode_add_author = """INSERT INTO authors(
-                    author_id,  
-                    author_fn,
-                    author_ln,
-                    author_up_constituent, 
-                    author_delete_ind, 
-                    author_last_upd
-                )
-                VALUES (%s, %s, %s, %s, %s, %s)
-                """                 
-            form_a_values_add_author = [max_author_id, firstname, lastname, affiliation, False, a_add_timestamp_time]
-            db.modifydatabase(form_a_sqlcode_add_author, form_a_values_add_author)
-            
-            add_feedbackmessage = 'Author added to database. Please reload page.'
-            # add_okay_href = '/publications_manage'
-            add_okay_href = '/form_authorships' + add_search
-            # driver = webdriver.Chrome()
-            # driver.refresh()
-
-    elif eventid == 'form_a_add_author_closebtn' and add_close_btn: 
-        pass
-    else: 
+            up_aff_others_div = {'display': 'none'}
+            upd_unit_div = {'display': 'none'}
+            engg_dept_div = {'display': 'none'}
+            ie_fac_ind_div = {'display': 'none'}
+    else:
         raise PreventUpdate
-    return [add_openmodal, add_feedbackmessage, add_inputsalert, add_okay_href]
+    return(up_aff_others_div, upd_unit_div, engg_dept_div, ie_fac_ind_div)
+
+#UP Constituent filter callback
+@app.callback(
+    [
+        Output('form_a_up_aff_dropdown', 'options'),
+    ],
+    [
+        Input('url', 'pathname'),
+    ]
+) 
+def loadcons(pathname):
+    if pathname == '/form_authorships':
+        sql_filter1 = """SELECT DISTINCT (cons_name) as label, (cons_name) as value
+            FROM up_system
+            WHERE cons_delete_ind = FALSE
+            ORDER BY value ASC"""
+        values_filter1 = []
+        cols_filter1 = ['label', 'value']
+        fac_filter_included = db.querydatafromdatabase(sql_filter1, values_filter1, cols_filter1)
+        fac_filter_options = fac_filter_included.to_dict('records')
+    else:
+        raise PreventUpdate
+    return [fac_filter_options] 
+
+#UPD Units filter callback
+@app.callback(
+    [
+        Output('form_a_upd_unit_dropdown', 'options'),
+    ],
+    [
+        Input('url', 'pathname'),
+    ]
+) 
+def loadupdunits(pathname):
+    if pathname == '/form_authorships':
+        sql_filter2 = """SELECT DISTINCT (college_name) as label, (college_name) as value
+            FROM up_diliman
+            WHERE college_delete_ind = FALSE
+            ORDER BY value ASC"""
+        values_filter2 = []
+        cols_filter2 = ['label', 'value']
+        fac_filter_included = db.querydatafromdatabase(sql_filter2, values_filter2, cols_filter2)
+        fac_filter_options = fac_filter_included.to_dict('records')
+    else:
+        raise PreventUpdate
+    return [fac_filter_options] 
+
+#UPD Engineering Dept filter callback
+@app.callback(
+    [
+        Output('form_a_engg_dept_dropdown', 'options'),
+    ],
+    [
+        Input('url', 'pathname'),
+    ]
+) 
+def loadenggdept(pathname):
+    if pathname == '/form_authorships':
+        sql_filter3 = """SELECT DISTINCT (dept_name) as label, (dept_name) as value
+            FROM upd_engg_depts
+            WHERE dept_delete_ind = FALSE
+            ORDER BY value ASC"""
+        values_filter3 = []
+        cols_filter3 = ['label', 'value']
+        fac_filter_included = db.querydatafromdatabase(sql_filter3, values_filter3, cols_filter3)
+        fac_filter_options = fac_filter_included.to_dict('records')
+    else:
+        raise PreventUpdate
+    return [fac_filter_options] 
 
 #Load Data    
 @app.callback(
@@ -707,6 +882,7 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
 #Add Publication Submit process
 @app.callback(
     [
+        Output('form_a_add_author_modal', 'is_open'),
         Output('form_a_modal', 'is_open'), 
         Output('form_a_feedback_message', 'children'), 
         Output('form_a_closebtn', 'href'), 
@@ -716,6 +892,7 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
         Output('a_authors_alert', 'is_open'),
     ], 
     [
+        Input('form_a_add_author_btn', 'n_clicks'),
         Input('form_a_submitbtn', 'n_clicks'), 
         Input('form_a_closebtn', 'n_clicks') 
     ], 
@@ -735,12 +912,13 @@ def form_a_load(timestamp, to_load, search, onlyloadonce):
         State('currentuserid', 'data')
     ]
 )
-def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing, 
+def form_a_submitprocess (addauthor_btn, submit_btn, close_btn, a_lead, a_contributing, 
                           a_title, a_tag, a_date, a_publisher, a_pubname,
                           a_doi, a_isxn, a_scopus, search, removerecord, cuser_id):
     ctx = dash.callback_context
     if ctx.triggered: 
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        addauthoropenmodal = False
         openmodal = False 
         feedbackmessage  = ' '
         inputsalert = False
@@ -751,7 +929,9 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
     else: 
         raise PreventUpdate
     
-    if eventid == 'form_a_submitbtn' and submit_btn:     
+    if eventid == 'form_a_add_author_btn' and addauthor_btn: 
+        addauthoropenmodal = True
+    elif eventid == 'form_a_submitbtn' and submit_btn:     
         inputs = [
             a_lead,
             a_tag, 
@@ -1056,4 +1236,115 @@ def form_a_submitprocess (submit_btn, close_btn, a_lead, a_contributing,
         pass
     else: 
         raise PreventUpdate
-    return [openmodal, feedbackmessage, okay_href, inputsalert, leadalert, DOI_alert, authoralert]
+    return [addauthoropenmodal, openmodal, feedbackmessage, okay_href, inputsalert, leadalert, DOI_alert, authoralert]
+
+#Add Author Submit process
+@app.callback(
+    [
+        Output('a_add_inputs_alert', 'is_open'),
+        Output('a_add_success_alert', 'is_open')
+    ], 
+    [
+        Input('form_a_submit_author_submitbtn', 'n_clicks'), 
+    ], 
+    [
+        State('form_a_add_author_fn', 'value'),
+        State('form_a_add_author_ln', 'value'),
+        State('form_a_add_author_up_aff_dropdown', 'value'),
+        State('form_a_up_aff_others', 'value'),
+        State('form_a_upd_unit_dropdown', 'value'),
+        State('form_a_engg_dept_dropdown', 'value'),
+        State('form_a_iefacind_dropdown', 'value'),
+        State('form_a_add_author_mail', 'value'),
+        State('form_a_add_author_contact', 'value'),
+        State('url', 'search' ),
+    ]
+)
+def form_a_submitauthorprocess (add_submit_btn,
+                            firstname, lastname,
+                            affiliation, other_aff, upd_unit, engg_dept, iefacind,
+                            mail, contact,
+                            add_search):
+    ctx = dash.callback_context
+    if ctx.triggered: 
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        add_inputsalert = False
+        add_successalert = False
+    else: 
+        raise PreventUpdate
+    
+    if eventid == 'form_a_submit_author_submitbtn' and add_submit_btn:     
+        add_inputs = [firstname, lastname, affiliation]
+        if not all(add_inputs): 
+            add_inputsalert = True
+        else: 
+            if affiliation == 'Non-UP':
+                if not (other_aff):
+                    add_inputsalert = True
+                else:
+                    add_successalert = True
+                    parsed = urlparse(add_search)
+                    mode = parse_qs(parsed.query)['mode'][0]
+
+                    a_add_timestamp = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    a_add_timestamp_time = dt.datetime.strptime(a_add_timestamp,'%Y-%m-%d %H:%M:%S')
+
+                    sql_max_author_inquiry = """SELECT MAX(author_id) from authors"""
+                    max_author_val = []
+                    max_author_colname = ['max']
+                    max_author_value_db = db.querydatafromdatabase (sql_max_author_inquiry, max_author_val, max_author_colname)
+                    max_author_id = int(max_author_value_db['max'][0]) + 1
+
+                    form_a_sqlcode_add_author = """INSERT INTO authors(
+                                author_id,  
+                                author_fn,
+                                author_ln,
+                                author_mail,
+                                author_contact,
+                                author_up_constituent,
+                                author_other_aff,
+                                author_upd_unit,
+                                author_engg_dept,
+                                author_fac_ind,
+                                author_last_upd
+                            )
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            """                 
+                    form_a_values_add_author = [max_author_id, firstname, lastname, mail, contact, affiliation, other_aff, upd_unit, engg_dept, iefacind, a_add_timestamp_time]
+                    db.modifydatabase(form_a_sqlcode_add_author, form_a_values_add_author)
+            else:
+                add_successalert = True
+                parsed = urlparse(add_search)
+                mode = parse_qs(parsed.query)['mode'][0]
+
+                a_add_timestamp = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                a_add_timestamp_time = dt.datetime.strptime(a_add_timestamp,'%Y-%m-%d %H:%M:%S')
+
+                sql_max_author_inquiry = """SELECT MAX(author_id) from authors"""
+                max_author_val = []
+                max_author_colname = ['max']
+                max_author_value_db = db.querydatafromdatabase (sql_max_author_inquiry, max_author_val, max_author_colname)
+                max_author_id = int(max_author_value_db['max'][0]) + 1
+
+                form_a_sqlcode_add_author = """INSERT INTO authors(
+                            author_id,  
+                            author_fn,
+                            author_ln,
+                            author_mail,
+                            author_contact,
+                            author_up_constituent,
+                            author_other_aff,
+                            author_upd_unit,
+                            author_engg_dept,
+                            author_fac_ind,
+                            author_last_upd
+                        )
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        """                 
+                form_a_values_add_author = [max_author_id, firstname, lastname, mail, contact, affiliation, other_aff, upd_unit, engg_dept, iefacind, a_add_timestamp_time]
+                db.modifydatabase(form_a_sqlcode_add_author, form_a_values_add_author)
+                    
+    else: 
+        raise PreventUpdate
+    return [add_inputsalert, add_successalert]
+
