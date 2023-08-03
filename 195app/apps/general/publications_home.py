@@ -227,7 +227,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                 LEFT OUTER JOIN (
 					SELECT
 						pub_id,
-						string_agg(authors.author_user_id::text, ', ') AS lead_user_ids,
+						string_agg(COALESCE(authors.author_user_id::text, ''), ', ') AS lead_user_ids,
 						string_agg(lead_author_name, ', ') AS lead_author_names,
 						string_agg(author_up_constituent, ', ') AS lead_up_affiliations
 					FROM pub_lead_authors
@@ -237,7 +237,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
 				LEFT OUTER JOIN (
 					SELECT
 						pub_id,
-						string_agg(authors.author_user_id::text, ', ') AS contributing_user_ids, 
+						string_agg(COALESCE(authors.author_user_id::text, ''), ', ') AS contributing_user_ids, 
 						string_agg(contributing_author_name, ', ') AS contributing_author_names,
 						string_agg(author_up_constituent, ', ') AS contributing_up_affiliations
 					FROM pub_contributing_authors
@@ -380,6 +380,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     if len(pub_lead_user_list) < len(pub_lead_list):
                         pub_lead_user_list += [None] * (len(pub_lead_list) - len(pub_lead_user_list))
                     pub_category = pub_a2['Criteria'][i]
+
                     pub_contributing_user = pub_a2['Contributing User ids'][i]
                     if pub_contributing_user is not None:
                         if ',' not in pub_contributing_user:
@@ -408,6 +409,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                         pub_contributing_aff_list = []
                     if len(pub_contributing_user_list) < len(pub_contributing_list):
                         pub_contributing_user_list += [None] * (len(pub_contributing_list) - len(pub_contributing_user_list))
+
                     pub_date = pub_a2['Date'][i]
                     pub_publication = pub_a2['Publication'][i]
                     pub_publisher = pub_a2['Publisher'][i]
@@ -424,10 +426,8 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
 
                     for pub_lead, pub_lead_aff, pub_lead_user in zip(pub_lead_list, pub_lead_aff_list, pub_lead_user_list):
                         if pub_lead_aff.strip() == 'UP Diliman':
-                            if pub_lead_user is not None:
-                                pub_lead_user = int(pub_lead_user)
-                                if pub_lead_user > 0:
-                                    pub_lead_faculty_list.append(pub_lead)
+                            if pub_lead_user is not '':
+                                pub_lead_faculty_list.append(pub_lead)
                             else:
                                 pub_lead_up_list.append(pub_lead)
                         else:
@@ -436,12 +436,10 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     pub_lead_up = ', '.join(pub_lead_up_list)
                     pub_lead_other = ', '.join(pub_lead_other_list)
                     
-                    for pub_contributing_user, pub_contributing, pub_contributing_aff in zip(pub_contributing_user_list, pub_contributing_list, pub_contributing_aff_list):
+                    for pub_contributing, pub_contributing_aff, pub_contributing_user in zip(pub_contributing_list, pub_contributing_aff_list, pub_contributing_user_list):
                         if pub_contributing_aff.strip() == 'UP Diliman':
-                            if pub_contributing_user is not None:
-                                pub_contributing_user = int(pub_contributing_user)
-                                if pub_contributing_user > 0:
-                                    pub_contributing_faculty_list.append(pub_contributing)
+                            if pub_contributing_user is not '':
+                                pub_contributing_faculty_list.append(pub_contributing)
                             else:
                                 pub_contributing_up_list.append(pub_contributing)
                         else:
@@ -449,6 +447,9 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
                     pub_contributing_faculty = ', '.join(pub_contributing_faculty_list)
                     pub_contributing_up = ', '.join(pub_contributing_up_list)
                     pub_contributing_other = ', '.join(pub_contributing_other_list)
+
+                    # print(ids, ': ', 'Lead ', 'Faculty: ', pub_lead_faculty, 'NON-IE UPD : ', pub_lead_up, 'NON-UP/NON-UPD : ', pub_lead_other)
+                    # print(ids, ': ', 'Contributing ', 'Faculty: ', pub_contributing_faculty, 'NON-IE UPD : ', pub_contributing_up, 'NON-UP/NON-UPD : ', pub_contributing_other)
 
                     modals_a += [
                         html.Div(
@@ -1194,7 +1195,7 @@ def pubhome_loadpublist(pathname, tab, searchterm, datefilter, datefilter_u):
     else: 
         raise PreventUpdate      
 
-#modal callback for undeleted publications only - stops working after any admin/faculty task that != viewing lists
+#modal callback for undeleted publications only
 sql_aa = """SELECT publications.pub_id
     FROM publications
     WHERE pub_delete_ind = false

@@ -561,7 +561,7 @@ def form_a_load_dropdown(pathname, lead, contributing, currentuserid):
 			author_user_id
             from authors
             WHERE not author_delete_ind
-				ORDER BY authors.author_user_id 
+			ORDER BY authors.author_user_id 
         """
         values_lead_author = []
         
@@ -572,14 +572,15 @@ def form_a_load_dropdown(pathname, lead, contributing, currentuserid):
 
         #contributing author options
         sql_contributing_author = """ SELECT
-            DISTINCT (author_fn ||' '|| author_ln) as label, author_id as value
+            DISTINCT (author_fn ||' '|| author_ln) as label, author_id as value,
+            author_user_id
             from authors
             WHERE not author_delete_ind
-            ORDER BY value DESC
+            ORDER BY authors.author_user_id 
         """
         values_contributing_author = []
         
-        cols_contributing_author = ['label', 'value']
+        cols_contributing_author = ['label', 'value', 'faculty_ind']
         contributing_author_involved = db.querydatafromdatabase(sql_contributing_author, values_contributing_author, cols_contributing_author)
 
         contributing_author_opts = contributing_author_involved.to_dict('records')
@@ -1134,6 +1135,11 @@ def form_a_submitprocess (addauthor_btn, submit_btn, close_btn, a_lead, a_contri
                 values_update_publications = [a_tag, a_title, to_delete, a_timestamp_time, a_username_modifier, form_a_editmodeid]
                 db.modifydatabase(sql_update_publications,values_update_publications )
                 
+                sql_delete_lead_a = """DELETE FROM authorships
+                        WHERE pub_id = %s"""
+                val_delete_lead_a =[int(form_a_editmodeid)]
+                db.modifydatabase(sql_delete_lead_a, val_delete_lead_a)  
+
                 if a_lead == None: 
                     a_lead = []
                 if type(a_lead) == int: 
@@ -1150,7 +1156,8 @@ def form_a_submitprocess (addauthor_btn, submit_btn, close_btn, a_lead, a_contri
                 sql_delete_lead_a = """DELETE FROM pub_lead_authors
                         WHERE pub_id = %s"""
                 val_delete_lead_a =[int(form_a_editmodeid)]
-                db.modifydatabase(sql_delete_lead_a, val_delete_lead_a)               
+                db.modifydatabase(sql_delete_lead_a, val_delete_lead_a)
+                             
                 #re-add pub w updated lead
                 for i in range(len(a_lead)):
                     sql_pub_lead = """INSERT INTO pub_lead_authors(pub_id, a_lead_id)

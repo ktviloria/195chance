@@ -48,6 +48,7 @@ UPDATED MODULES:
             -lead author can be determined as faculty: author_user_id=user_id where user_id>3
         -contributing author can be selected from all authors (author_id)
         -alert when contributing author in lead author
+        -ability to add author
 
 6. 195app>apps>general>publications_home
     -updated table to reflect changes in database
@@ -66,6 +67,7 @@ UPDATED MODULES:
 10. 195app>apps>forms>form_presentations
     -changed layout
     -changed callback
+    -ability to add presenter
 
 
 ########

@@ -368,7 +368,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 LEFT OUTER JOIN (
 					SELECT
 						pub_id,
-                        string_agg(authors.author_user_id::text, ', ') AS lead_user_ids,
+                        string_agg(COALESCE(authors.author_user_id::text, ''), ', ') AS lead_user_ids,
 						string_agg(lead_author_name, ', ') AS lead_author_names,
 						string_agg(author_up_constituent, ', ') AS lead_up_affiliations
 					FROM pub_lead_authors
@@ -378,7 +378,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
 				LEFT OUTER JOIN (
 					SELECT
 						pub_id,
-                        string_agg(authors.author_user_id::text, ', ') AS contributing_user_ids,
+                        string_agg(COALESCE(authors.author_user_id::text, ''), ', ') AS contributing_user_ids,
 						string_agg(contributing_author_name, ', ') AS contributing_author_names,
 						string_agg(author_up_constituent, ', ') AS contributing_up_affiliations
 					FROM pub_contributing_authors
@@ -558,10 +558,8 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
 
                     for pub_lead, pub_lead_aff, pub_lead_user in zip(pub_lead_list, pub_lead_aff_list, pub_lead_user_list):
                         if pub_lead_aff.strip() == 'UP Diliman':
-                            if pub_lead_user is not None:
-                                pub_lead_user = int(pub_lead_user)
-                                if pub_lead_user > 0:
-                                    pub_lead_faculty_list.append(pub_lead)
+                            if pub_lead_user is not '':
+                                pub_lead_faculty_list.append(pub_lead)
                             else:
                                 pub_lead_up_list.append(pub_lead)
                         else:
@@ -572,10 +570,8 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                     
                     for pub_contributing_user, pub_contributing, pub_contributing_aff in zip(pub_contributing_user_list, pub_contributing_list, pub_contributing_aff_list):
                         if pub_contributing_aff.strip() == 'UP Diliman':
-                            if pub_contributing_user is not None:
-                                pub_contributing_user = int(pub_contributing_user)
-                                if pub_contributing_user > 0:
-                                    pub_contributing_faculty_list.append(pub_contributing)
+                            if pub_contributing_user is not '':
+                                pub_contributing_faculty_list.append(pub_contributing)
                             else:
                                 pub_contributing_up_list.append(pub_contributing)
                         else:
