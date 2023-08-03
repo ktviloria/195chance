@@ -558,7 +558,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
 
                     for pub_lead, pub_lead_aff, pub_lead_user in zip(pub_lead_list, pub_lead_aff_list, pub_lead_user_list):
                         if pub_lead_aff.strip() == 'UP Diliman':
-                            if pub_lead_user is not '':
+                            if pub_lead_user != '':
                                 pub_lead_faculty_list.append(pub_lead)
                             else:
                                 pub_lead_up_list.append(pub_lead)
@@ -570,7 +570,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                     
                     for pub_contributing_user, pub_contributing, pub_contributing_aff in zip(pub_contributing_user_list, pub_contributing_list, pub_contributing_aff_list):
                         if pub_contributing_aff.strip() == 'UP Diliman':
-                            if pub_contributing_user is not '':
+                            if pub_contributing_user != '':
                                 pub_contributing_faculty_list.append(pub_contributing)
                             else:
                                 pub_contributing_up_list.append(pub_contributing)
@@ -589,7 +589,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                         html.Div([
                                             dbc.FormText("Author Affiliation Legend:", style = {"font-weight": "bold"}),
                                             html.Span(': '),
-                                            dbc.FormText("IE Faculty", style = {"font-style": "italic", "color":"red"}),
+                                            dbc.FormText("IE Faculty", style = {"font-style": "italic", "color":"green"}),
                                             html.Span(', '),
                                             dbc.FormText("UP Diliman", style = {"font-style": "italic"}),
                                             html.Span(', '),
@@ -602,7 +602,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                         ),
                                         html.Div([
                                             html.Strong("Lead Author(s): "),
-                                            html.Span(f"{pub_lead_faculty}", style={"font-style": "italic", "color":"red"}),
+                                            html.Span(f"{pub_lead_faculty}", style={"font-style": "italic", "color":"green"}),
                                             html.Span(', '),
                                             html.Span(f"{pub_lead_up}", style={"font-style": "italic"}),
                                             html.Span(', '),
@@ -610,7 +610,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                         ], id = f"modal_lead_authors_{ids}"),
                                         html.Div([
                                             html.Strong("Other Contributing Author(s): "),
-                                            html.Span(f"{pub_contributing_faculty}", style={"font-style": "italic", "color":"red"}),
+                                            html.Span(f"{pub_contributing_faculty}", style={"font-style": "italic", "color":"green"}),
                                             html.Span(', '),
                                             html.Span(f"{pub_contributing_up}", style={"font-style": "italic"}),
                                             html.Span(', '),
@@ -687,7 +687,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                 LEFT OUTER JOIN (
 					SELECT
 						pub_id,
-                        string_agg(authors.author_user_id::text, ', ') AS pres_user_ids,
+                        string_agg(COALESCE(authors.author_user_id::text, ''), ', ') AS pres_user_ids,
 						string_agg(author_name, ', ') AS pres_author_names,
 						string_agg(author_up_constituent, ', ') AS pres_up_affiliations
 					FROM pres_authors
@@ -842,10 +842,8 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                     pres_presenters_other_list = []
                     for pres_user, pres_presenters, pres_presenters_aff in zip(pub_presenters_user_list, pres_presenters_list, pres_presenters_aff_list):
                         if pres_presenters_aff == 'UP Diliman':
-                            if pres_user is not None:
-                                pres_user = int(pres_user)
-                                if pres_user > 0:
-                                    pres_presenters_faculty_list.append(pres_presenters)
+                            if pres_user != '':
+                                pres_presenters_faculty_list.append(pres_presenters)
                             else:
                                 pres_presenters_up_list.append(pres_presenters)
                         else:
@@ -863,7 +861,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                         html.Div([
                                             dbc.FormText("Presenter Affiliation Legend:", style = {"font-weight": "bold"}),
                                             html.Span(': '),
-                                            dbc.FormText("IE Faculty", style = {"font-style": "italic", "color":"red"}),
+                                            dbc.FormText("IE Faculty", style = {"font-style": "italic", "color":"green"}),
                                             html.Span(', '),
                                             dbc.FormText("UP Diliman", style = {"font-style": "italic"}),
                                             html.Span(', '),
@@ -875,7 +873,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
                                             html.Span(f"{pub_title}"),],id = f"modal_title_{ids}"),
                                         html.Div([
                                             html.Strong("Presenter(s): "), 
-                                            html.Span(f"{pres_presenters_faculty}", style={"font-style": "italic", "color":"red"}),
+                                            html.Span(f"{pres_presenters_faculty}", style={"font-style": "italic", "color":"green"}),
                                             html.Span(', '),
                                             html.Span(f"{pres_presenters_up}", style={"font-style": "italic"}),
                                             html.Span(', '),
@@ -1353,7 +1351,7 @@ def facdet_loadpublist (pathname, tab, searchterm, datefilter, datefilter_u, sea
     else: 
         raise PreventUpdate       
 
-#modal callback for undeleted publications only  - stops working after any admin/faculty task that != viewing lists
+#modal callback for undeleted publications only 
 sql_aa = """SELECT publications.pub_id
     FROM publications
     WHERE pub_delete_ind = false

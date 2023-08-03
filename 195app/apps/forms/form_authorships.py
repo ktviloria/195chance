@@ -508,6 +508,7 @@ layout= html.Div(
             centered=True, 
             id="form_a_add_author_modal", 
             is_open=False, 
+            size = "lg"
         ),  
     ] 
 )
